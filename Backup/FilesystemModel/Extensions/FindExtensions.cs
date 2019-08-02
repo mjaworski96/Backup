@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace FilesystemModel.Extensions
 {
@@ -8,7 +7,8 @@ namespace FilesystemModel.Extensions
         public static FileBase Find(this Directory directory,
             string path)
         {
-			if (!path.Contains(directory.Path))
+            directory = CheckDirectory(directory, path);
+			if (!path.StartsWith(directory.Path))
 				return null;
             path = GetPath(directory, path);
             string[] subPaths = FileBase.GetSubPaths(path);
@@ -17,7 +17,7 @@ namespace FilesystemModel.Extensions
             for(int i = 0; i < subPaths.Length; i++)
             {
                 if (file.Type != FileType.DIRECTORY)
-                    break;
+                    return null;
                 Directory dir = file as Directory;
                 file = dir.Content.Where(x => x.Name == subPaths[i]).FirstOrDefault();
                 if (file == null)
@@ -31,6 +31,20 @@ namespace FilesystemModel.Extensions
             int legth = directory is VirtualDirectory ? 
                 directory.Path.Length : directory.Path.Length + 1;
             return path.Substring(legth);
+        }
+        private static Directory CheckDirectory(Directory directory, string path)
+        {
+            if(directory is VirtualDirectory)
+            {
+                Directory valid = directory.Content
+                    .Where(x => x.Type == FileType.DIRECTORY && 
+                     path.StartsWith(x.Path))
+                    .OrderBy(x => x.Path.Length)
+                    .FirstOrDefault() as Directory;
+                if (valid != null)
+                    return valid;
+            }
+            return directory;
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using FilesystemModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace FilesystemModel.Extensions
 {
@@ -55,9 +52,7 @@ namespace FilesystemModel.Extensions
             foreach (var oldItem in directory.Content)
             {
                 if (item.Name == oldItem.Name)
-                {
                     return oldItem;
-                }
             }
 
             return null;
