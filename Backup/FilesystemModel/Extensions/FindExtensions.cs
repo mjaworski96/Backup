@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace FilesystemModel.Extensions
 {
@@ -47,12 +48,29 @@ namespace FilesystemModel.Extensions
                 Directory valid = directory.Content
                     .Where(x => x.Type == FileType.DIRECTORY &&
                      path.StartsWith(x.Path))
-                    .OrderBy(x => x.Path.Length)
+                    .OrderByDescending(x => PathEqualSubpathsCount(x.Path, path))
                     .FirstOrDefault() as Directory;
                 if (valid != null)
                     return valid;
             }
             return directory;
+        }
+        private static int PathEqualSubpathsCount(string path1, string path2)
+        {
+            int equal = 0;
+
+            var path1Split = path1.Split('/');
+            var path2Split = path2.Split('/');
+            var min = Math.Min(path1Split.Length, path2Split.Length);
+            for (int i = 0; i < min; i++)
+            {
+                if (path1Split[i] == path2Split[i])
+                    equal++;
+                else
+                    break;
+            }
+
+            return equal;
         }
     }
 }
