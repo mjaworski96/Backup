@@ -28,6 +28,10 @@ namespace BackupLogic
         }
         private void MakeBackup(Directory source, Directory target, string rootDirectory)
         {
+            if(source.Attributes != target.Attributes)
+            {
+                System.IO.File.SetAttributes(target.Path, (System.IO.FileAttributes)source.Attributes);
+            }
             source.Compare(target,
                 out List<FileBase> newFiles,
                 out List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
@@ -45,12 +49,13 @@ namespace BackupLogic
                 {
                     Directory directory = item as Directory;
                     System.IO.Directory.CreateDirectory(path);
+                    System.IO.File.SetAttributes(path, (System.IO.FileAttributes)item.Attributes);
                     HandleNewFiles(directory.Content, path);
                 }
                 else if (item.Type == FileType.FILE)
                 {
                     Console.WriteLine($"Downloanding {item.Path}");
-                    _communicator.ReceiveFile(item.Path, path);
+                    _communicator.ReceiveFile(item.Path, path, item.Attributes);
                 }
             }
         }
@@ -101,7 +106,11 @@ namespace BackupLogic
             if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32()))
             {
                 Console.WriteLine($"Downloanding {sourceFile.Path}");
-                _communicator.ReceiveFile(sourceFile.Path, inTarget.Path);
+                _communicator.ReceiveFile(sourceFile.Path, inTarget.Path, sourceFile.Attributes);
+            }
+            if(sourceFile.Attributes != targetFile.Attributes)
+            {
+                System.IO.File.SetAttributes(inTarget.Path, (System.IO.FileAttributes)sourceFile.Attributes);
             }
         }
 

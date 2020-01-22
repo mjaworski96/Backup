@@ -26,11 +26,11 @@ namespace Communication
 
             return Receive<Directory>();
         }
-        public void ReceiveFile(string fileRequestPath, string saveFileAs)
+        public void ReceiveFile(string fileRequestPath, string saveFileAs, int attributes)
         {
             SendRequest(Request.GET_FILE);
             Send(fileRequestPath);
-            ReceiveFile(saveFileAs);
+            ReceiveFile(saveFileAs, attributes);
         }
 		public uint GetCrc32(string fileRequestPath)
         {
@@ -42,20 +42,21 @@ namespace Communication
         {
             SendRequest(Request.FINISH);
         }
-        private void ReceiveFile(string filename)
+        private void ReceiveFile(string filename, int attributes)
         {
             long size = Receive<long>();
             if (size == 0)
                 HandleEmptyFile(filename);
             else
-                HandleNoEmptyFile(filename, size);
+                HandleNoEmptyFile(filename, size, attributes);
         }
 
-        private void HandleNoEmptyFile(string filename, long size)
+        private void HandleNoEmptyFile(string filename, long size, int attributes)
         {
             long total = 0;
             using (System.IO.Stream stream = new System.IO.FileStream(filename, System.IO.FileMode.OpenOrCreate))
             {
+                System.IO.File.SetAttributes(filename, (System.IO.FileAttributes) attributes);
                 byte[] buffer = new byte[_bufferSize];
                 while (total < size)
                 {

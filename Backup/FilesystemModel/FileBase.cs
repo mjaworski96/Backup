@@ -6,14 +6,19 @@ namespace FilesystemModel
     {
         public string Path { get; private set; }
         public string Name { get => Path.Split('/').Last(); }
+        public int Attributes { get; private set; }
         public FileBase(string path)
         {
             if (string.IsNullOrEmpty(path))
                 Path = path;
             else
+            {
                 Path = System.IO.Path.GetFullPath(
                 path.Replace('\\', '/'))
                 .Replace('\\', '/');
+                if(System.IO.File.Exists(Path))
+                    Attributes = (int)System.IO.File.GetAttributes(Path);
+            }             
         }
         public abstract FileType Type { get; }
         public abstract void Copy(string target);
