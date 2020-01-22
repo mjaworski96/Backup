@@ -41,7 +41,8 @@ namespace Communication
             try
 			{
 				byte[] buffer = new byte[_bufferSize];
-				using (System.IO.Stream stream = new System.IO.FileStream(filename, System.IO.FileMode.Open))
+                using (System.IO.Stream stream = 
+                    new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				{
 					Send(stream.Length);
 					while(stream.Position != stream.Length)
