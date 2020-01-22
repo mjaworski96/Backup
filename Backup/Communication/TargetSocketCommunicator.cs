@@ -26,7 +26,9 @@ namespace Communication
 
             return Receive<Directory>();
         }
-        public void ReceiveFile(string fileRequestPath, string saveFileAs, int attributes)
+        public void ReceiveFile(string fileRequestPath,
+            string saveFileAs,
+            System.IO.FileAttributes attributes)
         {
             SendRequest(Request.GET_FILE);
             Send(fileRequestPath);
@@ -42,7 +44,8 @@ namespace Communication
         {
             SendRequest(Request.FINISH);
         }
-        private void ReceiveFile(string filename, int attributes)
+        private void ReceiveFile(string filename,
+            System.IO.FileAttributes attributes)
         {
             long size = Receive<long>();
             if (size == 0)
@@ -51,12 +54,14 @@ namespace Communication
                 HandleNoEmptyFile(filename, size, attributes);
         }
 
-        private void HandleNoEmptyFile(string filename, long size, int attributes)
+        private void HandleNoEmptyFile(string filename,
+            long size,
+            System.IO.FileAttributes attributes)
         {
             long total = 0;
             using (System.IO.Stream stream = new System.IO.FileStream(filename, System.IO.FileMode.OpenOrCreate))
             {
-                System.IO.File.SetAttributes(filename, (System.IO.FileAttributes) attributes);
+                System.IO.File.SetAttributes(filename, attributes);
                 byte[] buffer = new byte[_bufferSize];
                 while (total < size)
                 {

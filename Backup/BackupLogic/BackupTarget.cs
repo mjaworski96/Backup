@@ -30,7 +30,7 @@ namespace BackupLogic
         {
             if(source.Attributes != target.Attributes)
             {
-                System.IO.File.SetAttributes(target.Path, (System.IO.FileAttributes)source.Attributes);
+                System.IO.File.SetAttributes(target.Path, source.Attributes);
             }
             source.Compare(target,
                 out List<FileBase> newFiles,
@@ -49,7 +49,7 @@ namespace BackupLogic
                 {
                     Directory directory = item as Directory;
                     System.IO.Directory.CreateDirectory(path);
-                    System.IO.File.SetAttributes(path, (System.IO.FileAttributes)item.Attributes);
+                    System.IO.File.SetAttributes(path, item.Attributes);
                     HandleNewFiles(directory.Content, path);
                 }
                 else if (item.Type == FileType.FILE)
@@ -110,7 +110,7 @@ namespace BackupLogic
             }
             if(sourceFile.Attributes != targetFile.Attributes)
             {
-                System.IO.File.SetAttributes(inTarget.Path, (System.IO.FileAttributes)sourceFile.Attributes);
+                System.IO.File.SetAttributes(inTarget.Path, sourceFile.Attributes);
             }
         }
 

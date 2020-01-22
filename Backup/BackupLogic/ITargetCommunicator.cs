@@ -8,7 +8,9 @@ namespace BackupLogic
     public interface ITargetCommunicator: IDisposable
     {
         Directory GetDirectory();
-        void ReceiveFile(string fileRequestPath, string saveFileAs, int attributes);
+        void ReceiveFile(string fileRequestPath,
+            string saveFileAs,
+            System.IO.FileAttributes attributes);
         uint GetCrc32(string fileRequestPath);
         void Finish();
     }
