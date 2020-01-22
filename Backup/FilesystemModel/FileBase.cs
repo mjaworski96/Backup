@@ -16,7 +16,7 @@ namespace FilesystemModel
                 Path = System.IO.Path.GetFullPath(
                 path.Replace('\\', '/'))
                 .Replace('\\', '/');
-                if(System.IO.File.Exists(Path))
+                if(System.IO.File.Exists(Path) || System.IO.Directory.Exists(Path))
                     Attributes = (int)System.IO.File.GetAttributes(Path);
             }             
         }
