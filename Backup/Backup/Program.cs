@@ -1,4 +1,4 @@
-﻿using BackupLogic;
+using BackupLogic;
 using Communication;
 using Communication.Serialization;
 using System;
@@ -9,6 +9,12 @@ namespace Backup
 {
     public class Program
     {
+        private const int MODE_INDEX = 0;
+        private const int IP_INDEX = 1;
+        private const int PORT_INDEX = 2;
+        private const int BUFFER_SIZE_INDEX = 3;
+        private const int FILES_INDEX = 4;
+
         private bool GetFromArgs(string[] args, int index, out string value)
         {
             if (args.Length > index)
@@ -52,14 +58,14 @@ namespace Backup
         }
         private string GetMode(string[] args)
         {
-            if (GetFromArgs(args, 0, out string value))
+            if (GetFromArgs(args, MODE_INDEX, out string value))
                 return value;
             else
                 return GetFromConsole("Mode (source/target)");
         }
         private string GetIp(string[] args)
         {
-            if (GetFromArgs(args, 1, out string value))
+            if (GetFromArgs(args, IP_INDEX, out string value))
                 return value;
             else
                 return GetFromConsole("Address IP");
@@ -67,23 +73,33 @@ namespace Backup
         private int GetPort(string[] args)
         {
             string port = "";
-            if (GetFromArgs(args, 2, out string value))
+            if (GetFromArgs(args, PORT_INDEX, out string value))
                 port =  value;
             else
                 port = GetFromConsole("Port");
 
             return int.Parse(port);
         }
+        private int GetBufferSize(string[] args)
+        {
+            string bufferSize = "";
+            if (GetFromArgs(args, BUFFER_SIZE_INDEX, out string value))
+                bufferSize = value;
+            else
+                bufferSize = GetFromConsole("Buffer size");
+
+            return int.Parse(bufferSize);
+        }
         private string GetTargetDirectoryPath(string[] args)
         {
-            if (GetFromArgs(args, 3, out string value))
+            if (GetFromArgs(args, FILES_INDEX, out string value))
                 return value;
             else
                 return GetFromConsole("Target directory");
         }
         private IEnumerable<string> GetSourceDirectoryContentPath(string[] args)
         {
-            if (GetFromArgs(args, 3, out string[] values))
+            if (GetFromArgs(args, FILES_INDEX, out string[] values))
                 return values;
             else
                 return GetMultipleValuesFromConsole("File/directory (empty line to exit)");
@@ -122,6 +138,7 @@ namespace Backup
                     new TargetSocketCommunicator(
                         GetIp(args),
                         GetPort(args),
+                        GetBufferSize(args),
                         new Json()));
             }
             else if (mode == "source")
@@ -130,6 +147,7 @@ namespace Backup
                     new SourceSocketCommunicator(
                         GetIp(args),
                         GetPort(args),
+                        GetBufferSize(args),
                         new Json()));
             }
             throw new UnsupportedModeException(mode);
@@ -144,7 +162,7 @@ namespace Backup
                     backup.MakeBackup(GetDirectory(args, mode));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);

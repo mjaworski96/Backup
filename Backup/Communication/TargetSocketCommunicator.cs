@@ -11,8 +11,8 @@ namespace Communication
     {
         public TargetSocketCommunicator(string address,
             int port,
-            ISerialization serialization,
-            int bufferSize = 10485760) : base(address, port, serialization, bufferSize)
+            int bufferSize,
+            ISerialization serialization) : base(address, port, bufferSize, serialization)
         {
             _socket.Bind(_endPoint);
             _socket.Listen(1);

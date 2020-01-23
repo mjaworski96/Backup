@@ -15,9 +15,12 @@ namespace Communication
         protected int _bufferSize;
         protected SocketCommunicator(string address, 
             int port,
-            ISerialization serialization,
-            int bufferSize)
+            int bufferSize,
+            ISerialization serialization)
         {
+            if (bufferSize < 1)
+                throw new InvalidBufferSizeException("Buffer size must be greater than 0");
+
             IPAddress ip = IPAddress.Parse(address);
             _endPoint = new IPEndPoint(ip, port);
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

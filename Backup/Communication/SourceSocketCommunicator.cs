@@ -11,8 +11,8 @@ namespace Communication
     {
         public SourceSocketCommunicator(string address,
             int port,
-            ISerialization serialization,
-            int bufferSize = 10485760) : base(address, port, serialization, bufferSize)
+            int bufferSize,
+            ISerialization serialization) : base(address, port, bufferSize, serialization)
         {
             _socket.Connect(_endPoint);
         }
