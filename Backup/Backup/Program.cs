@@ -15,7 +15,7 @@ namespace Backup
         private const int BUFFER_SIZE_INDEX = 3;
         private const int FILES_INDEX = 4;
 
-        private bool GetFromArgs(string[] args, int index, out string value)
+        private static bool GetFromArgs(string[] args, int index, out string value)
         {
             if (args.Length > index)
             {
@@ -25,7 +25,7 @@ namespace Backup
             value = null;
             return false;
         }
-        private bool GetFromArgs(string[] args, int startIndex, out string[] values)
+        private static bool GetFromArgs(string[] args, int startIndex, out string[] values)
         {
             if (args.Length > startIndex)
             {
@@ -39,12 +39,12 @@ namespace Backup
             values = null;
             return false;
         }
-        private string GetFromConsole(string message)
+        private static string GetFromConsole(string message)
         {
             Console.Write($"{message}: ");
             return Console.ReadLine();
         }
-        private IEnumerable<string> GetMultipleValuesFromConsole(string message)
+        private static IEnumerable<string> GetMultipleValuesFromConsole(string message)
         {
             bool hasValue = false;
             do
@@ -56,21 +56,21 @@ namespace Backup
                     yield return value;
             } while (hasValue);
         }
-        private string GetMode(string[] args)
+        private static string GetMode(string[] args)
         {
             if (GetFromArgs(args, MODE_INDEX, out string value))
                 return value;
             else
                 return GetFromConsole("Mode (source/target)");
         }
-        private string GetIp(string[] args)
+        private static string GetIp(string[] args)
         {
             if (GetFromArgs(args, IP_INDEX, out string value))
                 return value;
             else
                 return GetFromConsole("Address IP");
         }
-        private int GetPort(string[] args)
+        private static int GetPort(string[] args)
         {
             string port = "";
             if (GetFromArgs(args, PORT_INDEX, out string value))
@@ -80,7 +80,7 @@ namespace Backup
 
             return int.Parse(port);
         }
-        private int GetBufferSize(string[] args)
+        private static int GetBufferSize(string[] args)
         {
             string bufferSize = "";
             if (GetFromArgs(args, BUFFER_SIZE_INDEX, out string value))
@@ -90,26 +90,26 @@ namespace Backup
 
             return int.Parse(bufferSize);
         }
-        private string GetTargetDirectoryPath(string[] args)
+        private static string GetTargetDirectoryPath(string[] args)
         {
             if (GetFromArgs(args, FILES_INDEX, out string value))
                 return value;
             else
                 return GetFromConsole("Target directory");
         }
-        private IEnumerable<string> GetSourceDirectoryContentPath(string[] args)
+        private static IEnumerable<string> GetSourceDirectoryContentPath(string[] args)
         {
             if (GetFromArgs(args, FILES_INDEX, out string[] values))
                 return values;
             else
                 return GetMultipleValuesFromConsole("File/directory (empty line to exit)");
         }
-        private Directory GetTargetDirectory(string[] args)
+        private static Directory GetTargetDirectory(string[] args)
         {
             return new Directory(GetTargetDirectoryPath(args), true);
         }
 
-        private Directory GetSourceDirectory(string[] args)
+        private static Directory GetSourceDirectory(string[] args)
         {
             VirtualDirectory directory = new VirtualDirectory();
 
@@ -120,7 +120,7 @@ namespace Backup
 
             return directory;
         }
-        private Directory GetDirectory(string[] args, string mode)
+        private static Directory GetDirectory(string[] args, string mode)
         {
             if (mode == "source")
                 return GetSourceDirectory(args);
@@ -130,7 +130,7 @@ namespace Backup
                 throw new UnsupportedModeException(mode);
         }
 
-        private IBackup GetBackup(string[] args, string mode)
+        private static IBackup GetBackup(string[] args, string mode)
         {
             if (mode == "target")
             {
@@ -152,7 +152,7 @@ namespace Backup
             }
             throw new UnsupportedModeException(mode);
         }
-        public void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
