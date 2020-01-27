@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 
 namespace FilesystemModel
 {
@@ -6,7 +7,7 @@ namespace FilesystemModel
     {
         public static FileBase Create(string filename, bool createDirectoryIfNotExists)
         {
-            FileAttributes attributes = System.IO.File.GetAttributes(filename);
+            FileAttributes attributes = System.IO.File.GetAttributes(filename.Split('*').First());
             if(attributes.HasFlag(FileAttributes.Directory))
             {
                 return new Directory(filename, createDirectoryIfNotExists);

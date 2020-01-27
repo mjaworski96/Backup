@@ -15,6 +15,23 @@ namespace Backup
         private const int BUFFER_SIZE_INDEX = 3;
         private const int FILES_INDEX = 4;
 
+        public static void Main(string[] args)
+        {
+            try
+            {
+                string mode = GetMode(args);
+                using (IBackup backup = GetBackup(args, mode))
+                {
+                    backup.MakeBackup(GetDirectory(args, mode));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
         private static bool GetFromArgs(string[] args, int index, out string value)
         {
             if (args.Length > index)
@@ -151,22 +168,6 @@ namespace Backup
                         new Json()));
             }
             throw new UnsupportedModeException(mode);
-        }
-        public static void Main(string[] args)
-        {
-            try
-            {
-                string mode = GetMode(args);
-                using (IBackup backup = GetBackup(args, mode))
-                {
-                    backup.MakeBackup(GetDirectory(args, mode));
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
-            }
         }
     }
 }

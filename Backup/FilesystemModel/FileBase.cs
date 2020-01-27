@@ -5,10 +5,17 @@ namespace FilesystemModel
     public abstract class FileBase
     {
         public string Path { get; private set; }
-        public string Name { get => Path.Split('/').Last(); }
+        public string Name { get => Alias ?? Path.Split('/').Last(); }
+        public string Alias { get; set; }
         public System.IO.FileAttributes Attributes { get; private set; }
         public FileBase(string path)
         {
+            if(path.Contains("*"))
+            {
+                var split = path.Split('*');
+                path = split.First();
+                Alias = split.Last();
+            }
             if (string.IsNullOrEmpty(path))
                 Path = path;
             else
