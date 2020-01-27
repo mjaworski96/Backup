@@ -68,15 +68,24 @@ namespace BackupLogic
                 {
                     Directory directory = item as Directory;
                     HandleDeletedFiles(directory.Content, path);
+                    Console.WriteLine($"Deleting {path}");
+                    SetNormalAttribute(path);
                     System.IO.Directory.Delete(path);
                 }
                 else if (item.Type == FileType.FILE)
                 {
                     Console.WriteLine($"Deleting {path}");
+                    SetNormalAttribute(path);
                     System.IO.File.Delete(path);
                 }
             }
         }
+
+        private static void SetNormalAttribute(string path)
+        {
+            System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
+        }
+
         private void HandleExistingFiles(List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
             string rootDirectory)
         {
