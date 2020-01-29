@@ -1,4 +1,4 @@
-﻿namespace BackupLogic
+﻿namespace BackupCore
 {
     public enum Request
     {

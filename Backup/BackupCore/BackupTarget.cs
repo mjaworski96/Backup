@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FilesystemModel;
 using FilesystemModel.Extensions;
 
-namespace BackupLogic
+namespace BackupCore
 {
     public class BackupTarget: IBackup
     {

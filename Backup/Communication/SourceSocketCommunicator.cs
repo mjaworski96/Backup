@@ -1,5 +1,5 @@
 ﻿using System;
-using BackupLogic;
+using BackupCore;
 using Communication.Serialization;
 using FilesystemModel;
 using FilesystemModel.Extensions;

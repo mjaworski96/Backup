@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilesystemModel", "Filesyst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Communication\Communication.csproj", "{7B978A3B-70F7-40EF-B46B-EDA58AA20D40}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackupLogic", "BackupLogic\BackupLogic.csproj", "{C033EE59-35E1-4117-AC46-01410FE6B573}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackupCore", "BackupCore\BackupCore.csproj", "{C033EE59-35E1-4117-AC46-01410FE6B573}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backup", "Backup\Backup.csproj", "{1B12FC50-B1E9-4154-A53E-FC9E03EC03B9}"
 EndProject

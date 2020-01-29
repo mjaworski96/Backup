@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FilesystemModel;
 
-namespace BackupLogic
+namespace BackupCore
 {
     public interface ITargetCommunicator: IDisposable
     {

@@ -1,8 +1,6 @@
-﻿using BackupLogic;
+﻿using BackupCore;
 using Communication.Serialization;
 using FilesystemModel;
-using System;
-using System.Net;
 using System.Net.Sockets;
 
 namespace Communication

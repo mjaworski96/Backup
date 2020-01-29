@@ -1,5 +1,4 @@
-﻿using BackupLogic;
-using Communication.Serialization;
+﻿using Communication.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;

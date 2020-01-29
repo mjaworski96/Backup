@@ -1,7 +1,7 @@
 ﻿using FilesystemModel;
 using System;
 
-namespace BackupLogic
+namespace BackupCore
 {
     public interface IBackup: IDisposable
     {

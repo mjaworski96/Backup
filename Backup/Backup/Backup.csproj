@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BackupLogic\BackupLogic.csproj" />
+    <ProjectReference Include="..\BackupCore\BackupCore.csproj" />
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\FilesystemModel\FilesystemModel.csproj" />
   </ItemGroup>

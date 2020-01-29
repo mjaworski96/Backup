@@ -1,7 +1,7 @@
 ﻿using FilesystemModel;
 using FilesystemModel.Extensions;
 
-namespace BackupLogic
+namespace BackupCore
 {
     public class BackupSource: IBackup
     {
