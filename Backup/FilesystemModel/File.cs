@@ -11,9 +11,21 @@ namespace FilesystemModel
 
         public override FileType Type => FileType.FILE;
 
-        public uint CalculateCrc32()
+        public uint CalculateCrc32(int bufferSize)
         {
-            return Crc32CAlgorithm.Compute(System.IO.File.ReadAllBytes(Path));
+            uint crc32 = 0;
+            byte[] buffer = new byte[bufferSize];
+
+            using (Stream stream =
+                new FileStream(Path, FileMode.Open, FileAccess.Read))
+            {
+                while (stream.Position != stream.Length)
+                {
+                    int count = stream.Read(buffer, 0, bufferSize);
+                    Crc32CAlgorithm.Append(crc32, buffer, 0, count);
+                }
+            }
+            return crc32;
         }
 
         public override void Copy(string target)

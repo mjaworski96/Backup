@@ -7,12 +7,14 @@ namespace BackupCore
     {
         private readonly ISourceCommunicator _communicator;
         private readonly ILogger _logger;
+        private readonly int _bufferSize;
 
         public BackupSource(ISourceCommunicator communicator,
-            ILogger logger)
+            ILogger logger, int bufferSize)
         {
             _communicator = communicator;
             _logger = logger;
+            _bufferSize = bufferSize;
         }
 
         public void MakeBackup(Directory directory)
@@ -47,7 +49,7 @@ namespace BackupCore
             string filename = _communicator.GetFilename();
             _logger.Write($"Calculating checksum for {filename}");
             File file = directory.Find(filename) as File;
-            _communicator.SendCrc32(file.CalculateCrc32());
+            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize));
         }
 
         private void GetFile(Directory directory)

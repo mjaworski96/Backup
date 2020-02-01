@@ -23,9 +23,9 @@ namespace Backup
             try
             {
                 ParametersHandler parameters = new ParametersHandler(args, Defaults.DEFAULTS_PARAMS);
-                var directory = GetDirectory(parameters);
                 using (IBackup backup = GetBackup(parameters))
                 {
+                    var directory = GetDirectory(parameters);
                     backup.MakeBackup(directory);
                 }
             }
@@ -120,7 +120,8 @@ namespace Backup
                         GetBufferSize(parameters),
                         new Json(),
                         logger),
-                    logger);
+                    logger,
+                    GetBufferSize(parameters));
             }
             else if (mode == Defaults.MODE_SOURCE)
             {
@@ -131,7 +132,8 @@ namespace Backup
                         GetBufferSize(parameters),
                         new Json(),
                         logger),
-                    logger);
+                    logger,
+                    GetBufferSize(parameters));
             }
             throw new UnsupportedModeException(mode);
         }

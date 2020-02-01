@@ -19,7 +19,7 @@ namespace Backup
             new Dictionary<string, List<string>>
             {
                 { ADDRESS_KEY, new List<string>() { "127.0.0.1" } },
-                { PORT_KEY, new List<string>() { "6000" } },
+                { PORT_KEY, new List<string>() { "7000" } },
                 { BUFFER_KEY, new List<string>() { "10M" } },
             };
 

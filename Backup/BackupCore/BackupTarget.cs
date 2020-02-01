@@ -9,12 +9,14 @@ namespace BackupCore
     {
         private readonly ITargetCommunicator _communicator;
         private readonly ILogger _logger;
+        private readonly int _bufferSize;
 
         public BackupTarget(ITargetCommunicator communicator,
-            ILogger logger)
+            ILogger logger, int bufferSize)
         {
             _communicator = communicator;
             _logger = logger;
+            _bufferSize = bufferSize;
         }
 
         public void MakeBackup(Directory target)
@@ -115,7 +117,7 @@ namespace BackupCore
             File sourceFile = inSource as File;
             File targetFile = inTarget as File;
             _logger.Write($"Checking checksum for {sourceFile.Path}");
-            if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32()))
+            if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32(_bufferSize)))
             {
                 _logger.Write($"Downloanding {sourceFile.Path}");
                 _communicator.ReceiveFile(sourceFile.Path, inTarget.Path, sourceFile.Attributes);
