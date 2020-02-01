@@ -91,7 +91,7 @@ namespace Backup
         {
             string port = "";
             if (GetFromArgs(args, PORT_INDEX, out string value))
-                port =  value;
+                port = value;
             else
                 port = GetFromConsole("Port");
 

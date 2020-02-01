@@ -1,4 +1,4 @@
-﻿using BackupCore;
+using BackupCore;
 using Communication.Serialization;
 using FilesystemModel;
 using System.Net.Sockets;
@@ -15,7 +15,7 @@ namespace Communication
         {
             _socket.Bind(_endPoint);
             _socket.Listen(1);
-            _logger.Write($"Listening on {_endPoint.Address}:{_endPoint.Port}");
+            _logger.Write($"Listening on {_endPoint}");
         }
 
         public Directory GetDirectory()
@@ -73,6 +73,7 @@ namespace Communication
                     total += received;
                     stream.Write(buffer, 0, received);   
                 }
+                _logger.ResetProgress();
             }
         }
 

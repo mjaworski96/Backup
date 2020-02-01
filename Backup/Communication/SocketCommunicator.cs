@@ -38,11 +38,8 @@ namespace Communication
             byte[] buffer = new byte[_bufferSize];
             do
             {
-                int received = _socket.Receive(buffer);
-                for (int i = 0; i < received; i++)
-                {
-                    bytes.Add(buffer[i]);
-                }
+                _socket.Receive(buffer);
+                bytes.AddRange(buffer);
             } while (_socket.Available > 0);
             SendAck();
             return _serialization.Deserialize<T>(bytes.ToArray());

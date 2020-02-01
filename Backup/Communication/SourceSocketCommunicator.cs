@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using BackupCore;
 using Communication.Serialization;
 using FilesystemModel;
@@ -16,7 +16,7 @@ namespace Communication
             ILogger logger) : base(address, port, bufferSize, serialization, logger)
         {
             _socket.Connect(_endPoint);
-            _logger.Write($"Connecting to {_endPoint.Address}:{_endPoint.Port}");
+            _logger.Write($"Connecting to {_endPoint}");
         }
 
         public Request GetRequest()
@@ -55,6 +55,7 @@ namespace Communication
 						_socket.Send(buffer, count, SocketFlags.None);
 						ReceiveAck();
 					}
+                    _logger.ResetProgress();
 				}
 			}
 			catch(Exception)
