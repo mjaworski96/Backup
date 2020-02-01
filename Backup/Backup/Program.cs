@@ -4,25 +4,29 @@ using Communication.Serialization;
 using System;
 using FilesystemModel;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Linq;
 
 namespace Backup
 {
     public class Program
     {
-        private const int MODE_INDEX = 0;
-        private const int IP_INDEX = 1;
-        private const int PORT_INDEX = 2;
-        private const int BUFFER_SIZE_INDEX = 3;
-        private const int FILES_INDEX = 4;
+        private const string MODE_KEY = "-m";
+        private const string ADDRESS_KEY = "-a";
+        private const string PORT_KEY = "-p";
+        private const string BUFFER_KEY = "-bs";
+        private const string FILES_KEY = "-f";
 
         public static void Main(string[] args)
         {
             try
             {
-                string mode = GetMode(args);
-                using (IBackup backup = GetBackup(args, mode))
+                ParametersHandler parameters = new ParametersHandler(args, Defaults.DEFAULTS_PARAMS);
+                var directory = GetDirectory(parameters);
+                using (IBackup backup = GetBackup(parameters))
                 {
-                    backup.MakeBackup(GetDirectory(args, mode));
+                    backup.MakeBackup(directory);
                 }
             }
             catch (Exception e)
@@ -32,30 +36,6 @@ namespace Backup
             }
         }
 
-        private static bool GetFromArgs(string[] args, int index, out string value)
-        {
-            if (args.Length > index)
-            {
-                value = args[index];
-                return true;
-            }
-            value = null;
-            return false;
-        }
-        private static bool GetFromArgs(string[] args, int startIndex, out string[] values)
-        {
-            if (args.Length > startIndex)
-            {
-                values = new string[args.Length - startIndex];
-                for (int i = 0; i < values.Length; i++)
-                {
-                    values[i] = args[startIndex + i];
-                }
-                return true;
-            }
-            values = null;
-            return false;
-        }
         private static string GetFromConsole(string message)
         {
             Console.Write($"{message}: ");
@@ -73,104 +53,84 @@ namespace Backup
                     yield return value;
             } while (hasValue);
         }
-        private static string GetMode(string[] args)
+        private static string GetMode(ParametersHandler parameters)
         {
-            if (GetFromArgs(args, MODE_INDEX, out string value))
-                return value;
-            else
-                return GetFromConsole("Mode (source/target)");
+            return parameters.GetParameter(MODE_KEY, Defaults.MODE_MESSAGE);
         }
-        private static string GetIp(string[] args)
+        private static string GetIp(ParametersHandler parameters)
         {
-            if (GetFromArgs(args, IP_INDEX, out string value))
-                return value;
-            else
-                return GetFromConsole("Address IP");
+            return parameters.GetParameter(ADDRESS_KEY, Defaults.ADDRESS_MESSAGE);
         }
-        private static int GetPort(string[] args)
+        private static int GetPort(ParametersHandler parameters)
         {
-            string port = "";
-            if (GetFromArgs(args, PORT_INDEX, out string value))
-                port = value;
-            else
-                port = GetFromConsole("Port");
-
+            string port = parameters.GetParameter(PORT_KEY, Defaults.PORT_MESSAGE);
             return int.Parse(port);
         }
-        private static int GetBufferSize(string[] args)
+        private static int GetBufferSize(ParametersHandler parameters)
         {
-            string bufferSize = "";
-            if (GetFromArgs(args, BUFFER_SIZE_INDEX, out string value))
-                bufferSize = value;
-            else
-                bufferSize = GetFromConsole("Buffer size");
-
+            string bufferSize = parameters.GetParameter(BUFFER_KEY, Defaults.BUFFER_SIZE_MESSAGE);
             return int.Parse(bufferSize);
         }
-        private static string GetTargetDirectoryPath(string[] args)
+        private static string GetTargetDirectoryPath(ParametersHandler parameters)
         {
-            if (GetFromArgs(args, FILES_INDEX, out string value))
-                return value;
-            else
-                return GetFromConsole("Target directory");
+            return parameters.GetParameter(FILES_KEY, Defaults.TARGET_DIRECTORY_MESSAGE);
         }
-        private static IEnumerable<string> GetSourceDirectoryContentPath(string[] args)
+        private static IEnumerable<string> GetSourceDirectoryContentPath(ParametersHandler parameters)
         {
-            if (GetFromArgs(args, FILES_INDEX, out string[] values))
-                return values;
-            else
-                return GetMultipleValuesFromConsole("File/directory (empty line to exit)");
+            return parameters.GetParameters(FILES_KEY, Defaults.SOURCE_FILES_MESSAGE);
         }
-        private static Directory GetTargetDirectory(string[] args)
+        private static Directory GetTargetDirectory(ParametersHandler parameters)
         {
-            return new Directory(GetTargetDirectoryPath(args), true);
+            return new Directory(GetTargetDirectoryPath(parameters), true);
         }
 
-        private static Directory GetSourceDirectory(string[] args)
+        private static Directory GetSourceDirectory(ParametersHandler parameters)
         {
             VirtualDirectory directory = new VirtualDirectory();
 
-            foreach (var item in GetSourceDirectoryContentPath(args))
+            foreach (var item in GetSourceDirectoryContentPath(parameters))
             {
                 directory.Add(FileFactory.Create(item, false));
             }
 
             return directory;
         }
-        private static Directory GetDirectory(string[] args, string mode)
+        private static Directory GetDirectory(ParametersHandler parameters)
         {
-            if (mode == "source")
-                return GetSourceDirectory(args);
-            else if (mode == "target")
-                return GetTargetDirectory(args);
+            var mode = GetMode(parameters);
+            if (mode == Defaults.MODE_SOURCE)
+                return GetSourceDirectory(parameters);
+            else if (mode == Defaults.MODE_TARGET)
+                return GetTargetDirectory(parameters);
             else
                 throw new UnsupportedModeException(mode);
         }
 
-        private static IBackup GetBackup(string[] args, string mode)
+        private static IBackup GetBackup(ParametersHandler parameters)
         {
-            var logger = new ConsoleLogger();
-            if (mode == "target")
+            var mode = GetMode(parameters);
+            ILogger logger = new ConsoleLogger();
+
+            if (mode == Defaults.MODE_TARGET)
             {
                 return new BackupTarget(
                     new TargetSocketCommunicator(
-                        GetIp(args),
-                        GetPort(args),
-                        GetBufferSize(args),
+                        GetIp(parameters),
+                        GetPort(parameters),
+                        GetBufferSize(parameters),
                         new Json(),
                         logger),
                     logger);
             }
-            else if (mode == "source")
+            else if (mode == Defaults.MODE_SOURCE)
             {
                 return new BackupSource(
                     new SourceSocketCommunicator(
-                        GetIp(args),
-                        GetPort(args),
-                        GetBufferSize(args),
+                        GetIp(parameters),
+                        GetPort(parameters),
+                        GetBufferSize(parameters),
                         new Json(),
-                        logger
-                        ),
+                        logger),
                     logger);
             }
             throw new UnsupportedModeException(mode);
