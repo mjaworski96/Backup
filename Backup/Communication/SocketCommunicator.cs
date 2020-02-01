@@ -36,30 +36,44 @@ namespace Communication
         {
             List<byte> bytes = new List<byte>();
             byte[] buffer = new byte[_bufferSize];
+            long total = 0;
+            long size = ReceiveSize();
             do
             {
-                _socket.Receive(buffer);
+                total += _socket.Receive(buffer);
                 bytes.AddRange(buffer);
-            } while (_socket.Available > 0);
+            } while (total < size);
             SendAck();
             return _serialization.Deserialize<T>(bytes.ToArray());
         }
         protected void Send<T>(T obj)
         {
             byte[] content = _serialization.Serialize(obj);
+            SendSize(content.Length);
             _socket.Send(content);
 			ReceiveAck();
         }
 		protected void SendAck() 
 		{
-			byte[] content = _serialization.Serialize(Message.ACK);
+			byte[] content = BitConverter.GetBytes((int)Message.ACK);
 			_socket.Send(content);
 		}
 		protected void ReceiveAck() 
 		{
-			byte[] buffer = new byte[1];
-			_socket.Receive(buffer, 1, SocketFlags.None);
+			byte[] buffer = new byte[sizeof(Message)];
+			_socket.Receive(buffer, sizeof(Message), SocketFlags.None);
 		}
+        protected void SendSize(long size)
+        { 
+            byte[] content = BitConverter.GetBytes(size);
+            _socket.Send(content);
+        }
+        protected long ReceiveSize()
+        {
+            byte[] buffer = new byte[sizeof(long)];
+            _socket.Receive(buffer, sizeof(long), SocketFlags.None);
+            return BitConverter.ToInt64(buffer, 0);
+        }
         public void Dispose()
         {
             _socket.Dispose();
