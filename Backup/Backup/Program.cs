@@ -12,12 +12,6 @@ namespace Backup
 {
     public class Program
     {
-        private const string MODE_KEY = "-m";
-        private const string ADDRESS_KEY = "-a";
-        private const string PORT_KEY = "-p";
-        private const string BUFFER_KEY = "-bs";
-        private const string FILES_KEY = "-f";
-
         public static void Main(string[] args)
         {
             try
@@ -36,48 +30,31 @@ namespace Backup
             }
         }
 
-        private static string GetFromConsole(string message)
-        {
-            Console.Write($"{message}: ");
-            return Console.ReadLine();
-        }
-        private static IEnumerable<string> GetMultipleValuesFromConsole(string message)
-        {
-            bool hasValue = false;
-            do
-            {
-                Console.Write($"{message}: ");
-                string value = Console.ReadLine();
-                hasValue = value != "";
-                if (hasValue)
-                    yield return value;
-            } while (hasValue);
-        }
         private static string GetMode(ParametersHandler parameters)
         {
-            return parameters.GetParameter(MODE_KEY, Defaults.MODE_MESSAGE);
+            return parameters.GetParameter(Defaults.MODE_KEY, Defaults.MODE_MESSAGE);
         }
         private static string GetIp(ParametersHandler parameters)
         {
-            return parameters.GetParameter(ADDRESS_KEY, Defaults.ADDRESS_MESSAGE);
+            return parameters.GetParameter(Defaults.ADDRESS_KEY, Defaults.ADDRESS_MESSAGE);
         }
         private static int GetPort(ParametersHandler parameters)
         {
-            string port = parameters.GetParameter(PORT_KEY, Defaults.PORT_MESSAGE);
+            string port = parameters.GetParameter(Defaults.PORT_KEY, Defaults.PORT_MESSAGE);
             return int.Parse(port);
         }
         private static int GetBufferSize(ParametersHandler parameters)
         {
-            string bufferSize = parameters.GetParameter(BUFFER_KEY, Defaults.BUFFER_SIZE_MESSAGE);
+            string bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Defaults.BUFFER_SIZE_MESSAGE);
             return Parser.Parse(bufferSize);
         }
         private static string GetTargetDirectoryPath(ParametersHandler parameters)
         {
-            return parameters.GetParameter(FILES_KEY, Defaults.TARGET_DIRECTORY_MESSAGE);
+            return parameters.GetParameter(Defaults.FILES_KEY, Defaults.TARGET_DIRECTORY_MESSAGE);
         }
         private static IEnumerable<string> GetSourceDirectoryContentPath(ParametersHandler parameters)
         {
-            return parameters.GetParameters(FILES_KEY, Defaults.SOURCE_FILES_MESSAGE);
+            return parameters.GetParameters(Defaults.FILES_KEY, Defaults.SOURCE_FILES_MESSAGE);
         }
         private static Directory GetTargetDirectory(ParametersHandler parameters)
         {
