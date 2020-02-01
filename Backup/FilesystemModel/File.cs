@@ -14,15 +14,15 @@ namespace FilesystemModel
         public uint CalculateCrc32(int bufferSize)
         {
             uint crc32 = 0;
-            byte[] buffer = new byte[bufferSize];
-
             using (Stream stream =
                 new FileStream(Path, FileMode.Open, FileAccess.Read))
             {
+                byte[] buffer = stream.Length > bufferSize ?
+                    new byte[bufferSize] : new byte[stream.Length];
                 while (stream.Position != stream.Length)
                 {
-                    int count = stream.Read(buffer, 0, bufferSize);
-                    Crc32CAlgorithm.Append(crc32, buffer, 0, count);
+                    stream.Read(buffer, 0, buffer.Length);
+                    Crc32CAlgorithm.Append(crc32, buffer);
                 }
             }
             return crc32;

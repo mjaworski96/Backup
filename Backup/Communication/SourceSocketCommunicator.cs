@@ -42,15 +42,18 @@ namespace Communication
         {
             try
 			{
-				byte[] buffer = new byte[_bufferSize];
+				//byte[] buffer = new byte[_bufferSize];
                 using (System.IO.Stream stream = 
                     new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				{
-					Send(stream.Length);
+
+                    byte[] buffer = stream.Length > _bufferSize ?
+                        new byte[_bufferSize] : new byte[stream.Length];
+                    Send(stream.Length);
                     _logger.MaxProgress = stream.Length;
 					while(stream.Position != stream.Length)
 					{
-						int count = stream.Read(buffer, 0, _bufferSize);
+						int count = stream.Read(buffer, 0, buffer.Length);
                         _logger.UpdateProgress(count);
 						_socket.Send(buffer, count, SocketFlags.None);
 						ReceiveAck();

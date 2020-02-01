@@ -64,7 +64,8 @@ namespace Communication
             using (System.IO.Stream stream = new System.IO.FileStream(filename, System.IO.FileMode.OpenOrCreate))
             {
                 System.IO.File.SetAttributes(filename, attributes);
-                byte[] buffer = new byte[_bufferSize];
+               byte[] buffer = size > _bufferSize ?
+                    new byte[_bufferSize] : new byte[size];
                 while (total < size)
                 {
                     int received = _socket.Receive(buffer);
