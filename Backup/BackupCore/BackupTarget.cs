@@ -8,10 +8,13 @@ namespace BackupCore
     public class BackupTarget: IBackup
     {
         private readonly ITargetCommunicator _communicator;
+        private readonly ILogger _logger;
 
-        public BackupTarget(ITargetCommunicator communicator)
+        public BackupTarget(ITargetCommunicator communicator,
+            ILogger logger)
         {
             _communicator = communicator;
+            _logger = logger;
         }
 
         public void MakeBackup(Directory target)
@@ -23,7 +26,7 @@ namespace BackupCore
         private Directory GetSource()
         {
             Directory source = _communicator.GetDirectory();
-            Console.WriteLine(source);
+            _logger.Write(source);
             return source;
         }
         private void MakeBackup(Directory source, Directory target, string rootDirectory)
@@ -54,7 +57,7 @@ namespace BackupCore
                 }
                 else if (item.Type == FileType.FILE)
                 {
-                    Console.WriteLine($"Downloanding {item.Path}");
+                    _logger.Write($"Downloanding {item.Path}");
                     _communicator.ReceiveFile(item.Path, path, item.Attributes);
                 }
             }
@@ -68,13 +71,13 @@ namespace BackupCore
                 {
                     Directory directory = item as Directory;
                     HandleDeletedFiles(directory.Content, path);
-                    Console.WriteLine($"Deleting {path}");
+                    _logger.Write($"Deleting {path}");
                     SetNormalAttribute(path);
                     System.IO.Directory.Delete(path);
                 }
                 else if (item.Type == FileType.FILE)
                 {
-                    Console.WriteLine($"Deleting {path}");
+                    _logger.Write($"Deleting {path}");
                     SetNormalAttribute(path);
                     System.IO.File.Delete(path);
                 }
@@ -111,10 +114,10 @@ namespace BackupCore
         {
             File sourceFile = inSource as File;
             File targetFile = inTarget as File;
-            Console.WriteLine($"Checking checksum for {sourceFile.Path}");
+            _logger.Write($"Checking checksum for {sourceFile.Path}");
             if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32()))
             {
-                Console.WriteLine($"Downloanding {sourceFile.Path}");
+                _logger.Write($"Downloanding {sourceFile.Path}");
                 _communicator.ReceiveFile(sourceFile.Path, inTarget.Path, sourceFile.Attributes);
             }
             if(sourceFile.Attributes != targetFile.Attributes)

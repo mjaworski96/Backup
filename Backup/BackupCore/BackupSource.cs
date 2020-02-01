@@ -6,15 +6,18 @@ namespace BackupCore
     public class BackupSource: IBackup
     {
         private readonly ISourceCommunicator _communicator;
+        private readonly ILogger _logger;
 
-        public BackupSource(ISourceCommunicator communicator)
+        public BackupSource(ISourceCommunicator communicator,
+            ILogger logger)
         {
             _communicator = communicator;
+            _logger = logger;
         }
 
         public void MakeBackup(Directory directory)
         {
-            System.Console.WriteLine(directory);
+            _logger.Write(directory);
             _communicator.SendDirectory(directory);
             HandleRequests(directory);
         }
@@ -42,7 +45,7 @@ namespace BackupCore
         private void GetCrc32(Directory directory)
         {
             string filename = _communicator.GetFilename();
-            System.Console.WriteLine($"Calculating checksum for {filename}");
+            _logger.Write($"Calculating checksum for {filename}");
             File file = directory.Find(filename) as File;
             _communicator.SendCrc32(file.CalculateCrc32());
         }
@@ -50,7 +53,7 @@ namespace BackupCore
         private void GetFile(Directory directory)
         {
             string filename = _communicator.GetFilename();
-            System.Console.WriteLine($"Uploading {filename}");
+            _logger.Write($"Uploading {filename}");
             File file = directory.Find(filename) as File;
             _communicator.SendFile(file.Path);
         }

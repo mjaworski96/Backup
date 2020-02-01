@@ -12,9 +12,11 @@ namespace Communication
         public SourceSocketCommunicator(string address,
             int port,
             int bufferSize,
-            ISerialization serialization) : base(address, port, bufferSize, serialization)
+            ISerialization serialization,
+            ILogger logger) : base(address, port, bufferSize, serialization, logger)
         {
             _socket.Connect(_endPoint);
+            _logger.Write($"Connecting to {_endPoint.Address}:{_endPoint.Port}");
         }
 
         public Request GetRequest()
@@ -45,9 +47,11 @@ namespace Communication
                     new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				{
 					Send(stream.Length);
+                    _logger.MaxProgress = stream.Length;
 					while(stream.Position != stream.Length)
 					{
 						int count = stream.Read(buffer, 0, _bufferSize);
+                        _logger.UpdateProgress(count);
 						_socket.Send(buffer, count, SocketFlags.None);
 						ReceiveAck();
 					}

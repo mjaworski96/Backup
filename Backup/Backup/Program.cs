@@ -149,6 +149,7 @@ namespace Backup
 
         private static IBackup GetBackup(string[] args, string mode)
         {
+            var logger = new ConsoleLogger();
             if (mode == "target")
             {
                 return new BackupTarget(
@@ -156,7 +157,9 @@ namespace Backup
                         GetIp(args),
                         GetPort(args),
                         GetBufferSize(args),
-                        new Json()));
+                        new Json(),
+                        logger),
+                    logger);
             }
             else if (mode == "source")
             {
@@ -165,7 +168,10 @@ namespace Backup
                         GetIp(args),
                         GetPort(args),
                         GetBufferSize(args),
-                        new Json()));
+                        new Json(),
+                        logger
+                        ),
+                    logger);
             }
             throw new UnsupportedModeException(mode);
         }

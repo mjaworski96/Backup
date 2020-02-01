@@ -10,10 +10,12 @@ namespace Communication
         public TargetSocketCommunicator(string address,
             int port,
             int bufferSize,
-            ISerialization serialization) : base(address, port, bufferSize, serialization)
+            ISerialization serialization,
+            ILogger logger) : base(address, port, bufferSize, serialization, logger)
         {
             _socket.Bind(_endPoint);
             _socket.Listen(1);
+            _logger.Write($"Listening on {_endPoint.Address}:{_endPoint.Port}");
         }
 
         public Directory GetDirectory()
@@ -57,6 +59,8 @@ namespace Communication
             System.IO.FileAttributes attributes)
         {
             long total = 0;
+            _logger.MaxProgress = size;
+
             using (System.IO.Stream stream = new System.IO.FileStream(filename, System.IO.FileMode.OpenOrCreate))
             {
                 System.IO.File.SetAttributes(filename, attributes);
@@ -64,6 +68,7 @@ namespace Communication
                 while (total < size)
                 {
                     int received = _socket.Receive(buffer);
+                    _logger.UpdateProgress(received);
                     SendAck();
                     total += received;
                     stream.Write(buffer, 0, received);   

@@ -1,4 +1,5 @@
-﻿using Communication.Serialization;
+﻿using BackupCore;
+using Communication.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -9,13 +10,15 @@ namespace Communication
     public abstract class SocketCommunicator: IDisposable
     {
         protected Socket _socket;
-        protected IPEndPoint _endPoint;
-        protected ISerialization _serialization;
-        protected int _bufferSize;
+        protected readonly IPEndPoint _endPoint;
+        protected readonly ISerialization _serialization;
+        protected readonly int _bufferSize;
+        protected readonly ILogger _logger;
         protected SocketCommunicator(string address, 
             int port,
             int bufferSize,
-            ISerialization serialization)
+            ISerialization serialization,
+            ILogger logger)
         {
             if (bufferSize < 1)
                 throw new InvalidBufferSizeException("Buffer size must be greater than 0");
@@ -26,6 +29,7 @@ namespace Communication
 
             _serialization = serialization;
             _bufferSize = bufferSize;
+            _logger = logger;
         }
 
         protected T Receive<T>()

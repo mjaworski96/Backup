@@ -8,6 +8,7 @@ namespace FilesystemModel
 {
     public class Directory : FileBase
     {
+        public static string PREFIX_GROSS = "";
         protected List<FileBase> content;
 
         public Directory(string path, bool createDirectoryIfNotExists) : base(path)
@@ -21,7 +22,7 @@ namespace FilesystemModel
             foreach (var file in content)
             {
                 stringBuilder.Append('\n');
-                stringBuilder.Append(file.ToString(prefix + "---"));
+                stringBuilder.Append(file.ToString(prefix + PREFIX_GROSS));
             }
 
             return stringBuilder.ToString();
