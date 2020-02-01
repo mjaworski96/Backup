@@ -69,7 +69,7 @@ namespace Backup
         private static int GetBufferSize(ParametersHandler parameters)
         {
             string bufferSize = parameters.GetParameter(BUFFER_KEY, Defaults.BUFFER_SIZE_MESSAGE);
-            return int.Parse(bufferSize);
+            return Parser.Parse(bufferSize);
         }
         private static string GetTargetDirectoryPath(ParametersHandler parameters)
         {
