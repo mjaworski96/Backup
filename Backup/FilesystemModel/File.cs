@@ -1,4 +1,4 @@
-﻿using Common;
+using Common;
 using Force.Crc32;
 using System.IO;
 
@@ -25,7 +25,7 @@ namespace FilesystemModel
                 {
                     int count = stream.Read(buffer, 0, buffer.Length);
                     logger.UpdateProgressBar(count);
-                    Crc32CAlgorithm.Append(crc32, buffer, 0, count);
+                    crc32 = Crc32CAlgorithm.Append(crc32, buffer, 0, count);
                 }
                 logger.ResetProgressBar();
             }
