@@ -21,9 +21,9 @@ namespace Communication
 
         public Request GetRequest()
         {
-            byte[] buffer = new byte[1];
-			_socket.Receive(buffer, 1, SocketFlags.None);
-			return _serialization.Deserialize<Request>(buffer);
+            byte[] buffer = new byte[sizeof(Request)];
+			_socket.Receive(buffer, SocketFlags.None);
+            return (Request)BitConverter.ToInt32(buffer, 0);
         }
         public string GetFilename()
         {

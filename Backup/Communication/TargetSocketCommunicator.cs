@@ -2,6 +2,7 @@ using BackupCore;
 using Common;
 using Communication.Serialization;
 using FilesystemModel;
+using System;
 using System.Net.Sockets;
 
 namespace Communication
@@ -86,7 +87,7 @@ namespace Communication
 
 		private void SendRequest(Request request) 
 		{
-			byte[] content = _serialization.Serialize(request);
+			byte[] content = BitConverter.GetBytes((int)request);
 			_socket.Send(content);
 		}
         
