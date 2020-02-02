@@ -42,11 +42,9 @@ namespace Communication
         {
             try
 			{
-				//byte[] buffer = new byte[_bufferSize];
                 using (System.IO.Stream stream = 
                     new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 				{
-
                     byte[] buffer = stream.Length > _bufferSize ?
                         new byte[_bufferSize] : new byte[stream.Length];
                     Send(stream.Length);

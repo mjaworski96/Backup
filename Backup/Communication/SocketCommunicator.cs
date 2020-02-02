@@ -35,15 +35,16 @@ namespace Communication
 
         protected T Receive<T>()
         {
-            List<byte> bytes = new List<byte>();
-            byte[] buffer = new byte[_bufferSize];
-            long total = 0;
+            List<byte> bytes = new List<byte>();            
+            long totalRead = 0;
             long size = ReceiveSize();
+            byte[] buffer = size > _bufferSize ?
+                    new byte[_bufferSize] : new byte[size];
             do
             {
-                total += _socket.Receive(buffer);
+                totalRead += _socket.Receive(buffer);
                 bytes.AddRange(buffer);
-            } while (total < size);
+            } while (totalRead < size);
             SendAck();
             return _serialization.Deserialize<T>(bytes.ToArray());
         }

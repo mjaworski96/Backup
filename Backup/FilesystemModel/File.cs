@@ -25,7 +25,7 @@ namespace FilesystemModel
                 {
                     int count = stream.Read(buffer, 0, buffer.Length);
                     logger.UpdateProgress(count);
-                    Crc32CAlgorithm.Append(crc32, buffer);
+                    Crc32CAlgorithm.Append(crc32, buffer, 0, count);
                 }
                 logger.ResetProgress();
             }
