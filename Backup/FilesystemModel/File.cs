@@ -24,10 +24,10 @@ namespace FilesystemModel
                 while (stream.Position != stream.Length)
                 {
                     int count = stream.Read(buffer, 0, buffer.Length);
-                    logger.UpdateProgress(count);
+                    logger.UpdateProgressBar(count);
                     Crc32CAlgorithm.Append(crc32, buffer, 0, count);
                 }
-                logger.ResetProgress();
+                logger.ResetProgressBar();
             }
             return crc32;
         }

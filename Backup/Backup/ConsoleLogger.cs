@@ -6,6 +6,9 @@ namespace Backup
 {
     public class ConsoleLogger : ILogger
     {
+        private const char PROGRESS_BAR_FULL = '|';
+        private const char PROGRESS_BAR_EMPTY = ' ';
+
         private long _currentProgress = 0;
         public long MaxProgress { private get; set; }
 
@@ -19,7 +22,7 @@ namespace Backup
             Console.WriteLine(message);
         }
 
-        public void UpdateProgress(long progressGross)
+        public void UpdateProgressBar(long progressGross)
         {
             int width = Console.WindowWidth;
             Console.SetCursorPosition(0, Console.CursorTop);
@@ -29,12 +32,12 @@ namespace Backup
             int progressFilled = (int)(percentProgress * progressBarWidth);
 
             Console.Write('[');
-            WriteCharacter('|', progressFilled);
-            WriteCharacter(' ', progressBarWidth - progressFilled);
+            WriteCharacter(PROGRESS_BAR_FULL, progressFilled);
+            WriteCharacter(PROGRESS_BAR_EMPTY, progressBarWidth - progressFilled);
             Console.Write((int)(100 * percentProgress));
             Console.Write("%]");
         }
-        public void ResetProgress()
+        public void ResetProgressBar()
         {
             _currentProgress = 0;
         }

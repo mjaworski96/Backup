@@ -4,8 +4,8 @@
     {
         long MaxProgress { set; }
         void Write(object message);
-        void UpdateProgress(long progressGross);
-        void ResetProgress();
+        void UpdateProgressBar(long progressGross);
+        void ResetProgressBar();
         
     }
 }

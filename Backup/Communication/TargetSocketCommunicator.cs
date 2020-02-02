@@ -71,12 +71,12 @@ namespace Communication
                 while (total < size)
                 {
                     int received = _socket.Receive(buffer);
-                    _logger.UpdateProgress(received);
+                    _logger.UpdateProgressBar(received);
                     SendAck();
                     total += received;
                     stream.Write(buffer, 0, received);   
                 }
-                _logger.ResetProgress();
+                _logger.ResetProgressBar();
             }
         }
 

@@ -52,11 +52,11 @@ namespace Communication
 					while(stream.Position != stream.Length)
 					{
 						int count = stream.Read(buffer, 0, buffer.Length);
-                        _logger.UpdateProgress(count);
+                        _logger.UpdateProgressBar(count);
 						_socket.Send(buffer, count, SocketFlags.None);
 						ReceiveAck();
 					}
-                    _logger.ResetProgress();
+                    _logger.ResetProgressBar();
 				}
 			}
 			catch(Exception)
