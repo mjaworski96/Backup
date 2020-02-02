@@ -1,12 +1,9 @@
-﻿using FilesystemModel;
-
-namespace BackupCore
+﻿namespace Common
 {
     public interface ILogger
     {
         long MaxProgress { set; }
-        void Write(string message);
-        void Write(Directory directory);
+        void Write(object message);
         void UpdateProgress(long progressGross);
         void ResetProgress();
         

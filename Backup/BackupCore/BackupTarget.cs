@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Common;
 using FilesystemModel;
 using FilesystemModel.Extensions;
 
@@ -117,7 +118,7 @@ namespace BackupCore
             File sourceFile = inSource as File;
             File targetFile = inTarget as File;
             _logger.Write($"Checking checksum for {sourceFile.Path}");
-            if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32(_bufferSize)))
+            if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32(_bufferSize, _logger)))
             {
                 _logger.Write($"Downloanding {sourceFile.Path}");
                 _communicator.ReceiveFile(sourceFile.Path, inTarget.Path, sourceFile.Attributes);

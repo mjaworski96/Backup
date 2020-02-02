@@ -1,4 +1,5 @@
-﻿using Force.Crc32;
+﻿using Common;
+using Force.Crc32;
 using System.IO;
 
 namespace FilesystemModel
@@ -11,7 +12,7 @@ namespace FilesystemModel
 
         public override FileType Type => FileType.FILE;
 
-        public uint CalculateCrc32(int bufferSize)
+        public uint CalculateCrc32(int bufferSize, ILogger logger)
         {
             uint crc32 = 0;
             using (Stream stream =
@@ -19,11 +20,14 @@ namespace FilesystemModel
             {
                 byte[] buffer = stream.Length > bufferSize ?
                     new byte[bufferSize] : new byte[stream.Length];
+                logger.MaxProgress = stream.Length;
                 while (stream.Position != stream.Length)
                 {
-                    stream.Read(buffer, 0, buffer.Length);
+                    int count = stream.Read(buffer, 0, buffer.Length);
+                    logger.UpdateProgress(count);
                     Crc32CAlgorithm.Append(crc32, buffer);
                 }
+                logger.ResetProgress();
             }
             return crc32;
         }

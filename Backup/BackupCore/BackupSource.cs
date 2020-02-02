@@ -1,4 +1,5 @@
-﻿using FilesystemModel;
+﻿using Common;
+using FilesystemModel;
 using FilesystemModel.Extensions;
 
 namespace BackupCore
@@ -49,7 +50,7 @@ namespace BackupCore
             string filename = _communicator.GetFilename();
             _logger.Write($"Calculating checksum for {filename}");
             File file = directory.Find(filename) as File;
-            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize));
+            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger));
         }
 
         private void GetFile(Directory directory)

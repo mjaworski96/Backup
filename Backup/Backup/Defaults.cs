@@ -20,7 +20,7 @@ namespace Backup
             {
                 { ADDRESS_KEY, new List<string>() { "127.0.0.1" } },
                 { PORT_KEY, new List<string>() { "7000" } },
-                { BUFFER_KEY, new List<string>() { "10M" } },
+                { BUFFER_KEY, new List<string>() { "128M" } },
             };
 
         public const string MODE_MESSAGE = "Mode (source/target)";

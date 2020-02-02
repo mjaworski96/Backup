@@ -1,4 +1,5 @@
 using BackupCore;
+using Common;
 using FilesystemModel;
 using System;
 
@@ -9,15 +10,14 @@ namespace Backup
         private long _currentProgress = 0;
         public long MaxProgress { private get; set; }
 
-        public void Write(string message)
-        {
-            Console.WriteLine(message);
-        }
-
-        public void Write(Directory directory)
+        public ConsoleLogger()
         {
             Directory.PREFIX_GROSS = "|   ";
-            Console.WriteLine(directory);
+        }
+
+        public void Write(object message)
+        {
+            Console.WriteLine(message);
         }
 
         public void UpdateProgress(long progressGross)
