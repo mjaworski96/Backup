@@ -22,7 +22,7 @@ If argument is mandatory but not specified (by user or from default values) prog
 # Buffer size
 Buffer size can be specifed with postfix.
 
-|Prefix|Multiplier|Example|Real value|
+|Postfix|Multiplier|Example|Real value|
 |------|----------|-------|----------|
 |(None)|1|2024|2KiB| 
 |k or K|1024|4k or 4K|4KiB|
