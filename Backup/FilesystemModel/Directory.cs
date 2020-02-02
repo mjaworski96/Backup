@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,7 +36,8 @@ namespace FilesystemModel
                 string[] files = System.IO.Directory.GetFileSystemEntries(Path, "*", SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
-                    yield return FileFactory.Create(file, false);
+                    if(!FileFactory.MustBeIgnored(file))
+                        yield return FileFactory.Create(file, false);
                 }
             }
         }

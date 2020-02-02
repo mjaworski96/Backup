@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Backup
 {
@@ -26,23 +25,30 @@ namespace Backup
             SingleParams = multi.Convert();
         }
 
-        public string GetParameter(string key, string consoleMessage)
+        public string GetParameter(string key, string consoleMessage, bool mandatory = true)
         {
             SingleParams.TryGetValue(key, out string value);
             if (string.IsNullOrEmpty(value))
             {
-                value = GetFromConsole(consoleMessage);
-                SingleParams.Add(key, value);
+                if (mandatory)
+                    value = GetFromConsole(consoleMessage);
+                else
+                    value = "";
+                SingleParams.AddOrUpdate(key, value);
             }
             return value;
         }
-        public List<string> GetParameters(string key, string consoleMessage)
+        public List<string> GetParameters(string key, string consoleMessage, bool mandatory = true)
         {
             MultiParams.TryGetValue(key, out List<string> value);
-            if (value == null || !value.Any())
+            if (!value?.Any() ?? true)
             {
-                value = GetMultipleValuesFromConsole(consoleMessage).ToList();
-                MultiParams.Add(key, value);
+                if (mandatory || (!mandatory && (!value?.Any() ?? false)))
+                    value = GetMultipleValuesFromConsole(consoleMessage).ToList();
+                    
+                else
+                    value = new List<string>();
+                MultiParams.AddOrUpdate(key, value);
             }
             return value;
         }
@@ -68,20 +74,21 @@ namespace Backup
     }
     static class DictionaryHelper
     {
-        public static List<string> SafeGet(this Dictionary<string, List<string>> dict,
-            string key)
+        public static TValue SafeGet<TKey, TValue>(this Dictionary<TKey, TValue> dict,
+            TKey key) where TValue: new ()
         {
             if (!dict.ContainsKey(key))
-                dict.Add(key, new List<string>());
+                dict.Add(key, new TValue());
             return dict[key];
         }
-        public static Dictionary<string, string> Convert(this Dictionary<string, List<string>> dict)
+        public static Dictionary<TKey, TKey> Convert<TKey, TValue>(
+            this Dictionary<TKey, TValue> dict) where TValue: List<TKey>
         {
-            var singleData = new Dictionary<string, string>();
+            var singleData = new Dictionary<TKey, TKey>();
 
             foreach (var item in dict)
             {
-                if(item.Value.Count == 1)
+                if (item.Value.Count == 1)
                 {
                     singleData.Add(item.Key, item.Value.First());
                 }
@@ -89,8 +96,8 @@ namespace Backup
 
             return singleData;
         }
-        public static void AddIfNotContainsKey(this Dictionary<string, List<string>> dict,
-            Dictionary<string, List<string>> defaultValues)
+        public static void AddIfNotContainsKey<TKey, TValue>(this Dictionary<TKey, TValue> dict,
+            Dictionary<TKey, TValue> defaultValues)
         {
             foreach (var item in defaultValues)
             {
@@ -99,6 +106,15 @@ namespace Backup
                     dict.Add(item.Key, item.Value);
                 }
             }
+        }
+        public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict,
+            TKey key, TValue value)
+        {
+
+            if (!dict.ContainsKey(key))
+                dict.Add(key, value);
+            else
+                dict[key] = value;
         }
     }
 }

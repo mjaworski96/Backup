@@ -10,6 +10,7 @@ namespace Backup
         public const string PORT_KEY = "-p";
         public const string BUFFER_KEY = "-bs";
         public const string FILES_KEY = "-f";
+        public const string IGNORE_KEY = "-i";
 
         public const string MODE_TARGET = "target";
         public const string MODE_SOURCE = "source";
@@ -20,7 +21,7 @@ namespace Backup
             {
                 { ADDRESS_KEY, new List<string>() { "127.0.0.1" } },
                 { PORT_KEY, new List<string>() { "7000" } },
-                { BUFFER_KEY, new List<string>() { "128M" } },
+                { BUFFER_KEY, new List<string>() { "10M" } },
             };
 
         public const string MODE_MESSAGE = "Mode (source/target)";
@@ -29,6 +30,7 @@ namespace Backup
         public const string BUFFER_SIZE_MESSAGE = "Buffer size" ;
         public const string TARGET_DIRECTORY_MESSAGE = "Target directory" ;
         public const string SOURCE_FILES_MESSAGE = "File/directory (empty line to exit)";
+        public const string IGNORE_FILES_MESSAGE = "Ignore file pattern (empty line to exit)";
                 
     }
 }

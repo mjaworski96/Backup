@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Backup
 {
@@ -19,6 +18,13 @@ namespace Backup
                 return Parse(size, GIGA);
 
             return int.Parse(size);
+        }
+        public static IEnumerable<Regex> Parse(IEnumerable<string> patterns)
+        {
+            foreach (var item in patterns)
+            {
+                yield return new Regex(item);
+            }
         }
         private static bool CanBeParsed(string size, string prefix)
         {

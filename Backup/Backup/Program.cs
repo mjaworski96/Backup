@@ -4,10 +4,9 @@ using Communication.Serialization;
 using System;
 using FilesystemModel;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Linq;
 using Common;
+using System.Text.RegularExpressions;
 
 namespace Backup
 {
@@ -20,6 +19,7 @@ namespace Backup
                 ParametersHandler parameters = new ParametersHandler(args, Defaults.DEFAULTS_PARAMS);
                 using (IBackup backup = GetBackup(parameters))
                 {
+                    FileFactory.IgnoreRegex = GetIgnoreRegex(parameters).ToList();
                     var directory = GetDirectory(parameters);
                     backup.MakeBackup(directory);
                 }
@@ -61,7 +61,11 @@ namespace Backup
         {
             return new Directory(GetTargetDirectoryPath(parameters), true);
         }
-
+        private static IEnumerable<Regex> GetIgnoreRegex(ParametersHandler parameters)
+        {
+            var patterns = parameters.GetParameters(Defaults.IGNORE_KEY, Defaults.IGNORE_FILES_MESSAGE, false);
+            return Parser.Parse(patterns);
+        }
         private static Directory GetSourceDirectory(ParametersHandler parameters)
         {
             VirtualDirectory directory = new VirtualDirectory();

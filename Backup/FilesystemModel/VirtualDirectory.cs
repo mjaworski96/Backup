@@ -24,8 +24,7 @@ namespace FilesystemModel
         {
             foreach (var file in content)
             {
-                file.Copy(
-                    BuildPath(target, file.Name));
+                file.Copy(BuildPath(target, file.Name));
             }
         }
     }

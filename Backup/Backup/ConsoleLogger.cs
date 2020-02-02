@@ -1,4 +1,3 @@
-using BackupCore;
 using Common;
 using FilesystemModel;
 using System;

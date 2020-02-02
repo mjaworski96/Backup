@@ -1,5 +1,4 @@
-﻿using BackupCore;
-using Common;
+﻿using Common;
 using Communication.Serialization;
 using System;
 using System.Collections.Generic;
