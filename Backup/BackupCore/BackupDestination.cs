@@ -5,13 +5,13 @@ using FilesystemModel.Extensions;
 
 namespace BackupCore
 {
-    public class BackupTarget: IBackup
+    public class BackupDestination: IBackup
     {
-        private readonly ITargetCommunicator _communicator;
+        private readonly IDestinationCommunicator _communicator;
         private readonly ILogger _logger;
         private readonly int _bufferSize;
 
-        public BackupTarget(ITargetCommunicator communicator,
+        public BackupDestination(IDestinationCommunicator communicator,
             ILogger logger, int bufferSize)
         {
             _communicator = communicator;
@@ -19,10 +19,10 @@ namespace BackupCore
             _bufferSize = bufferSize;
         }
 
-        public void MakeBackup(Directory target)
+        public void MakeBackup(Directory destination)
         {
             Directory source = GetSource();
-            MakeBackup(source, target, target.Path);
+            MakeBackup(source, destination, destination.Path);
             _communicator.Finish();
         }
         private Directory GetSource()
@@ -31,13 +31,13 @@ namespace BackupCore
             _logger.Write(source);
             return source;
         }
-        private void MakeBackup(Directory source, Directory target, string rootDirectory)
+        private void MakeBackup(Directory source, Directory destination, string rootDirectory)
         {
-            if(source.Attributes != target.Attributes)
+            if(source.Attributes != destination.Attributes)
             {
-                System.IO.File.SetAttributes(target.Path, source.Attributes);
+                System.IO.File.SetAttributes(destination.Path, source.Attributes);
             }
-            source.Compare(target,
+            source.Compare(destination,
                 out List<FileBase> newFiles,
                 out List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
                 out List<FileBase> deletedFiles);
@@ -104,41 +104,41 @@ namespace BackupCore
             }
         }
 
-        private void HandleSameTypes(FileBase inSource, FileBase inTarget, string rootDirectory)
+        private void HandleSameTypes(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
             if(inSource.Type == FileType.DIRECTORY)
-                HandleDirectory(inSource, inTarget, rootDirectory);
+                HandleDirectory(inSource, inDestination, rootDirectory);
             else
-                HandleFile(inSource, inTarget);
+                HandleFile(inSource, inDestination);
         }
 
-        private void HandleFile(FileBase inSource, FileBase inTarget)
+        private void HandleFile(FileBase inSource, FileBase inDestination)
         {
             File sourceFile = inSource as File;
-            File targetFile = inTarget as File;
+            File destinationFile = inDestination as File;
             _logger.Write($"Checking checksum for {sourceFile.Path}");
-            if (IsDiffrent(sourceFile.Path, targetFile.CalculateCrc32(_bufferSize, _logger)))
+            if (IsDiffrent(sourceFile.Path, destinationFile.CalculateCrc32(_bufferSize, _logger)))
             {
                 _logger.Write($"Downloanding {sourceFile.Path}");
-                _communicator.ReceiveFile(sourceFile.Path, inTarget.Path, sourceFile.Attributes);
+                _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }
-            if(sourceFile.Attributes != targetFile.Attributes)
+            if(sourceFile.Attributes != destinationFile.Attributes)
             {
-                System.IO.File.SetAttributes(inTarget.Path, sourceFile.Attributes);
+                System.IO.File.SetAttributes(inDestination.Path, sourceFile.Attributes);
             }
         }
 
-        private void HandleDirectory(FileBase inSource, FileBase inTarget, string rootDirectory)
+        private void HandleDirectory(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
             Directory sourceDir = inSource as Directory;
-            Directory targetDir = inTarget as Directory;
-            MakeBackup(sourceDir, targetDir,
+            Directory destinationDir = inDestination as Directory;
+            MakeBackup(sourceDir, destinationDir,
                 FileBase.BuildPath(rootDirectory, inSource.Name));
         }
 
-        private void HandleDifrentTypes(FileBase inSource, FileBase inTarget, string rootDirectory)
+        private void HandleDifrentTypes(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
-            HandleDeletedFiles(new List<FileBase> { inTarget }, rootDirectory);
+            HandleDeletedFiles(new List<FileBase> { inDestination }, rootDirectory);
             HandleNewFiles(new List<FileBase> { inSource }, rootDirectory);
         }
         private bool IsDiffrent(string fileRequestPath, uint crc32)

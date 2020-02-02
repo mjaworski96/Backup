@@ -28,7 +28,7 @@ namespace FilesystemModel
             }             
         }
         public abstract FileType Type { get; }
-        public abstract void Copy(string target);
+        public abstract void Copy(string destination);
         public virtual string ToString(string prefix)
         {
             return prefix + Name;

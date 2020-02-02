@@ -20,11 +20,11 @@ namespace FilesystemModel
         {
             Copy(Path);
         }
-        public override void Copy(string target)
+        public override void Copy(string destination)
         {
             foreach (var file in content)
             {
-                file.Copy(BuildPath(target, file.Name));
+                file.Copy(BuildPath(destination, file.Name));
             }
         }
     }

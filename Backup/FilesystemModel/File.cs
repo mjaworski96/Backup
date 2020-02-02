@@ -32,9 +32,9 @@ namespace FilesystemModel
             return crc32;
         }
 
-        public override void Copy(string target)
+        public override void Copy(string destination)
         {
-            System.IO.File.Copy(Path, target, true);
+            System.IO.File.Copy(Path, destination, true);
         }
 
         public override string ToString(string prefix)

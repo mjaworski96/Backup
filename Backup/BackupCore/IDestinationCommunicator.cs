@@ -5,7 +5,7 @@ using FilesystemModel;
 
 namespace BackupCore
 {
-    public interface ITargetCommunicator: IDisposable
+    public interface IDestinationCommunicator: IDisposable
     {
         Directory GetDirectory();
         void ReceiveFile(string fileRequestPath,

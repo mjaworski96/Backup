@@ -7,9 +7,9 @@ using System.Net.Sockets;
 
 namespace Communication
 {
-    public class TargetSocketCommunicator : SocketCommunicator, ITargetCommunicator
+    public class DestinationSocketCommunicator : SocketCommunicator, IDestinationCommunicator
     {
-        public TargetSocketCommunicator(string address,
+        public DestinationSocketCommunicator(string address,
             int port,
             int bufferSize,
             ISerialization serialization,

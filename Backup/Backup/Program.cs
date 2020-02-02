@@ -49,17 +49,17 @@ namespace Backup
             string bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Defaults.BUFFER_SIZE_MESSAGE);
             return Parser.Parse(bufferSize);
         }
-        private static string GetTargetDirectoryPath(ParametersHandler parameters)
+        private static string GetDestinationDirectoryPath(ParametersHandler parameters)
         {
-            return parameters.GetParameter(Defaults.FILES_KEY, Defaults.TARGET_DIRECTORY_MESSAGE);
+            return parameters.GetParameter(Defaults.FILES_KEY, Defaults.DESTINATION_DIRECTORY_MESSAGE);
         }
         private static IEnumerable<string> GetSourceDirectoryContentPath(ParametersHandler parameters)
         {
             return parameters.GetParameters(Defaults.FILES_KEY, Defaults.SOURCE_FILES_MESSAGE);
         }
-        private static Directory GetTargetDirectory(ParametersHandler parameters)
+        private static Directory GetDestinationDirectory(ParametersHandler parameters)
         {
-            return new Directory(GetTargetDirectoryPath(parameters), true);
+            return new Directory(GetDestinationDirectoryPath(parameters), true);
         }
         private static IEnumerable<Regex> GetIgnoreRegex(ParametersHandler parameters)
         {
@@ -82,8 +82,8 @@ namespace Backup
             var mode = GetMode(parameters);
             if (mode == Defaults.MODE_SOURCE)
                 return GetSourceDirectory(parameters);
-            else if (mode == Defaults.MODE_TARGET)
-                return GetTargetDirectory(parameters);
+            else if (mode == Defaults.MODE_DESTINATION)
+                return GetDestinationDirectory(parameters);
             else
                 throw new UnsupportedModeException(mode);
         }
@@ -93,10 +93,10 @@ namespace Backup
             var mode = GetMode(parameters);
             ILogger logger = new ConsoleLogger();
 
-            if (mode == Defaults.MODE_TARGET)
+            if (mode == Defaults.MODE_DESTINATION)
             {
-                return new BackupTarget(
-                    new TargetSocketCommunicator(
+                return new BackupDestination(
+                    new DestinationSocketCommunicator(
                         GetIp(parameters),
                         GetPort(parameters),
                         GetBufferSize(parameters),

@@ -42,14 +42,13 @@ namespace FilesystemModel
             }
         }
 
-        public override void Copy(string target)
+        public override void Copy(string destination)
         {
-            System.IO.Directory.CreateDirectory(target);
+            System.IO.Directory.CreateDirectory(destination);
             foreach (var file in content)
             {
                 file.Copy(
-                    BuildPath(target, file.Name)
-                        );
+                    BuildPath(destination, file.Name));
             }
         }
 
