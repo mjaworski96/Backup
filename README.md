@@ -1,24 +1,35 @@
 # Backup
-
+Program can be run in two modes:
+- Source - source of copy
+- Target - destination of copy
 # Usage
-
-## Source of backup
-dotnet Backup.dll OR ./Backup.exe source [ip address] [port] [buffer size (in bytes)] [directories and files (list)]
-### Examples
 ```
-dotnet Backup.dll source 127.0.0.1 8000 10485760 ./source1 /source2
-./Backup.exe source 127.0.0.1 8000 10485760 ./source1 /source2
+dotnet Backup.dll <arguments>
+./Backup.exe <arguments>
  ```
- 
-## Target of backup
-dotnet Backup.dll OR ./Backup.exe target [ip address (0.0.0.0 for any)] [port]  [buffer size (in bytes)] [target directory]
-### Examples
-```
-dotnet Backup.dll  target 0.0.0.0 8000 10485760 ./target
-./Backup.exe  target 0.0.0.0 8000 10485760 ./target
-```
+# Armuments
+| Argument | Source | Target | Default value | Mandatory |
+|----------|--------|--------|---------------|-----------|
+|-m|If "source" run source mode|If "target" run target mode|(None)|Yes|
+|-a|IP addres of target|IP address to listen|127.0.0.1|Yes|
+|-p|TCP Port of target|TCP port to liten|7000|Yes|
+|-f|Files and directories to copy (list)|Destination of copy (directory)|(None)|Yes|
+|-bs|Maximum buffer size (to read files)|Maximum buffer size (to read files)|10M|Yes|
+|-i|Regex of files that will be ignored|Regex of files that will be ignored|(None)|No|
 
-## Aliases
+If argument is mandatory but not specified program will ask about value. Same if only parameter name is specified.
+
+# Buffer size
+Buffer size can be specifed with postfix (without spaces).
+
+|Prefix|Multiplier|Example|Real value|
+|------|----------|-------|----------|
+|(None)|1|2024|2KiB| 
+|k or K|1024|4k or 4K|4KiB|
+|m or m|1024 * 1024 = 1048576|8m or 8M|8MiB|
+|g or G|1024 * 1024 * 1024 = 1073741824|1g or 1G|1GiB|
+
+# Aliases
 Files can be renamed while copying to target. It can be done by specifing alias (in source): <br/>
 ```
 old_path*alias
