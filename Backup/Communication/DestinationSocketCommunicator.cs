@@ -26,6 +26,8 @@ namespace Communication
             _socket.Dispose();
             _socket = connection;
 
+            _logger.Write($"Connected with: {connection.RemoteEndPoint.ToString()}");
+
             return Receive<Directory>();
         }
         public void ReceiveFile(string fileRequestPath,
