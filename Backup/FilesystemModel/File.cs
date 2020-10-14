@@ -16,7 +16,7 @@ namespace FilesystemModel
         {
             uint crc32 = 0;
             using (Stream stream =
-                new FileStream(Path, FileMode.Open, FileAccess.Read))
+                SafeFileUsage.GetFile(Path, FileMode.Open, FileAccess.Read, logger))
             {
                 byte[] buffer = stream.Length > bufferSize ?
                     new byte[bufferSize] : new byte[stream.Length];

@@ -42,8 +42,8 @@ namespace Communication
         {
             try
 			{
-                using (System.IO.Stream stream = 
-                    new System.IO.FileStream(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                using (System.IO.Stream stream =
+                    SafeFileUsage.GetFile(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, _logger))
 				{
                     byte[] buffer = stream.Length > _bufferSize ?
                         new byte[_bufferSize] : new byte[stream.Length];

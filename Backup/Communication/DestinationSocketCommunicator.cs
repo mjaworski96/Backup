@@ -65,7 +65,7 @@ namespace Communication
             long total = 0;
             _logger.MaxProgress = size;
 
-            using (System.IO.Stream stream = new System.IO.FileStream(filename, System.IO.FileMode.OpenOrCreate))
+            using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, _logger))
             {
                 System.IO.File.SetAttributes(filename, attributes);
                byte[] buffer = size > _bufferSize ?
