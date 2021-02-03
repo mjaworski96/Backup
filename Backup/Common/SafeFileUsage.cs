@@ -27,7 +27,7 @@ namespace Common
                     if(errorCode == ERROR_LOCK_VIOLATION || errorCode == ERROR_SHARING_VIOLATION)
                     {
                         logger.Write($"File {filename} is used by other process. " +
-                        $"Waiting {WAIT_TIME_IN_SECCONDS} for access.");
+                        $"Waiting {WAIT_TIME_IN_SECCONDS} seconds for access.");
                         Thread.Sleep(WAIT_TIME_IN_SECCONDS * 1000);
                     }
                     else
