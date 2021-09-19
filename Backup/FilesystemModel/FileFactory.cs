@@ -12,10 +12,13 @@ namespace FilesystemModel
         public static bool MustBeIgnored(string filename)
         {
             filename = filename.Replace('\\', '/');
-            foreach (var regex in IgnoreRegex)
+            if (IgnoreRegex != null)
             {
-                if (regex.IsMatch(filename))
-                    return true;
+                foreach (var regex in IgnoreRegex)
+                {
+                    if (regex.IsMatch(filename))
+                        return true;
+                }
             }
             return false;
         }
