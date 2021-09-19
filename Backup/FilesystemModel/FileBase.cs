@@ -8,6 +8,9 @@ namespace FilesystemModel
         public string Name { get => Alias ?? Path.Split('/').Last(); }
         public string Alias { get; set; }
         public System.IO.FileAttributes Attributes { get; private set; }
+        
+        public FileBase() { }
+        
         public FileBase(string path)
         {
             if(path.Contains("*"))
@@ -21,7 +24,7 @@ namespace FilesystemModel
             else
             {
                 Path = System.IO.Path.GetFullPath(
-                path.Replace('\\', '/'))
+                    path.Replace('\\', '/'))
                 .Replace('\\', '/');
                 if(System.IO.File.Exists(Path) || System.IO.Directory.Exists(Path))
                     Attributes = System.IO.File.GetAttributes(Path);

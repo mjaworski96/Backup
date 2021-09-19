@@ -6,6 +6,8 @@ namespace FilesystemModel
 {
     public class File : FileBase
     {
+        public File() { }
+
         public File(string path) : base(path)
         {
         }

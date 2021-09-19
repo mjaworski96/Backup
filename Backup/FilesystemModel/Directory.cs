@@ -10,6 +10,8 @@ namespace FilesystemModel
         public static string PREFIX_GROSS = "";
         protected List<FileBase> content;
 
+        public Directory() { }
+
         public Directory(string path, bool createDirectoryIfNotExists) : base(path)
         {
             content = GetDirectoryContent(createDirectoryIfNotExists).ToList();
