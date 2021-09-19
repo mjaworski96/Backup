@@ -6,7 +6,7 @@ namespace FilesystemModel
     {
         public string Path { get; private set; }
         public string Name { get => Alias ?? Path.Split('/').Last(); }
-        public string Alias { get; set; }
+        public string Alias { get; private set; }
         public System.IO.FileAttributes Attributes { get; private set; }
         
         public FileBase() { }

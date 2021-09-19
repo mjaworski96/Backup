@@ -12,6 +12,7 @@ namespace Communication.Serialization
                  new JsonSerializerSettings()
                  {
                      TypeNameHandling = TypeNameHandling.Objects,
+                     ContractResolver = new PrivateResolver()
                  });
         }
 
