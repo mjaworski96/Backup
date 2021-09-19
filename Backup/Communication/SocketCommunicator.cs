@@ -2,6 +2,7 @@
 using Communication.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
@@ -20,7 +21,7 @@ namespace Communication
             ISerialization serialization,
             ILogger logger)
         {
-            if (bufferSize < 1)
+            if (bufferSize <= 0)
                 throw new InvalidBufferSizeException("Buffer size must be greater than 0");
 
             IPAddress ip = IPAddress.Parse(address);
@@ -34,15 +35,16 @@ namespace Communication
 
         protected T Receive<T>()
         {
-            List<byte> bytes = new List<byte>();            
+            MemoryStream bytes = new MemoryStream();
             long totalRead = 0;
             long size = ReceiveSize();
             byte[] buffer = size > _bufferSize ?
                     new byte[_bufferSize] : new byte[size];
             do
             {
-                totalRead += _socket.Receive(buffer);
-                bytes.AddRange(buffer);
+                int received = _socket.Receive(buffer);
+                totalRead += received;
+                bytes.Write(buffer, 0, received);
             } while (totalRead < size);
             SendAck();
             return _serialization.Deserialize<T>(bytes.ToArray());
@@ -58,14 +60,14 @@ namespace Communication
 		{
 			byte[] content = BitConverter.GetBytes((int)Message.ACK);
 			_socket.Send(content);
-		}
+        }
 		protected void ReceiveAck() 
 		{
-			byte[] buffer = new byte[sizeof(Message)];
+            byte[] buffer = new byte[sizeof(Message)];
 			_socket.Receive(buffer, sizeof(Message), SocketFlags.None);
-		}
+        }
         protected void SendSize(long size)
-        { 
+        {
             byte[] content = BitConverter.GetBytes(size);
             _socket.Send(content);
         }

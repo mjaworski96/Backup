@@ -38,12 +38,12 @@ namespace Communication
             Send(fileRequestPath);
             ReceiveFile(saveFileAs, attributes);
         }
-		public uint GetCrc32(string fileRequestPath)
+        public uint GetCrc32(string fileRequestPath)
         {
             SendRequest(Request.GET_CRC32);
             Send(fileRequestPath);
             return Receive<uint>();
-        }		
+        }
         public void Finish()
         {
             SendRequest(Request.FINISH);
@@ -68,15 +68,23 @@ namespace Communication
             using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, _logger))
             {
                 System.IO.File.SetAttributes(filename, attributes);
-               byte[] buffer = size > _bufferSize ?
-                    new byte[_bufferSize] : new byte[size];
+                byte[] buffer = size > _bufferSize ?
+                     new byte[_bufferSize] : new byte[size];
                 while (total < size)
                 {
-                    int received = _socket.Receive(buffer);
-                    _logger.UpdateProgressBar(received);
+                    long currentBufferReceived = 0;
+                    long bytesLeft = size - total;
+                    long currentBufferSize = bytesLeft > buffer.Length ? buffer.Length : bytesLeft;
+                    while (currentBufferReceived < currentBufferSize)
+                    {
+                        int received = _socket.Receive(buffer);
+                        _logger.UpdateProgressBar(received);
+
+                        total += received;
+                        currentBufferReceived += received;
+                        stream.Write(buffer, 0, received);
+                    }
                     SendAck();
-                    total += received;
-                    stream.Write(buffer, 0, received);   
                 }
                 _logger.ResetProgressBar();
             }
@@ -87,11 +95,11 @@ namespace Communication
             System.IO.File.Create(filename);
         }
 
-		private void SendRequest(Request request) 
-		{
-			byte[] content = BitConverter.GetBytes((int)request);
-			_socket.Send(content);
-		}
-        
+        private void SendRequest(Request request)
+        {
+            byte[] content = BitConverter.GetBytes((int)request);
+            _socket.Send(content);
+        }
+
     }
 }

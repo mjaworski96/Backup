@@ -22,7 +22,7 @@ namespace Communication
         public Request GetRequest()
         {
             byte[] buffer = new byte[sizeof(Request)];
-			_socket.Receive(buffer, SocketFlags.None);
+            _socket.Receive(buffer, SocketFlags.None);
             return (Request)BitConverter.ToInt32(buffer, 0);
         }
         public string GetFilename()
@@ -41,28 +41,28 @@ namespace Communication
         public void SendFile(string filename)
         {
             try
-			{
+            {
                 using (System.IO.Stream stream =
                     SafeFileUsage.GetFile(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, _logger))
-				{
+                {
                     byte[] buffer = stream.Length > _bufferSize ?
                         new byte[_bufferSize] : new byte[stream.Length];
                     Send(stream.Length);
                     _logger.MaxProgress = stream.Length;
-					while(stream.Position != stream.Length)
-					{
-						int count = stream.Read(buffer, 0, buffer.Length);
+                    while (stream.Position != stream.Length)
+                    {
+                        int count = stream.Read(buffer, 0, buffer.Length);
                         _logger.UpdateProgressBar(count);
-						_socket.Send(buffer, count, SocketFlags.None);
-						ReceiveAck();
-					}
+                        _socket.Send(buffer, count, SocketFlags.None);
+                        ReceiveAck();
+                    }
                     _logger.ResetProgressBar();
-				}
-			}
-			catch(Exception)
-			{
-				Send(0L);
-			}
+                }
+            }
+            catch (Exception)
+            {
+                Send(0L);
+            }
         }
     }
 }
