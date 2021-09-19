@@ -26,6 +26,7 @@ namespace Backup
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.GetType().FullName);
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
             }
