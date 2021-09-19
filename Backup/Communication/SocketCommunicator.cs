@@ -26,7 +26,7 @@ namespace Communication
 
             IPAddress ip = IPAddress.Parse(address);
             _endPoint = new IPEndPoint(ip, port);
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
             _serialization = serialization;
             _bufferSize = bufferSize;
