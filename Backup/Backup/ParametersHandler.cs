@@ -27,28 +27,33 @@ namespace Backup
 
         public string GetParameter(string key, string consoleMessage, bool mandatory = true)
         {
-            SingleParams.TryGetValue(key, out string value);
+            var containsKey = SingleParams.TryGetValue(key, out string value);
             if (string.IsNullOrEmpty(value))
             {
-                if (mandatory)
+                if (mandatory || containsKey)
+                {
                     value = GetFromConsole(consoleMessage);
+                    SingleParams.AddOrUpdate(key, value);
+                }
                 else
                     value = "";
-                SingleParams.AddOrUpdate(key, value);
+                
             }
             return value;
         }
         public List<string> GetParameters(string key, string consoleMessage, bool mandatory = true)
         {
-            MultiParams.TryGetValue(key, out List<string> value);
-            if (!value?.Any() ?? true)
+            var containsKey = MultiParams.TryGetValue(key, out List<string> value);
+            if (value == null || !value.Any())
             {
-                if (mandatory || (!mandatory && (!value?.Any() ?? false)))
+                if (mandatory || containsKey)
+                {
                     value = GetMultipleValuesFromConsole(consoleMessage).ToList();
-                    
+                    MultiParams.AddOrUpdate(key, value);
+                }    
                 else
                     value = new List<string>();
-                MultiParams.AddOrUpdate(key, value);
+                
             }
             return value;
         }
@@ -61,7 +66,7 @@ namespace Backup
 
         private static IEnumerable<string> GetMultipleValuesFromConsole(string message)
         {
-            bool hasValue = false;
+            bool hasValue;
             do
             {
                 Console.Write($"{message}: ");
@@ -92,6 +97,10 @@ namespace Backup
                 {
                     singleData.Add(item.Key, item.Value.First());
                 }
+                else if (item.Value.Count == 0)
+                {
+                    singleData.Add(item.Key, default(TKey));
+                } 
             }
 
             return singleData;
