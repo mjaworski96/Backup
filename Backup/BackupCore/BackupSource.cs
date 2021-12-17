@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Translations;
 using FilesystemModel;
 using FilesystemModel.Extensions;
 
@@ -48,7 +49,7 @@ namespace BackupCore
         private void GetCrc32(Directory directory)
         {
             string filename = _communicator.GetFilename();
-            _logger.Write($"Calculating checksum for {filename}");
+            _logger.Write(string.Format(LoggerMessages.CalculatingChecksum, filename));
             File file = directory.Find(filename) as File;
             _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger));
         }
@@ -56,7 +57,7 @@ namespace BackupCore
         private void GetFile(Directory directory)
         {
             string filename = _communicator.GetFilename();
-            _logger.Write($"Uploading {filename}");
+            _logger.Write(string.Format(LoggerMessages.Uploading, filename));
             File file = directory.Find(filename) as File;
             _communicator.SendFile(file.Path);
         }

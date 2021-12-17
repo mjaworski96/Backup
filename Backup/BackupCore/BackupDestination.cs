@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Common;
+using Common.Translations;
 using FilesystemModel;
 using FilesystemModel.Extensions;
 
@@ -59,7 +60,7 @@ namespace BackupCore
                 }
                 else if (item.Type == FileType.FILE)
                 {
-                    _logger.Write($"Downloanding {item.Path}");
+                    _logger.Write(string.Format(LoggerMessages.Downloanding, item.Path));
                     _communicator.ReceiveFile(item.Path, path, item.Attributes);
                 }
             }
@@ -73,13 +74,13 @@ namespace BackupCore
                 {
                     Directory directory = item as Directory;
                     HandleDeletedFiles(directory.Content, path);
-                    _logger.Write($"Deleting {path}");
+                    _logger.Write(string.Format(LoggerMessages.Deleting, path));
                     SetNormalAttribute(path);
                     System.IO.Directory.Delete(path);
                 }
                 else if (item.Type == FileType.FILE)
                 {
-                    _logger.Write($"Deleting {path}");
+                    _logger.Write(string.Format(LoggerMessages.Deleting, path));
                     SetNormalAttribute(path);
                     System.IO.File.Delete(path);
                 }
@@ -116,10 +117,10 @@ namespace BackupCore
         {
             File sourceFile = inSource as File;
             File destinationFile = inDestination as File;
-            _logger.Write($"Checking checksum for {sourceFile.Path}");
+            _logger.Write(string.Format(LoggerMessages.CheckingChecksum, sourceFile.Path));
             if (IsDiffrent(sourceFile.Path, destinationFile.CalculateCrc32(_bufferSize, _logger)))
             {
-                _logger.Write($"Downloanding {sourceFile.Path}");
+                _logger.Write(string.Format(LoggerMessages.Downloanding, sourceFile.Path));
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }
             if(sourceFile.Attributes != destinationFile.Attributes)

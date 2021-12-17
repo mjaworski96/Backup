@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Translations;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -39,8 +40,7 @@ namespace Common
                     long errorCode = e.HResult & 0xFFFF;
                     if(FILE_IN_USE_ERROR_CODES.Contains(errorCode))
                     {
-                        logger.Write($"File {filename} is used by other process. " +
-                        $"Waiting {WAIT_TIME_IN_SECCONDS} seconds for access.");
+                        logger.Write(string.Format(LoggerMessages.FileIsUsed, filename, WAIT_TIME_IN_SECCONDS));
                         Thread.Sleep(WAIT_TIME_IN_SECCONDS * 1000);
                     }
                     else

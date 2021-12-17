@@ -1,5 +1,6 @@
 using BackupCore;
 using Common;
+using Common.Translations;
 using Communication.Serialization;
 using FilesystemModel;
 using System;
@@ -17,7 +18,7 @@ namespace Communication
         {
             _socket.Bind(_endPoint);
             _socket.Listen(1);
-            _logger.Write($"Listening on {_endPoint}");
+            _logger.Write(string.Format(LoggerMessages.ListenOn, _endPoint));
         }
 
         public Directory GetDirectory()
@@ -26,7 +27,7 @@ namespace Communication
             _socket.Dispose();
             _socket = connection;
 
-            _logger.Write($"Connected with: {connection.RemoteEndPoint}");
+            _logger.Write(string.Format(LoggerMessages.ConnectedWith, connection.RemoteEndPoint));
 
             return Receive<Directory>();
         }

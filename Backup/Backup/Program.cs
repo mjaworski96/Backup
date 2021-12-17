@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Common;
 using System.Text.RegularExpressions;
+using Backup.Translations;
+using System.Globalization;
+using System.Threading;
 
 namespace Backup
 {
@@ -34,29 +37,29 @@ namespace Backup
 
         private static string GetMode(ParametersHandler parameters)
         {
-            return parameters.GetParameter(Defaults.MODE_KEY, Defaults.MODE_MESSAGE);
+            return parameters.GetParameter(Defaults.MODE_KEY, Messages.Mode);
         }
         private static string GetIp(ParametersHandler parameters)
         {
-            return parameters.GetParameter(Defaults.ADDRESS_KEY, Defaults.ADDRESS_MESSAGE);
+            return parameters.GetParameter(Defaults.ADDRESS_KEY, Messages.Address);
         }
         private static int GetPort(ParametersHandler parameters)
         {
-            string port = parameters.GetParameter(Defaults.PORT_KEY, Defaults.PORT_MESSAGE);
+            string port = parameters.GetParameter(Defaults.PORT_KEY, Messages.Port);
             return int.Parse(port);
         }
         private static int GetBufferSize(ParametersHandler parameters)
         {
-            string bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Defaults.BUFFER_SIZE_MESSAGE);
+            string bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Messages.BufferSize);
             return Parser.Parse(bufferSize);
         }
         private static string GetDestinationDirectoryPath(ParametersHandler parameters)
         {
-            return parameters.GetParameter(Defaults.FILES_KEY, Defaults.DESTINATION_DIRECTORY_MESSAGE);
+            return parameters.GetParameter(Defaults.FILES_KEY, Messages.DestinationDirectory);
         }
         private static IEnumerable<string> GetSourceDirectoryContentPath(ParametersHandler parameters)
         {
-            return parameters.GetParameters(Defaults.FILES_KEY, Defaults.SOURCE_FILES_MESSAGE);
+            return parameters.GetParameters(Defaults.FILES_KEY, Messages.SourceFiles);
         }
         private static Directory GetDestinationDirectory(ParametersHandler parameters)
         {
@@ -64,7 +67,7 @@ namespace Backup
         }
         private static IEnumerable<Regex> GetIgnoreRegex(ParametersHandler parameters)
         {
-            var patterns = parameters.GetParameters(Defaults.IGNORE_KEY, Defaults.IGNORE_FILES_MESSAGE, false);
+            var patterns = parameters.GetParameters(Defaults.IGNORE_KEY, Messages.IngoreFilesPattern, false);
             return Parser.Parse(patterns);
         }
         private static Directory GetSourceDirectory(ParametersHandler parameters)

@@ -4,6 +4,7 @@ using Communication.Serialization;
 using FilesystemModel;
 using System.Net.Sockets;
 using Common;
+using Common.Translations;
 
 namespace Communication
 {
@@ -15,9 +16,9 @@ namespace Communication
             ISerialization serialization,
             ILogger logger) : base(address, port, bufferSize, serialization, logger)
         {
-            _logger.Write($"Connecting to {_endPoint}");
+            _logger.Write(string.Format(LoggerMessages.ConnectingTo, _endPoint));
             _socket.Connect(_endPoint);  
-            _logger.Write($"Connected with: {_endPoint}");
+            _logger.Write(string.Format(LoggerMessages.ConnectedWith, _endPoint));
         }
 
         public Request GetRequest()

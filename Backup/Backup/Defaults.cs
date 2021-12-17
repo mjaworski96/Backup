@@ -22,15 +22,6 @@ namespace Backup
                 { ADDRESS_KEY, new List<string>() { "127.0.0.1" } },
                 { PORT_KEY, new List<string>() { "7000" } },
                 { BUFFER_KEY, new List<string>() { "10M" } },
-            };
-
-        public const string MODE_MESSAGE = "Mode (source/destination)";
-        public const string ADDRESS_MESSAGE=  "Address IP" ;
-        public const string PORT_MESSAGE = "Port";
-        public const string BUFFER_SIZE_MESSAGE = "Buffer size" ;
-        public const string DESTINATION_DIRECTORY_MESSAGE = "Destination directory" ;
-        public const string SOURCE_FILES_MESSAGE = "File/directory (empty line to exit)";
-        public const string IGNORE_FILES_MESSAGE = "Ignore file pattern (empty line to exit)";
-                
+            };                
     }
 }

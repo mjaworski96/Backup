@@ -1,4 +1,5 @@
 ﻿using Common;
+using Common.Translations;
 using Communication.Serialization;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Communication
             ILogger logger)
         {
             if (bufferSize <= 0)
-                throw new InvalidBufferSizeException("Buffer size must be greater than 0");
+                throw new InvalidBufferSizeException(Exceptions.BufferSizeGreaterThanZero);
 
             IPAddress ip = IPAddress.Parse(address);
             _endPoint = new IPEndPoint(ip, port);
