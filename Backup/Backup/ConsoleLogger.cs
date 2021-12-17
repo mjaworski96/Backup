@@ -10,7 +10,20 @@ namespace Backup
         private const char PROGRESS_BAR_EMPTY = ' ';
 
         private long _currentProgress = 0;
-        public long MaxProgress { private get; set; }
+        private long _maxProgress = 0;
+        public long MaxProgress 
+        { 
+            private get
+            {
+                return _maxProgress;
+            }
+            set
+            {
+                _maxProgress = value;
+                _currentProgress = 0;
+                DrawProgress();
+            }
+        }
 
         public ConsoleLogger()
         {
@@ -24,9 +37,14 @@ namespace Backup
 
         public void UpdateProgressBar(long progressGross)
         {
+            _currentProgress += progressGross;
+            DrawProgress();
+        }
+
+        private void DrawProgress()
+        {
             int width = Console.WindowWidth;
             Console.SetCursorPosition(0, Console.CursorTop);
-            _currentProgress += progressGross;
             int progressBarWidth = width - 6; //[]xxx%
             double percentProgress = (double)_currentProgress / MaxProgress;
             int progressFilled = (int)(percentProgress * progressBarWidth);
@@ -37,14 +55,18 @@ namespace Backup
             Console.Write((int)(100 * percentProgress));
             Console.Write("%]");
         }
-        public void ResetProgressBar()
-        {
-            _currentProgress = 0;
-        }
+
         private void WriteCharacter(char c, int count)
         {
             if (count > 0)
                 Console.Write(new string(c, count));
+        }
+
+        public void ShowCompleted()
+        {
+            _maxProgress = 1;
+            _currentProgress = 1;
+            DrawProgress();
         }
     }
 }

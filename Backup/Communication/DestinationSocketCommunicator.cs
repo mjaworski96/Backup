@@ -26,7 +26,7 @@ namespace Communication
             _socket.Dispose();
             _socket = connection;
 
-            _logger.Write($"Connected with: {connection.RemoteEndPoint.ToString()}");
+            _logger.Write($"Connected with: {connection.RemoteEndPoint}");
 
             return Receive<Directory>();
         }
@@ -63,7 +63,7 @@ namespace Communication
             System.IO.FileAttributes attributes)
         {
             long total = 0;
-            _logger.MaxProgress = size;
+            _logger.MaxProgress = size * 2; //download and save
 
             using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, _logger))
             {
@@ -83,16 +83,18 @@ namespace Communication
                         total += received;
                         currentBufferReceived += received;
                         stream.Write(buffer, 0, received);
+                        _logger.UpdateProgressBar(received);
                     }
                     SendAck();
                 }
-                _logger.ResetProgressBar();
             }
         }
 
         private void HandleEmptyFile(string filename)
         {
+            _logger.MaxProgress = 1;
             System.IO.File.Create(filename);
+            _logger.UpdateProgressBar(1);
         }
 
         private void SendRequest(Request request)

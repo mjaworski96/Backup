@@ -29,7 +29,10 @@ namespace FilesystemModel
                     logger.UpdateProgressBar(count);
                     crc32 = Crc32CAlgorithm.Append(crc32, buffer, 0, count);
                 }
-                logger.ResetProgressBar();
+                if (stream.Length == 0)
+                {
+                    logger.ShowCompleted();
+                }
             }
             return crc32;
         }

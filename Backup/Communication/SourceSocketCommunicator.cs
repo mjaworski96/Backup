@@ -15,8 +15,9 @@ namespace Communication
             ISerialization serialization,
             ILogger logger) : base(address, port, bufferSize, serialization, logger)
         {
-            _socket.Connect(_endPoint);
             _logger.Write($"Connecting to {_endPoint}");
+            _socket.Connect(_endPoint);  
+            _logger.Write($"Connected with: {_endPoint}");
         }
 
         public Request GetRequest()
@@ -48,15 +49,15 @@ namespace Communication
                     byte[] buffer = stream.Length > _bufferSize ?
                         new byte[_bufferSize] : new byte[stream.Length];
                     Send(stream.Length);
-                    _logger.MaxProgress = stream.Length;
+                    _logger.MaxProgress = stream.Length * 2; //read file and upload
                     while (stream.Position != stream.Length)
                     {
                         int count = stream.Read(buffer, 0, buffer.Length);
                         _logger.UpdateProgressBar(count);
                         _socket.Send(buffer, count, SocketFlags.None);
+                        _logger.UpdateProgressBar(count);
                         ReceiveAck();
                     }
-                    _logger.ResetProgressBar();
                 }
             }
             catch (Exception)

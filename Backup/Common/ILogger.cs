@@ -5,7 +5,6 @@
         long MaxProgress { set; }
         void Write(object message);
         void UpdateProgressBar(long progressGross);
-        void ResetProgressBar();
-        
+        void ShowCompleted();
     }
 }
