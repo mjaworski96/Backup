@@ -120,6 +120,9 @@
   <data name="CalculatingChecksum" xml:space="preserve">
     <value>Obliczanie sumy kontrolnej dla {0}</value>
   </data>
+  <data name="CantSetAtributes" xml:space="preserve">
+    <value>Nie można ustawić atrybutów na: {0}: {1}</value>
+  </data>
   <data name="CheckingChecksum" xml:space="preserve">
     <value>Sprawdzanie sumy kontrolnej dla {0}</value>
   </data>

@@ -35,6 +35,14 @@ namespace Backup
             Console.WriteLine(message);
         }
 
+        public void WriteError(object message)
+        {
+            var color = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(message);
+            Console.ForegroundColor = color;
+        }
+
         public void UpdateProgressBar(long progressGross)
         {
             _currentProgress += progressGross;

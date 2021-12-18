@@ -6,7 +6,7 @@ using FilesystemModel.Extensions;
 
 namespace BackupCore
 {
-    public class BackupDestination: IBackup
+    public class BackupDestination : IBackup
     {
         private readonly IDestinationCommunicator _communicator;
         private readonly ILogger _logger;
@@ -34,9 +34,9 @@ namespace BackupCore
         }
         private void MakeBackup(Directory source, Directory destination, string rootDirectory)
         {
-            if(source.Attributes != destination.Attributes)
+            if (source.Attributes != destination.Attributes)
             {
-                System.IO.File.SetAttributes(destination.Path, source.Attributes);
+                source.Attributes.Set(destination.Path, _logger);
             }
             source.Compare(destination,
                 out List<FileBase> newFiles,
@@ -55,13 +55,12 @@ namespace BackupCore
                 {
                     Directory directory = item as Directory;
                     System.IO.Directory.CreateDirectory(path);
-                    System.IO.File.SetAttributes(path, item.Attributes);
+                    item.Attributes.Set(path, _logger);
                     HandleNewFiles(directory.Content, path);
                 }
                 else if (item.Type == FileType.FILE)
                 {
-                    _logger.Write(string.Format(LoggerMessages.Downloanding, item.Path));
-                    _communicator.ReceiveFile(item.Path, path, item.Attributes);
+                   _communicator.ReceiveFile(item.Path, path, item.Attributes);
                 }
             }
         }
@@ -87,9 +86,9 @@ namespace BackupCore
             }
         }
 
-        private static void SetNormalAttribute(string path)
+        private void SetNormalAttribute(string path)
         {
-            System.IO.File.SetAttributes(path, System.IO.FileAttributes.Normal);
+            System.IO.FileAttributes.Normal.Set(path, _logger);
         }
 
         private void HandleExistingFiles(List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
@@ -107,7 +106,7 @@ namespace BackupCore
 
         private void HandleSameTypes(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
-            if(inSource.Type == FileType.DIRECTORY)
+            if (inSource.Type == FileType.DIRECTORY)
                 HandleDirectory(inSource, inDestination, rootDirectory);
             else
                 HandleFile(inSource, inDestination);
@@ -120,12 +119,11 @@ namespace BackupCore
             _logger.Write(string.Format(LoggerMessages.CheckingChecksum, sourceFile.Path));
             if (IsDiffrent(sourceFile.Path, destinationFile.CalculateCrc32(_bufferSize, _logger)))
             {
-                _logger.Write(string.Format(LoggerMessages.Downloanding, sourceFile.Path));
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }
-            if(sourceFile.Attributes != destinationFile.Attributes)
+            if (sourceFile.Attributes != destinationFile.Attributes)
             {
-                System.IO.File.SetAttributes(inDestination.Path, sourceFile.Attributes);
+                sourceFile.Attributes.Set(inDestination.Path, _logger);
             }
         }
 

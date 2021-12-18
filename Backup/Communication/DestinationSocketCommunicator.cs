@@ -3,6 +3,7 @@ using Common;
 using Common.Translations;
 using Communication.Serialization;
 using FilesystemModel;
+using FilesystemModel.Extensions;
 using System;
 using System.Net.Sockets;
 
@@ -64,11 +65,13 @@ namespace Communication
             System.IO.FileAttributes attributes)
         {
             long total = 0;
-            _logger.MaxProgress = size * 2; //download and save
 
             using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, _logger))
             {
-                System.IO.File.SetAttributes(filename, attributes);
+                attributes.Set(filename, _logger);
+                _logger.Write(string.Format(LoggerMessages.Downloanding, filename));
+                _logger.MaxProgress = size * 2; //download and save
+
                 byte[] buffer = size > _bufferSize ?
                      new byte[_bufferSize] : new byte[size];
                 while (total < size)
@@ -93,6 +96,7 @@ namespace Communication
 
         private void HandleEmptyFile(string filename)
         {
+            _logger.Write(string.Format(LoggerMessages.Downloanding, filename));
             _logger.MaxProgress = 1;
             System.IO.File.Create(filename);
             _logger.UpdateProgressBar(1);

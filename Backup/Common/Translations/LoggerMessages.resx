@@ -120,6 +120,9 @@
   <data name="CalculatingChecksum" xml:space="preserve">
     <value>Calculating checksum for {0}</value>
   </data>
+  <data name="CantSetAtributes" xml:space="preserve">
+    <value>Can't set attributes on {0}: {1}</value>
+  </data>
   <data name="CheckingChecksum" xml:space="preserve">
     <value>Checking checksum for {0}</value>
   </data>

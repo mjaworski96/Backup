@@ -70,6 +70,15 @@ namespace Common.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t set attributes on {0}: {1}.
+        /// </summary>
+        public static string CantSetAtributes {
+            get {
+                return ResourceManager.GetString("CantSetAtributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Checking checksum for {0}.
         /// </summary>
         public static string CheckingChecksum {
