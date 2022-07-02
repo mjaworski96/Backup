@@ -26,7 +26,7 @@ Buffer size can be specifed with postfix.
 |------|----------|-------|----------|
 |(None)|1|2024|2KiB| 
 |k or K|1024|4k or 4K|4KiB|
-|m or m|1024 * 1024 = 1048576|8m or 8M|8MiB|
+|m or M|1024 * 1024 = 1048576|8m or 8M|8MiB|
 |g or G|1024 * 1024 * 1024 = 1073741824|1g or 1G|1GiB|
 
 # Aliases
@@ -39,3 +39,5 @@ It allow copying files with the same name from other directories. For example:
 <path1/name*first_file>
 <path2/name*second_file>
 ```
+# Guard file (reserved filename)
+File "backup_directory_guard" will be created in target directory (on root level). For this reason "backup_directory_guard" filename can not be used on root level. This filename can be used in nested directories.

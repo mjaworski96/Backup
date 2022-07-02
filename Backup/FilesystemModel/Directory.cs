@@ -57,5 +57,12 @@ namespace FilesystemModel
         public override FileType Type => FileType.DIRECTORY;
 
         public List<FileBase> Content { get => content; set => content = value; }
+
+        public bool Empty => !Content.Any();
+
+        public virtual void Refresh()
+        {
+            content = GetDirectoryContent(false).ToList();
+        }
     }
 }

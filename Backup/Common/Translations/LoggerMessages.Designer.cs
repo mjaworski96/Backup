@@ -142,11 +142,47 @@ namespace Common.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected directory ({0}) was not used as backup directory..
+        /// </summary>
+        public static string SelectedDirectoryIsNotBackupDirectory {
+            get {
+                return ResourceManager.GetString("SelectedDirectoryIsNotBackupDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected directory ({0}) was used as backup directory but has been modified..
+        /// </summary>
+        public static string SelectedDirectoryWasModified {
+            get {
+                return ResourceManager.GetString("SelectedDirectoryWasModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uploading {0}.
         /// </summary>
         public static string Uploading {
             get {
                 return ResourceManager.GetString("Uploading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can use this directory anyway, but any changes will be removed. Do you want use this directory? (type y/Y to use this directory):.
+        /// </summary>
+        public static string UseModifiedDirectory {
+            get {
+                return ResourceManager.GetString("UseModifiedDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can use this directory anyway, but some (maybe all of them) files and directories can be changed or removed. Do you want use this directory? (type y/Y to use this directory): .
+        /// </summary>
+        public static string UseNewDirectory {
+            get {
+                return ResourceManager.GetString("UseNewDirectory", resourceCulture);
             }
         }
     }

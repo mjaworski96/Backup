@@ -63,7 +63,18 @@ namespace Backup
         }
         private static Directory GetDestinationDirectory(ParametersHandler parameters)
         {
-            return new Directory(GetDestinationDirectoryPath(parameters), true);
+            var guard = new DirectoryGuard(new ConsoleLogger(), new ConsoleInput());
+            Directory directory = null;
+            do
+            {
+                if (directory != null)
+                {
+                    parameters.RemoveSingleParam(Defaults.FILES_KEY);
+                }
+                directory = new Directory(GetDestinationDirectoryPath(parameters), true);
+            } while (!guard.CheckTargetDirectory(directory));
+            
+            return directory;
         }
         private static IEnumerable<Regex> GetIgnoreRegex(ParametersHandler parameters)
         {

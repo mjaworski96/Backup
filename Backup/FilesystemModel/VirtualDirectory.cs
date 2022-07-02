@@ -27,5 +27,9 @@ namespace FilesystemModel
                 file.Copy(BuildPath(destination, file.Name));
             }
         }
+        public override void Refresh()
+        {
+            //Do nothing
+        }
     }
 }

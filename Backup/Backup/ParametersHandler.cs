@@ -76,6 +76,14 @@ namespace Backup
                     yield return value;
             } while (hasValue);
         }
+        public void RemoveSingleParam(string key)
+        {
+            SingleParams.Remove(key);
+        }
+        public void RemoveMultiParam(string key)
+        {
+            MultiParams.Remove(key);
+        }
     }
     static class DictionaryHelper
     {
@@ -119,7 +127,6 @@ namespace Backup
         public static void AddOrUpdate<TKey, TValue>(this Dictionary<TKey, TValue> dict,
             TKey key, TValue value)
         {
-
             if (!dict.ContainsKey(key))
                 dict.Add(key, value);
             else

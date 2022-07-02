@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Translations\DataInputs.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataInputs.resx</DependentUpon>
+    </Compile>
     <Compile Update="Translations\Exceptions.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -18,6 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Translations\DataInputs.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DataInputs.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Translations\Exceptions.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Exceptions.Designer.cs</LastGenOutput>

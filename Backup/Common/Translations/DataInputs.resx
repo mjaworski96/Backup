@@ -117,46 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CalculatingChecksum" xml:space="preserve">
-    <value>Calculating checksum for {0}</value>
+  <data name="Yes" xml:space="preserve">
+    <value>yes</value>
   </data>
-  <data name="CantSetAtributes" xml:space="preserve">
-    <value>Can't set attributes on {0}: {1}</value>
-  </data>
-  <data name="CheckingChecksum" xml:space="preserve">
-    <value>Checking checksum for {0}</value>
-  </data>
-  <data name="ConnectedWith" xml:space="preserve">
-    <value>Connected with {0}</value>
-  </data>
-  <data name="ConnectingTo" xml:space="preserve">
-    <value>Connecting to {0}</value>
-  </data>
-  <data name="Deleting" xml:space="preserve">
-    <value>Deleting {0}</value>
-  </data>
-  <data name="Downloanding" xml:space="preserve">
-    <value>Downloanding {0}</value>
-  </data>
-  <data name="FileIsUsed" xml:space="preserve">
-    <value>File {0} is used by another process. Waitng {1} seconds for access. </value>
-  </data>
-  <data name="ListenOn" xml:space="preserve">
-    <value>Listen on {0}</value>
-  </data>
-  <data name="SelectedDirectoryIsNotBackupDirectory" xml:space="preserve">
-    <value>Selected directory ({0}) was not used as backup directory.</value>
-  </data>
-  <data name="SelectedDirectoryWasModified" xml:space="preserve">
-    <value>Selected directory ({0}) was used as backup directory but has been modified.</value>
-  </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>Uploading {0}</value>
-  </data>
-  <data name="UseModifiedDirectory" xml:space="preserve">
-    <value>You can use this directory anyway, but any changes will be removed. Do you want use this directory? (type y/Y to use this directory):</value>
-  </data>
-  <data name="UseNewDirectory" xml:space="preserve">
-    <value>You can use this directory anyway, but some (maybe all of them) files and directories can be changed or removed. Do you want use this directory? (type y/Y to use this directory): </value>
+  <data name="YesSingleChar" xml:space="preserve">
+    <value>y</value>
   </data>
 </root>

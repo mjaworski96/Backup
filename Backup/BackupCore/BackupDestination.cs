@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Common;
 using Common.Translations;
 using FilesystemModel;
@@ -23,8 +24,9 @@ namespace BackupCore
         public void MakeBackup(Directory destination)
         {
             Directory source = GetSource();
-            MakeBackup(source, destination, destination.Path);
+            MakeBackup(source, destination, destination.Path, true);
             _communicator.Finish();
+            CreateBackupDirectoryGuardFile(destination);
         }
         private Directory GetSource()
         {
@@ -32,7 +34,7 @@ namespace BackupCore
             _logger.Write(source);
             return source;
         }
-        private void MakeBackup(Directory source, Directory destination, string rootDirectory)
+        private void MakeBackup(Directory source, Directory destination, string rootDirectory, bool isBackupRoot)
         {
             if (source.Attributes != destination.Attributes)
             {
@@ -41,7 +43,8 @@ namespace BackupCore
             source.Compare(destination,
                 out List<FileBase> newFiles,
                 out List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
-                out List<FileBase> deletedFiles);
+                out List<FileBase> deletedFiles,
+                isBackupRoot);
             HandleNewFiles(newFiles, rootDirectory);
             HandleExistingFiles(existingFiles, rootDirectory);
             HandleDeletedFiles(deletedFiles, rootDirectory);
@@ -132,7 +135,8 @@ namespace BackupCore
             Directory sourceDir = inSource as Directory;
             Directory destinationDir = inDestination as Directory;
             MakeBackup(sourceDir, destinationDir,
-                FileBase.BuildPath(rootDirectory, inSource.Name));
+                FileBase.BuildPath(rootDirectory, inSource.Name),
+                false);
         }
 
         private void HandleDifrentTypes(FileBase inSource, FileBase inDestination, string rootDirectory)
@@ -140,10 +144,23 @@ namespace BackupCore
             HandleDeletedFiles(new List<FileBase> { inDestination }, rootDirectory);
             HandleNewFiles(new List<FileBase> { inSource }, rootDirectory);
         }
+
         private bool IsDiffrent(string fileRequestPath, uint crc32)
         {
             return _communicator.GetCrc32(fileRequestPath) != crc32;
         }
+
+        private void CreateBackupDirectoryGuardFile(Directory directory)
+        {
+            var guardFilePath = FileBase.BuildPath(directory.Path, Consts.BackupDirectoryGuardFilePath);
+            if (!directory.Content.Any(x => x.Name == Consts.BackupDirectoryGuardFilePath))
+            {
+                System.IO.File.Create(guardFilePath);
+            }
+            directory.Refresh();
+            System.IO.File.WriteAllText(guardFilePath, directory.ToString());
+        }
+
         public void Dispose()
         {
             _communicator?.Dispose();
