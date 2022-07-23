@@ -157,6 +157,6 @@
     <value>Możesz użyć tego folderu, ale zmiany zostaną skasowane. Czy chesz użyć tego folderu? (wpisz t/T aby wykorzystać ten folder):</value>
   </data>
   <data name="UseNewDirectory" xml:space="preserve">
-    <value>Możesz użyć tego folderu, ale część (być może wszystkie) plik i i foldery mogą zostać zmienione lub skasowane. Czy chesz użyć tego folderu? (wpisz t/T aby wykorzystać ten folder): </value>
+    <value>Możesz użyć tego folderu, ale część (być może wszystkie) plik i foldery mogą zostać zmienione lub skasowane. Czy chesz użyć tego folderu? (wpisz t/T aby wykorzystać ten folder): </value>
   </data>
 </root>
