@@ -180,7 +180,7 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(src);
 
             var backup = BackupHelper.Standard;
-            await backup.CreateBackup(desc, $"{src}/");
+            await backup.CreateBackup($"{desc}/", $"{src}/");
             backup.AssertDirectoryNotChanged();
 
             FileHelpers.Assert(src);
@@ -197,7 +197,7 @@ namespace BackupTests
 
             FileHelpers.CreateTestDirectory(src, content: content);
 
-            await backup.CreateBackup(desc, $"{src}/");
+            await backup.CreateBackup($"{desc}/", $"{src}/");
             backup.AssertDirectoryNotChanged();
 
             FileHelpers.Assert(src, content);

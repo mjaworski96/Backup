@@ -58,7 +58,7 @@ namespace BackupCore
         {
             string filename = _communicator.GetFilename();
             _logger.Write(string.Format(LoggerMessages.Uploading, filename));
-            File file = directory.Find(filename) as File;
+            var file = directory.Find(filename) as File;
             _communicator.SendFile(file.Path);
         }
 
