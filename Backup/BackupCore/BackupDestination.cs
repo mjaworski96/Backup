@@ -155,7 +155,7 @@ namespace BackupCore
             var guardFilePath = FileBase.BuildPath(directory.Path, Consts.BackupDirectoryGuardFilePath);
             if (!directory.Content.Any(x => x.Name == Consts.BackupDirectoryGuardFilePath))
             {
-                System.IO.File.Create(guardFilePath);
+                System.IO.File.Create(guardFilePath).Dispose();
             }
             directory.Refresh();
             System.IO.File.WriteAllText(guardFilePath, directory.ToString());
