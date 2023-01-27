@@ -66,7 +66,7 @@ namespace Communication
         {
             long total = 0;
 
-            using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write, _logger))
+            using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write, _logger))
             {
                 attributes.Set(filename, _logger);
                 _logger.Write(string.Format(LoggerMessages.Downloanding, filename));
