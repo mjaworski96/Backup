@@ -98,7 +98,7 @@ namespace Communication
         {
             _logger.Write(string.Format(LoggerMessages.Downloanding, filename));
             _logger.MaxProgress = 1;
-            System.IO.File.Create(filename);
+            System.IO.File.Create(filename).Dispose();
             _logger.UpdateProgressBar(1);
         }
 
