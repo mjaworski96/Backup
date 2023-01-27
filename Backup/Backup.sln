@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29709.97
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilesystemModel", "FilesystemModel\FilesystemModel.csproj", "{431B766E-CC42-42A8-99B4-54E7D055F49C}"
 EndProject
@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackupCore", "BackupCore\Ba
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backup", "Backup\Backup.csproj", "{1B12FC50-B1E9-4154-A53E-FC9E03EC03B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{4135F058-71B6-452A-99DE-75852138F4E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{4135F058-71B6-452A-99DE-75852138F4E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackupTests", "BackupTests\BackupTests.csproj", "{976651C1-FCE1-4027-9E07-F5494BA85D64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{4135F058-71B6-452A-99DE-75852138F4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4135F058-71B6-452A-99DE-75852138F4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4135F058-71B6-452A-99DE-75852138F4E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{976651C1-FCE1-4027-9E07-F5494BA85D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{976651C1-FCE1-4027-9E07-F5494BA85D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{976651C1-FCE1-4027-9E07-F5494BA85D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{976651C1-FCE1-4027-9E07-F5494BA85D64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

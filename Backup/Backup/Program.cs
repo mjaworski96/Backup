@@ -15,6 +15,8 @@ namespace Backup
 {
     public static class Program
     {
+        public static ILogger Logger { get; set; } = new ConsoleLogger();
+        public static IDataInput DataInput { get; set; } = new ConsoleDataInput();
         public static void Main(string[] args)
         {
             try
@@ -63,7 +65,7 @@ namespace Backup
         }
         private static Directory GetDestinationDirectory(ParametersHandler parameters)
         {
-            var guard = new DirectoryGuard(new ConsoleLogger(), new ConsoleInput());
+            var guard = new DirectoryGuard(Logger, DataInput);
             Directory directory = null;
             do
             {
@@ -106,7 +108,6 @@ namespace Backup
         private static IBackup GetBackup(ParametersHandler parameters)
         {
             var mode = GetMode(parameters);
-            ILogger logger = new ConsoleLogger();
 
             if (mode == Defaults.MODE_DESTINATION)
             {
@@ -116,8 +117,8 @@ namespace Backup
                         GetPort(parameters),
                         GetBufferSize(parameters),
                         new Json(),
-                        logger),
-                    logger,
+                        Logger),
+                    Logger,
                     GetBufferSize(parameters));
             }
             else if (mode == Defaults.MODE_SOURCE)
@@ -128,8 +129,8 @@ namespace Backup
                         GetPort(parameters),
                         GetBufferSize(parameters),
                         new Json(),
-                        logger),
-                    logger,
+                        Logger),
+                    Logger,
                     GetBufferSize(parameters));
             }
             throw new UnsupportedModeException(mode);

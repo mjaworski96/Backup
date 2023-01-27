@@ -150,7 +150,7 @@ namespace BackupCore
             return _communicator.GetCrc32(fileRequestPath) != crc32;
         }
 
-        private void CreateBackupDirectoryGuardFile(Directory directory)
+        public static void CreateBackupDirectoryGuardFile(Directory directory)
         {
             var guardFilePath = FileBase.BuildPath(directory.Path, Consts.BackupDirectoryGuardFilePath);
             if (!directory.Content.Any(x => x.Name == Consts.BackupDirectoryGuardFilePath))

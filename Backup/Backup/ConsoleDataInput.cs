@@ -3,7 +3,7 @@ using System;
 
 namespace Backup
 {
-    public class ConsoleInput : IDataInput
+    public class ConsoleDataInput : IDataInput
     {
         public string Get(string message)
         {
