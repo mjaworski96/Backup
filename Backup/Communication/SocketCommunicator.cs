@@ -4,6 +4,7 @@ using Communication.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
@@ -24,8 +25,7 @@ namespace Communication
         {
             if (bufferSize <= 0)
                 throw new InvalidBufferSizeException(Exceptions.BufferSizeGreaterThanZero);
-
-            IPAddress ip = IPAddress.Parse(address);
+            var ip = Dns.GetHostEntry("localhost").AddressList.FirstOrDefault() ?? IPAddress.Parse(address);
             _endPoint = new IPEndPoint(ip, port);
             _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
