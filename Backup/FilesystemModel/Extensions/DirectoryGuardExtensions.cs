@@ -9,7 +9,7 @@ namespace FilesystemModel.Extensions
         public static List<FileBase> GetFilesWithoutGuard(this Directory directory)
         {
             return directory.Content
-                .Where(x => x.Type != FileType.FILE && x.Name != Consts.BackupDirectoryGuardFilePath)
+                .Where(x => x.Type != FileType.FILE || x.Name != Consts.BackupDirectoryGuardFilePath)
                 .ToList();
         }
     }

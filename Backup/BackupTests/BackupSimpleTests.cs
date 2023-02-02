@@ -279,12 +279,12 @@ namespace BackupTests
         [Fact]
         public async Task BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination()
         {
-            var srcRoot = $"{nameof(BackupShouldNotCopyIgnoredFiles)}Src";
-            var srcA = $"{nameof(BackupShouldNotCopyIgnoredFiles)}SrcA";
-            var srcB = $"{nameof(BackupShouldNotCopyIgnoredFiles)}SrcB";
-            var srcC = $"{nameof(BackupShouldNotCopyIgnoredFiles)}SrcC";
-            var srcD = $"{nameof(BackupShouldNotCopyIgnoredFiles)}SrcD";
-            var desc = $"{nameof(BackupShouldNotCopyIgnoredFiles)}Desc";
+            var srcRoot = $"{nameof(BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination)}Src";
+            var srcA = $"{nameof(BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination)}SrcA";
+            var srcB = $"{nameof(BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination)}SrcB";
+            var srcC = $"{nameof(BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination)}SrcC";
+            var srcD = $"{nameof(BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination)}SrcD";
+            var desc = $"{nameof(BackupShouldCopyFilesEvenIfTheyAreAddedInIgnoreInDestination)}Desc";
 
             var firstContent = "Test content";
             var secondContent = "Test content 2";

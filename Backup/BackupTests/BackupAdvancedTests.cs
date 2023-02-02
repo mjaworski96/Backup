@@ -12,67 +12,71 @@ namespace BackupTests
         public async Task BackupShouldWorkWithMultipleInputFiles()
         {
             var src = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}Src";
-            var srcA = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcA";
-            var srcB = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcB";
-            var srcC = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcC";
+            var srcDirA = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcDirA";
+            var srcDirB = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcDirB";
+            var srcDirC = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcDirC";
             var desc = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}Desc";
+            var srcFileA = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcFileA";
+            var srcFileB = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcFileB";
+            var srcFileC = $"{nameof(BackupShouldWorkWithMultipleInputFiles)}SrcFileC";
 
             FileHelpers.ClearDirectories(desc);
-            FileHelpers.CreateTestDirectory(srcA);
-            FileHelpers.CreateTestDirectory(srcB);
-            FileHelpers.CreateTestDirectory(srcC);
+            FileHelpers.CreateTestDirectory(srcDirA);
+            FileHelpers.CreateTestDirectory(srcDirB);
+            FileHelpers.CreateTestDirectory(srcDirC);
 
-            FileHelpers.CreateFile($"{src}newFileA", "TestA");
-            FileHelpers.CreateFile($"{src}newFileB", "TestB");
-            FileHelpers.CreateFile($"{src}newFileC", "TestC");
+            FileHelpers.CreateFile(srcFileA, "TestA");
+            FileHelpers.CreateFile(srcFileB, "TestB");
+            FileHelpers.CreateFile(srcFileC, "TestC");
 
             var backup = BackupHelper.Standard;
-            await backup.CreateBackup(desc, srcA, srcB, $"{src}newFileA", $"{src}newFileB");
+            await backup.CreateBackup(desc, srcDirA, srcDirB, srcFileA, srcFileB);
             backup.AssertDirectoryNotChanged();
 
-            FileHelpers.Assert(srcA);
-            FileHelpers.Assert($"{desc}/{srcA}");
-            FileHelpers.Assert(srcB);
-            FileHelpers.Assert($"{desc}/{srcB}");
-            FileHelpers.Assert(srcC);
+            FileHelpers.Assert(srcDirA);
+            FileHelpers.Assert($"{desc}/{srcDirA}");
+            FileHelpers.Assert(srcDirB);
+            FileHelpers.Assert($"{desc}/{srcDirB}");
+            FileHelpers.Assert(srcDirC);
             FileHelpers.AssertGuardFile(desc, true);
-            FileHelpers.AssertGuardFile(srcA, false);
-            FileHelpers.AssertGuardFile(srcB, false);
-            FileHelpers.AssertGuardFile(srcC, false);
+            FileHelpers.AssertGuardFile(srcDirA, false);
+            FileHelpers.AssertGuardFile(srcDirB, false);
+            FileHelpers.AssertGuardFile(srcDirC, false);
 
-            FileHelpers.AssertDirectoryNotExists($"{desc}/{srcC}");
-            FileHelpers.AssertFileExists($"{src}newFileA", "TestA");
-            FileHelpers.AssertFileExists($"{src}newFileB", "TestB");
-            FileHelpers.AssertFileExists($"{src}newFileC", "TestC");
+            FileHelpers.AssertDirectoryNotExists($"{desc}/{srcDirC}");
+            FileHelpers.AssertFileExists(srcFileA, "TestA");
+            FileHelpers.AssertFileExists(srcFileB, "TestB");
+            FileHelpers.AssertFileExists(srcFileC, "TestC");
 
-            FileHelpers.AssertFileExists($"{desc}/newFileA", "TestA");
-            FileHelpers.AssertFileExists($"{desc}/newFileB", "TestB");
-            FileHelpers.AssertFileNotExists($"{desc}/newFileC");
+            FileHelpers.AssertFileExists($"{desc}/{srcFileA}", "TestA");
+            FileHelpers.AssertFileExists($"{desc}/{srcFileB}", "TestB");
+            FileHelpers.AssertFileNotExists($"{desc}/{srcFileC}");
 
-            await backup.CreateBackup(desc, srcA, srcC, $"{src}newFileA", "newFileC");
+            FileHelpers.CreateFile(srcFileA, "TestA - modification");
+            await backup.CreateBackup(desc, srcDirA, srcDirC, srcFileA, srcFileC);
             backup.AssertDirectoryNotChanged();
 
-            FileHelpers.Assert(srcA);
-            FileHelpers.Assert($"{desc}/{srcA}");
-            FileHelpers.Assert(srcB);
-            FileHelpers.Assert($"{desc}/{srcB}");
-            FileHelpers.Assert(srcC);
+            FileHelpers.Assert(srcDirA);
+            FileHelpers.Assert($"{desc}/{srcDirA}");
+            FileHelpers.Assert(srcDirB);
+            FileHelpers.Assert($"{desc}/{srcDirC}");
+            FileHelpers.Assert(srcDirC);
             FileHelpers.AssertGuardFile(desc, true);
-            FileHelpers.AssertGuardFile(srcA, false);
-            FileHelpers.AssertGuardFile(srcB, false);
-            FileHelpers.AssertGuardFile(srcC, false);
+            FileHelpers.AssertGuardFile(srcDirA, false);
+            FileHelpers.AssertGuardFile(srcDirB, false);
+            FileHelpers.AssertGuardFile(srcDirC, false);
 
-            FileHelpers.AssertDirectoryNotExists($"{desc}/{srcB}");
-            FileHelpers.AssertFileExists($"{src}newFileA", "TestA");
-            FileHelpers.AssertFileExists($"{src}newFileB", "TestB");
-            FileHelpers.AssertFileExists($"{src}newFileC", "TestC");
+            FileHelpers.AssertDirectoryNotExists($"{desc}/{srcDirB}");
+            FileHelpers.AssertFileExists(srcFileA, "TestA - modification");
+            FileHelpers.AssertFileExists(srcFileB, "TestB");
+            FileHelpers.AssertFileExists(srcFileC, "TestC");
 
-            FileHelpers.AssertFileExists($"{desc}/newFileA", "TestA");
-            FileHelpers.AssertFileNotExists($"{desc}/newFileB");
-            FileHelpers.AssertFileExists($"{desc}/newFileC", "TestC");
+            FileHelpers.AssertFileExists($"{desc}/{srcFileA}", "TestA - modification");
+            FileHelpers.AssertFileNotExists($"{desc}/{srcFileB}");
+            FileHelpers.AssertFileExists($"{desc}/{srcFileC}", "TestC");
 
-            FileHelpers.ClearDirectories(desc, srcA, srcB, srcC);
-            FileHelpers.ClearFiles($"{src}newFileA", $"{src}newFileB", $"{src}newFileC");
+            FileHelpers.ClearDirectories(desc, srcDirA, srcDirB, srcDirC);
+            FileHelpers.ClearFiles(srcFileA, srcFileB, srcFileC);
         }
 
         [Fact]
