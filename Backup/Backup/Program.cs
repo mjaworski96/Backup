@@ -21,7 +21,7 @@ namespace Backup
         {
             try
             {
-                ParametersHandler parameters = new ParametersHandler(args, Defaults.DEFAULTS_PARAMS);
+                ParametersHandler parameters = new ParametersHandler(DataInput, args, Defaults.DEFAULTS_PARAMS);
                 using (IBackup backup = GetBackup(parameters))
                 {
                     FileFactory.IgnoreRegex = GetIgnoreRegex(parameters).ToList();

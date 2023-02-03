@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 
 namespace Backup
@@ -8,9 +10,10 @@ namespace Backup
     {
         private Dictionary<string, List<string>> MultiParams { get; set; }
         private Dictionary<string, string> SingleParams { get; set; }
-
-        public ParametersHandler(string[] args, Dictionary<string, List<string>> defaults)
+        private IDataInput DataInput { get; set;}
+        public ParametersHandler(IDataInput dataInput, string[] args, Dictionary<string, List<string>> defaults)
         {
+            DataInput = dataInput;
             var multi = new Dictionary<string, List<string>>();
             List<string> currentParameter = multi.SafeGet("");
             foreach (var item in args)
@@ -25,14 +28,14 @@ namespace Backup
             SingleParams = multi.Convert();
         }
 
-        public string GetParameter(string key, string consoleMessage, bool mandatory = true)
+        public string GetParameter(string key, string message, bool mandatory = true)
         {
             var containsKey = SingleParams.TryGetValue(key, out string value);
             if (string.IsNullOrEmpty(value))
             {
                 if (mandatory || containsKey)
                 {
-                    value = GetFromConsole(consoleMessage);
+                    value = DataInput.Get(message);
                     SingleParams.AddOrUpdate(key, value);
                 }
                 else
@@ -56,12 +59,6 @@ namespace Backup
                 
             }
             return value;
-        }
-
-        private static string GetFromConsole(string message)
-        {
-            Console.Write($"{message}: ");
-            return Console.ReadLine();
         }
 
         private static IEnumerable<string> GetMultipleValuesFromConsole(string message)
