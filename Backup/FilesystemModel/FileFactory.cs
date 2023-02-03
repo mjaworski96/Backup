@@ -5,11 +5,16 @@ using System.Text.RegularExpressions;
 
 namespace FilesystemModel
 {
-    public static class FileFactory
+    public class FileFactory
     {
-        public static List<Regex> IgnoreRegex;
+        public List<Regex> IgnoreRegex;
 
-        public static bool MustBeIgnored(string filename)
+        public FileFactory(List<Regex> ignoreRegex)
+        {
+            IgnoreRegex = ignoreRegex;
+        }
+
+        public bool MustBeIgnored(string filename)
         {
             filename = filename.Replace('\\', '/');
             if (IgnoreRegex != null)
@@ -23,12 +28,12 @@ namespace FilesystemModel
             return false;
         }
 
-        public static FileBase Create(string filename, bool createDirectoryIfNotExists)
+        public FileBase Create(string filename, bool createDirectoryIfNotExists)
         {
             var attributes = System.IO.File.GetAttributes(filename.Split('*').First());
             if(attributes.HasFlag(FileAttributes.Directory))
             {
-                return new Directory(filename, createDirectoryIfNotExists);
+                return new Directory(this, filename, createDirectoryIfNotExists);
             }
             else
             {

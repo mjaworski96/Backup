@@ -4,7 +4,7 @@ namespace FilesystemModel
 {
     public class VirtualDirectory : Directory
     {
-        public VirtualDirectory() : base("", false)
+        public VirtualDirectory(FileFactory fileFactory) : base(fileFactory, "", false)
         {
             content = new List<FileBase>();
         }

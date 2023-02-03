@@ -3,6 +3,7 @@ using Common;
 using Shouldly;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -337,7 +338,7 @@ namespace BackupTests
 
             var backup = BackupHelper.Standard;
             backup.DestinationIgnorePatterns = new[] { $"/{srcB}", $"/{srcD}" };
-            FileHelpers.RefreshGuardFile(desc);
+            FileHelpers.RefreshGuardFile(desc, backup.DestinationIgnorePatterns.ToArray());
 
             await backup.CreateBackup(desc, srcRoot);
             backup.AssertDirectoryNotChanged();

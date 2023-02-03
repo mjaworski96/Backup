@@ -1,11 +1,10 @@
 ﻿using BackupCore;
 using Common;
 using Shouldly;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BackupTests
 {
@@ -115,10 +114,11 @@ namespace BackupTests
             AssertFileExists($"{path}/directoryA/directoryB/fileC", content);
         }
 
-        public static void RefreshGuardFile(string path)
+        public static void RefreshGuardFile(string path, params string[] ignoreFilesRegex)
         {
             FilesystemModel.Directory.PREFIX_GROSS = "|   ";
-            BackupDestination.CreateBackupDirectoryGuardFile(new FilesystemModel.Directory($"{TestFilesDirectory}/{path}", false));
+            var fileFactory = new FilesystemModel.FileFactory(ignoreFilesRegex.Select(x => new Regex(x)).ToList());
+            BackupDestination.CreateBackupDirectoryGuardFile(new FilesystemModel.Directory(fileFactory, $"{TestFilesDirectory}/{path}", false));
         }
 
         private static void CreateFileWithText(string path, Dictionary<string, string> content)

@@ -7,13 +7,15 @@ namespace FilesystemModel
 {
     public class Directory : FileBase
     {
+        private FileFactory fileFactory;
         public static string PREFIX_GROSS = "";
         protected List<FileBase> content;
 
         public Directory() { }
 
-        public Directory(string path, bool createDirectoryIfNotExists) : base(path)
+        public Directory(FileFactory fileFactory, string path, bool createDirectoryIfNotExists) : base(path)
         {
+            this.fileFactory = fileFactory;
             content = GetDirectoryContent(createDirectoryIfNotExists).ToList();
         }
         public override string ToString(string prefix)
@@ -38,8 +40,8 @@ namespace FilesystemModel
                 string[] files = System.IO.Directory.GetFileSystemEntries(Path, "*", SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
-                    if(!FileFactory.MustBeIgnored(file))
-                        yield return FileFactory.Create(file, false);
+                    if(!fileFactory.MustBeIgnored(file))
+                        yield return fileFactory.Create(file, false);
                 }
             }
         }

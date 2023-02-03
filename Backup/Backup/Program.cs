@@ -24,8 +24,8 @@ namespace Backup
                 ParametersHandler parameters = new ParametersHandler(DataInput, args, Defaults.DEFAULTS_PARAMS);
                 using (IBackup backup = GetBackup(parameters))
                 {
-                    FileFactory.IgnoreRegex = GetIgnoreRegex(parameters).ToList();
-                    var directory = GetDirectory(parameters);
+                    FileFactory fileFactory = new FileFactory(GetIgnoreRegex(parameters).ToList());
+                    var directory = GetDirectory(fileFactory, parameters);
                     backup.MakeBackup(directory);
                 }
             }
@@ -63,7 +63,7 @@ namespace Backup
         {
             return parameters.GetParameters(Defaults.FILES_KEY, Messages.SourceFiles);
         }
-        private static Directory GetDestinationDirectory(ParametersHandler parameters)
+        private static Directory GetDestinationDirectory(FileFactory fileFactory, ParametersHandler parameters)
         {
             var guard = new DirectoryGuard(Logger, DataInput);
             Directory directory = null;
@@ -73,7 +73,7 @@ namespace Backup
                 {
                     parameters.RemoveSingleParam(Defaults.FILES_KEY);
                 }
-                directory = new Directory(GetDestinationDirectoryPath(parameters), true);
+                directory = new Directory(fileFactory, GetDestinationDirectoryPath(parameters), true);
             } while (!guard.CheckTargetDirectory(directory));
             
             return directory;
@@ -83,24 +83,24 @@ namespace Backup
             var patterns = parameters.GetParameters(Defaults.IGNORE_KEY, Messages.IngoreFilesPattern, false);
             return Parser.Parse(patterns);
         }
-        private static Directory GetSourceDirectory(ParametersHandler parameters)
+        private static Directory GetSourceDirectory(FileFactory fileFactory, ParametersHandler parameters)
         {
-            VirtualDirectory directory = new VirtualDirectory();
+            VirtualDirectory directory = new VirtualDirectory(fileFactory);
 
             foreach (var item in GetSourceDirectoryContentPath(parameters))
             {
-                directory.Add(FileFactory.Create(item, false));
+                directory.Add(fileFactory.Create(item, false));
             }
 
             return directory;
         }
-        private static Directory GetDirectory(ParametersHandler parameters)
+        private static Directory GetDirectory(FileFactory fileFactory, ParametersHandler parameters)
         {
             var mode = GetMode(parameters);
             if (mode == Defaults.MODE_SOURCE)
-                return GetSourceDirectory(parameters);
+                return GetSourceDirectory(fileFactory, parameters);
             else if (mode == Defaults.MODE_DESTINATION)
-                return GetDestinationDirectory(parameters);
+                return GetDestinationDirectory(fileFactory, parameters);
             else
                 throw new UnsupportedModeException(mode);
         }
