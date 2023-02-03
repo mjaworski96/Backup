@@ -111,6 +111,9 @@ namespace BackupTests
             FileHelpers.AssertDirectoryExists($"{desc}/{srcB}");
             FileHelpers.AssertGuardFile(desc, true);
 
+            FileHelpers.ClearDirectories(srcB, desc);
+            FileHelpers.ClearFiles(srcA);
+
         }
         [Theory]
         [InlineData("10M")]
