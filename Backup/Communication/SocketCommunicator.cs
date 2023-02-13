@@ -25,7 +25,11 @@ namespace Communication
         {
             if (bufferSize <= 0)
                 throw new InvalidBufferSizeException();
-            var ip = Dns.GetHostEntry("localhost").AddressList.FirstOrDefault() ?? IPAddress.Parse(address);
+            if (!IPAddress.TryParse(address, out var ip))
+            {
+                ip = Dns.GetHostEntry(address).AddressList.FirstOrDefault() ?? IPAddress.Parse(address);
+            }
+
             _endPoint = new IPEndPoint(ip, port);
             _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
