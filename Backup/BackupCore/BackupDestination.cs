@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Common;
 using Common.Translations;
@@ -120,7 +121,7 @@ namespace BackupCore
             File sourceFile = inSource as File;
             File destinationFile = inDestination as File;
             _logger.Write(string.Format(LoggerMessages.CheckingChecksum, sourceFile.Path));
-            if (IsDiffrent(sourceFile.Path, destinationFile.CalculateCrc32(_bufferSize, _logger)))
+            if (IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger)))
             {
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }
@@ -145,9 +146,14 @@ namespace BackupCore
             HandleNewFiles(new List<FileBase> { inSource }, rootDirectory);
         }
 
-        private bool IsDiffrent(string fileRequestPath, uint crc32)
+        private bool IsDiffrent(string fileRequestPath, long fileSize, Func<uint> crc32)
         {
-            return _communicator.GetCrc32(fileRequestPath) != crc32;
+            long sourceFileSize = _communicator.GetFileSize(fileRequestPath);
+            if (sourceFileSize != fileSize)
+            {
+                return true;
+            }
+            return _communicator.GetCrc32(fileRequestPath) != crc32();
         }
 
         public static void CreateBackupDirectoryGuardFile(Directory directory)

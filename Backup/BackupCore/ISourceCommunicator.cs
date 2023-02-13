@@ -10,5 +10,6 @@ namespace BackupCore
         string GetFilename();
         void SendFile(string filename);
         void SendCrc32(uint crc32);
+        void SendFileSize(long size);
     }
 }

@@ -66,5 +66,10 @@ namespace Communication
                 Send(0L);
             }
         }
+
+        public void SendFileSize(long size)
+        {
+            SendSize(size);
+        }
     }
 }

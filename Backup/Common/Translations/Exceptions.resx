@@ -120,4 +120,7 @@
   <data name="BufferSizeGreaterThanZero" xml:space="preserve">
     <value>Buffer size must be greater than 0</value>
   </data>
+  <data name="UnsupportedRequest" xml:space="preserve">
+    <value>Request type: {0} is not supported</value>
+  </data>
 </root>

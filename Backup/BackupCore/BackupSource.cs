@@ -27,36 +27,47 @@ namespace BackupCore
         }
         private void HandleRequests(Directory directory)
         {
-            Request request = Request.FINISH;
+            Request request;
             do
             {
                 request = _communicator.GetRequest();
                 switch (request)
                 {
                     case Request.GET_FILE:
-                        GetFile(directory);
+                        SendFile(directory);
                         break;
                     case Request.GET_CRC32:
-                        GetCrc32(directory);
+                        SendCrc32(directory);
+                        break;
+                    case Request.GET_FILE_SIZE:
+                        SendFileSize(directory);
                         break;
                     case Request.FINISH:
-                    default:
                         break;
+                    default:
+                        throw new UnsuportedRequestException((int)request);
                 }
             } while (request != Request.FINISH);
         }
 
-        private void GetCrc32(Directory directory)
+        private void SendCrc32(Directory directory)
         {
-            string filename = _communicator.GetFilename();
+            var filename = _communicator.GetFilename();
             _logger.Write(string.Format(LoggerMessages.CalculatingChecksum, filename));
-            File file = directory.Find(filename) as File;
+            var file = directory.Find(filename) as File;
             _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger));
         }
 
-        private void GetFile(Directory directory)
+        private void SendFileSize(Directory directory)
         {
-            string filename = _communicator.GetFilename();
+            var filename = _communicator.GetFilename();
+            var file = directory.Find(filename) as File;
+            _communicator.SendFileSize(file.Size);
+        }
+
+        private void SendFile(Directory directory)
+        {
+            var filename = _communicator.GetFilename();
             _logger.Write(string.Format(LoggerMessages.Uploading, filename));
             var file = directory.Find(filename) as File;
             _communicator.SendFile(file.Path);

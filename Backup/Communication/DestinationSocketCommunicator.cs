@@ -108,5 +108,11 @@ namespace Communication
             _socket.Send(content);
         }
 
+        public long GetFileSize(string fileRequestPath)
+        {
+            SendRequest(Request.GET_FILE_SIZE);
+            Send(fileRequestPath);
+            return ReceiveSize();
+        }
     }
 }

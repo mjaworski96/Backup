@@ -6,10 +6,12 @@ namespace FilesystemModel
 {
     public class File : FileBase
     {
+        public long Size { get; set; }
         public File() { }
 
         public File(string path) : base(path)
         {
+            Size = new FileInfo(Path).Length;
         }
 
         public override FileType Type => FileType.FILE;

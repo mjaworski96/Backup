@@ -120,4 +120,7 @@
   <data name="BufferSizeGreaterThanZero" xml:space="preserve">
     <value>Rozmiar bufora musi być większy od 0</value>
   </data>
+  <data name="UnsupportedRequest" xml:space="preserve">
+    <value>Typ żądania: {0} jest nieprawidłowy</value>
+  </data>
 </root>

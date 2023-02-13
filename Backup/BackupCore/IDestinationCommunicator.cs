@@ -13,5 +13,6 @@ namespace BackupCore
             System.IO.FileAttributes attributes);
         uint GetCrc32(string fileRequestPath);
         void Finish();
+        long GetFileSize(string fileRequestPath);
     }
 }
