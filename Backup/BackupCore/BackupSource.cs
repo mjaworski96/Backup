@@ -55,7 +55,7 @@ namespace BackupCore
             var filename = _communicator.GetFilename();
             _logger.Write(string.Format(LoggerMessages.CalculatingChecksum, filename));
             var file = directory.Find(filename) as File;
-            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger));
+            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger, false));
         }
 
         private void SendFileSize(Directory directory)

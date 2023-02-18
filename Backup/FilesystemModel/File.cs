@@ -16,11 +16,11 @@ namespace FilesystemModel
 
         public override FileType Type => FileType.FILE;
 
-        public uint CalculateCrc32(int bufferSize, ILogger logger)
+        public uint CalculateCrc32(int bufferSize, ILogger logger, bool setFileNormalAttribute)
         {
             uint crc32 = 0;
             using (Stream stream =
-                SafeFileUsage.GetFile(Path, FileMode.Open, FileAccess.Read, logger))
+                SafeFileUsage.GetFile(Path, FileMode.Open, FileAccess.Read, logger, setFileNormalAttribute))
             {
                 byte[] buffer = stream.Length > bufferSize ?
                     new byte[bufferSize] : new byte[stream.Length];

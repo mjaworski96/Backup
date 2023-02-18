@@ -7,6 +7,7 @@ namespace BackupTests
 {
     internal class NullLogger : ILogger
     {
+        public int ErrorsCount { get; set; }
         public long MaxProgress { get; set; }
 
         public void ShowCompleted()
@@ -26,7 +27,7 @@ namespace BackupTests
 
         public void WriteError(object message)
         {
-            
+            ErrorsCount++;
         }
     }
 }

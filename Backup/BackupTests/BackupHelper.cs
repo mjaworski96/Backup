@@ -36,6 +36,7 @@ namespace BackupTests
         public IEnumerable<string> SourceIgnorePatterns { get; set; }
 
         public NullDataInput DataInput { get; private set; }
+        public NullLogger Logger { get; private set; }
 
         public BackupHelper(string address, string bufferSize, IEnumerable<string> destinationIgnorePatterns, IEnumerable<string> sourceIgnorePatterns)
         {
@@ -66,7 +67,7 @@ namespace BackupTests
 
         public async Task CreateBackup(string destination, params string[] source)
         {
-            Program.Logger = new NullLogger();
+            Program.Logger = Logger = new NullLogger();
             Program.DataInput = DataInput = new NullDataInput();
             var port = GetPort();
             var destinationTask = Task.Run(() =>
@@ -92,6 +93,11 @@ namespace BackupTests
         public void AssertDirectoryChanged()
         {
             DataInput.Called.ShouldBeTrue();
+        }
+
+        public void AssertErrorsCount(int count = 0)
+        {
+            Logger.ErrorsCount.ShouldBe(count);
         }
 
         private string CreateBaseParameters()

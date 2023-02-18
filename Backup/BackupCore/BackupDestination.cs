@@ -121,7 +121,7 @@ namespace BackupCore
             File sourceFile = inSource as File;
             File destinationFile = inDestination as File;
             _logger.Write(string.Format(LoggerMessages.CheckingChecksum, sourceFile.Path));
-            if (IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger)))
+            if (IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger, true)))
             {
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }

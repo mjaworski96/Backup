@@ -1,10 +1,12 @@
-﻿using Common.Translations;
+﻿using Common;
+using Common.Translations;
+using FilesystemModel.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
-namespace Common
+namespace FilesystemModel
 {
     public static class SafeFileUsage
     {
@@ -26,13 +28,19 @@ namespace Common
 
         public static FileStream GetFile(string filename, 
             FileMode fileMode, FileAccess fileAccess,
-            ILogger logger)
+            ILogger logger,
+            bool setFileNormalAttribute)
         {   
             FileStream file = null;
             do
             {
                 try
                 {
+                    if (setFileNormalAttribute && System.IO.File.Exists(filename))
+                    {
+                        FileAttributes.Normal.Set(filename, logger);
+                    }
+                    
                     file = new FileStream(filename, fileMode, fileAccess);
                 }
                 catch (IOException e)
@@ -47,7 +55,6 @@ namespace Common
                     {
                         throw e;
                     }
-                    
                 }
             } while (file == null);
             return file;

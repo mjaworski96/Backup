@@ -1,6 +1,4 @@
-﻿using Backup;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -113,7 +111,6 @@ namespace BackupTests
 
             FileHelpers.ClearDirectories(srcB, desc);
             FileHelpers.ClearFiles(srcA);
-
         }
         [Theory]
         [InlineData("10M")]
@@ -304,6 +301,112 @@ namespace BackupTests
             FileHelpers.ClearDirectories(srcA, desc);
             FileHelpers.ClearFiles(srcB);
             FileHelpers.ClearFiles(srcAliasA);
+        }
+
+        [Fact]
+        public async Task BackupShouldWorkWithHiddenFiles()
+        {
+            var src = $"{nameof(BackupShouldWorkWithHiddenFiles)}SrcA";
+            var desc = $"{nameof(BackupShouldWorkWithHiddenFiles)}Desc";
+
+            FileHelpers.ClearDirectories(desc);
+            FileHelpers.CreateFile(src, "InitialContent");
+            FileHelpers.HideFile(src);
+
+            var backup = BackupHelper.Standard;
+            await backup.CreateBackup(desc, src, src);
+            backup.AssertDirectoryNotChanged();
+
+            FileHelpers.AssertFileExists(src, "InitialContent");
+            FileHelpers.AssertFileIsHidden(src);
+            FileHelpers.AssertFileExists($"{desc}/{src}", "InitialContent");
+            FileHelpers.AssertFileIsHidden($"{desc}/{src}");
+            FileHelpers.AssertGuardFile(desc, true);
+            
+            FileHelpers.CreateFile(src, "ModifiedContent");
+            FileHelpers.HideFile(src);
+
+            await backup.CreateBackup(desc, src);
+            backup.AssertDirectoryNotChanged();
+
+            FileHelpers.AssertFileExists(src, "ModifiedContent");
+            FileHelpers.AssertFileIsHidden(src);
+            FileHelpers.AssertFileExists($"{desc}/{src}", "ModifiedContent");
+            FileHelpers.AssertFileIsHidden($"{desc}/{src}");
+            FileHelpers.AssertGuardFile(desc, true);
+
+            FileHelpers.ClearDirectories(src, desc);
+            FileHelpers.ClearFiles(src);
+        }
+
+        [Fact]
+        public async Task BackupShouldAddHiddenAttribute()
+        {
+            var src = $"{nameof(BackupShouldAddHiddenAttribute)}SrcA";
+            var desc = $"{nameof(BackupShouldAddHiddenAttribute)}Desc";
+
+            FileHelpers.ClearDirectories(desc);
+            FileHelpers.CreateFile(src, "InitialContent");
+
+            var backup = BackupHelper.Standard;
+            await backup.CreateBackup(desc, src, src);
+            backup.AssertDirectoryNotChanged();
+
+            FileHelpers.AssertFileExists(src, "InitialContent");
+            FileHelpers.AssertFileIsVisible(src);
+            FileHelpers.AssertFileExists($"{desc}/{src}", "InitialContent");
+            FileHelpers.AssertFileIsVisible($"{desc}/{src}");
+            FileHelpers.AssertGuardFile(desc, true);
+
+            FileHelpers.CreateFile(src, "ModifiedContent");
+            FileHelpers.HideFile(src);
+
+            await backup.CreateBackup(desc, src);
+            backup.AssertDirectoryNotChanged();
+
+            FileHelpers.AssertFileExists(src, "ModifiedContent");
+            FileHelpers.AssertFileIsHidden(src);
+            FileHelpers.AssertFileExists($"{desc}/{src}", "ModifiedContent");
+            FileHelpers.AssertFileIsHidden($"{desc}/{src}");
+            FileHelpers.AssertGuardFile(desc, true);
+
+            FileHelpers.ClearDirectories(src, desc);
+            FileHelpers.ClearFiles(src);
+        }
+
+        [Fact]
+        public async Task BackupShouldRemoveHiddenAttribute()
+        {
+            var src = $"{nameof(BackupShouldRemoveHiddenAttribute)}SrcA";
+            var desc = $"{nameof(BackupShouldRemoveHiddenAttribute)}Desc";
+
+            FileHelpers.ClearDirectories(desc);
+            FileHelpers.CreateFile(src, "InitialContent");
+            FileHelpers.HideFile(src);
+
+            var backup = BackupHelper.Standard;
+            await backup.CreateBackup(desc, src, src);
+            backup.AssertDirectoryNotChanged();
+
+            FileHelpers.AssertFileExists(src, "InitialContent");
+            FileHelpers.AssertFileIsHidden(src);
+            FileHelpers.AssertFileExists($"{desc}/{src}", "InitialContent");
+            FileHelpers.AssertFileIsHidden($"{desc}/{src}");
+            FileHelpers.AssertGuardFile(desc, true);
+
+            FileHelpers.CreateFile(src, "ModifiedContent");
+
+            await backup.CreateBackup(desc, src);
+            backup.AssertDirectoryNotChanged();
+
+            FileHelpers.AssertFileExists(src, "ModifiedContent");
+            FileHelpers.AssertFileIsVisible(src);
+            FileHelpers.AssertFileExists($"{desc}/{src}", "ModifiedContent");
+            FileHelpers.AssertFileIsVisible($"{desc}/{src}");
+            FileHelpers.AssertGuardFile(desc, true);
+
+            FileHelpers.ClearDirectories(src, desc);
+            FileHelpers.ClearFiles(src);
         }
     }
 }

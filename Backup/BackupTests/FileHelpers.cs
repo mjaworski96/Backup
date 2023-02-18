@@ -79,6 +79,20 @@ namespace BackupTests
             File.Create($"{TestFilesDirectory}/{path}").Dispose();
             File.WriteAllText($"{TestFilesDirectory}/{path}", content);
         }
+        public static void HideFile(string path)
+        {
+            File.SetAttributes($"{TestFilesDirectory}/{path}", FileAttributes.Hidden);
+        }
+        public static void AssertFileIsHidden(string path)
+        {
+            var attributes = File.GetAttributes($"{TestFilesDirectory}/{path}");
+            (attributes & FileAttributes.Hidden).ShouldBe(FileAttributes.Hidden);
+        }
+        public static void AssertFileIsVisible(string path)
+        {
+            var attributes = File.GetAttributes($"{TestFilesDirectory}/{path}");
+            ((int)(attributes & FileAttributes.Hidden)).ShouldBe(0);
+        }
         public static void CreateDirectory(string path)
         {
             ClearDirectories(path);
