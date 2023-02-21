@@ -19,7 +19,7 @@ namespace Common.Translations {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class LoggerMessages {
@@ -84,6 +84,15 @@ namespace Common.Translations {
         public static string CheckingChecksum {
             get {
                 return ResourceManager.GetString("CheckingChecksum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checking filesize for {0}.
+        /// </summary>
+        public static string CheckingFileSize {
+            get {
+                return ResourceManager.GetString("CheckingFileSize", resourceCulture);
             }
         }
         
@@ -156,6 +165,15 @@ namespace Common.Translations {
         public static string SelectedDirectoryWasModified {
             get {
                 return ResourceManager.GetString("SelectedDirectoryWasModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sending file size for {0}.
+        /// </summary>
+        public static string SendingFileSize {
+            get {
+                return ResourceManager.GetString("SendingFileSize", resourceCulture);
             }
         }
         

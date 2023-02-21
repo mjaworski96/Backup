@@ -126,6 +126,9 @@
   <data name="CheckingChecksum" xml:space="preserve">
     <value>Checking checksum for {0}</value>
   </data>
+  <data name="CheckingFileSize" xml:space="preserve">
+    <value>Checking filesize for {0}</value>
+  </data>
   <data name="ConnectedWith" xml:space="preserve">
     <value>Connected with {0}</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="SelectedDirectoryWasModified" xml:space="preserve">
     <value>Selected directory ({0}) was used as backup directory but has been modified.</value>
+  </data>
+  <data name="SendingFileSize" xml:space="preserve">
+    <value>Sending file size for {0}</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>Uploading {0}</value>

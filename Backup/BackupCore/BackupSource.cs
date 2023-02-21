@@ -61,6 +61,7 @@ namespace BackupCore
         private void SendFileSize(Directory directory)
         {
             var filename = _communicator.GetFilename();
+            _logger.Write(string.Format(LoggerMessages.SendingFileSize, filename));
             var file = directory.Find(filename) as File;
             _communicator.SendFileSize(file.Size);
         }

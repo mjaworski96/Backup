@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Common;
 using Common.Translations;
@@ -120,7 +121,7 @@ namespace BackupCore
         {
             File sourceFile = inSource as File;
             File destinationFile = inDestination as File;
-            _logger.Write(string.Format(LoggerMessages.CheckingChecksum, sourceFile.Path));
+            _logger.Write(string.Format(LoggerMessages.CheckingFileSize, sourceFile.Path));
             if (IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger, true)))
             {
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
@@ -153,6 +154,7 @@ namespace BackupCore
             {
                 return true;
             }
+            _logger.Write(string.Format(LoggerMessages.CheckingChecksum, fileRequestPath));
             return _communicator.GetCrc32(fileRequestPath) != crc32();
         }
 

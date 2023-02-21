@@ -126,6 +126,9 @@
   <data name="CheckingChecksum" xml:space="preserve">
     <value>Sprawdzanie sumy kontrolnej dla {0}</value>
   </data>
+  <data name="CheckingFileSize" xml:space="preserve">
+    <value>Sprawdzanie długości pliku dla {0}</value>
+  </data>
   <data name="ConnectedWith" xml:space="preserve">
     <value>Połączono z {0}</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="SelectedDirectoryWasModified" xml:space="preserve">
     <value>Wybrany folder ({0}) był użyty jako folder kopii zapasowej, ale został zmodyfikowany.</value>
+  </data>
+  <data name="SendingFileSize" xml:space="preserve">
+    <value>Wysyłanie rozmiaru pliku: {0}</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>Wysyłanie {0}</value>
