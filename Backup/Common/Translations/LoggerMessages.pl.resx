@@ -127,7 +127,7 @@
     <value>Sprawdzanie sumy kontrolnej dla {0}</value>
   </data>
   <data name="CheckingFileSize" xml:space="preserve">
-    <value>Sprawdzanie długości pliku dla {0}</value>
+    <value>Sprawdzanie rozmiaru pliku dla {0}</value>
   </data>
   <data name="ConnectedWith" xml:space="preserve">
     <value>Połączono z {0}</value>
