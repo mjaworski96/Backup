@@ -24,9 +24,10 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(src);
             FileHelpers.ClearDirectories(desc);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src);
             FileHelpers.Assert($"{desc}/{src}");
@@ -44,9 +45,10 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(src);
             FileHelpers.CreateTestDirectory(desc, src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src);
             FileHelpers.Assert($"{desc}/{src}");
@@ -71,9 +73,10 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(src, content: filesContent);
             FileHelpers.CreateTestDirectory(desc, src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
 
             FileHelpers.Assert(src, filesContent);
@@ -94,9 +97,10 @@ namespace BackupTests
             FileHelpers.CreateDirectory($"{src}/directoryNew");
             FileHelpers.CreateTestDirectory(desc, src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src);
             FileHelpers.Assert($"{desc}/{src}");
@@ -122,9 +126,10 @@ namespace BackupTests
             FileHelpers.CreateDirectory($"{desc}/{src}/directoryOld");
             FileHelpers.RefreshGuardFile(desc);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src);
             FileHelpers.Assert($"{desc}/{src}");
@@ -155,9 +160,10 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(desc, src);
             FileHelpers.CreateFile($"{desc}/{src}/newFile", "");
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryChanged();
+            backup.AssertErrorsCount(1);
 
             FileHelpers.Assert(src, filesContent);
             FileHelpers.Assert($"{desc}/{src}", filesContent);
@@ -185,9 +191,10 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(desc, src);
             FileHelpers.ClearFiles($"{desc}/{Consts.BackupDirectoryGuardFilePath}");
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryChanged();
+            backup.AssertErrorsCount(1);
 
             FileHelpers.Assert(src, filesContent);
             FileHelpers.Assert($"{desc}/{src}", filesContent);
@@ -212,11 +219,12 @@ namespace BackupTests
             FileHelpers.CreateDirecotriesForIgnoreTests(srcRoot, srcA, srcB, srcC, srcD, firstContent, secondContent);
             FileHelpers.ClearDirectories(desc);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             backup.SourceIgnorePatterns = new[] { $"/{srcB}", $"/{srcD}" };
 
             await backup.CreateBackup(desc, srcRoot);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcA}");
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcB}");
@@ -253,12 +261,13 @@ namespace BackupTests
             FileHelpers.CreateDirecotriesForIgnoreTests($"{desc}/{srcRoot}", srcA, srcB, srcC, srcD, firstContentDesc, secondContentDesc);
             
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             backup.SourceIgnorePatterns = new[] { $"/{srcB}", $"/{srcD}" };
             FileHelpers.RefreshGuardFile(desc);
 
             await backup.CreateBackup(desc, srcRoot);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcA}");
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcB}");
@@ -293,11 +302,12 @@ namespace BackupTests
             FileHelpers.CreateDirecotriesForIgnoreTests(srcRoot, srcA, srcB, srcC, srcD, firstContent, secondContent);
             FileHelpers.ClearDirectories(desc);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             backup.DestinationIgnorePatterns = new[] { $"/{srcB}", $"/{srcD}" };
 
             await backup.CreateBackup(desc, srcRoot);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcA}");
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcB}");
@@ -336,12 +346,13 @@ namespace BackupTests
             FileHelpers.ClearDirectories($"{srcRoot}/{srcB}");
             FileHelpers.ClearFiles($"{srcRoot}/{srcD}");
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             backup.DestinationIgnorePatterns = new[] { $"/{srcB}", $"/{srcD}" };
             FileHelpers.RefreshGuardFile(desc, backup.DestinationIgnorePatterns.ToArray());
 
             await backup.CreateBackup(desc, srcRoot);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertDirectoryExists($"{srcRoot}/{srcA}");
             FileHelpers.AssertDirectoryNotExists($"{srcRoot}/{srcB}");

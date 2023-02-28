@@ -38,12 +38,9 @@ namespace BackupTests
         public NullDataInput DataInput { get; private set; }
         public NullLogger Logger { get; private set; }
 
-        public BackupHelper(string address, string bufferSize, IEnumerable<string> destinationIgnorePatterns, IEnumerable<string> sourceIgnorePatterns)
+        public BackupHelper(string address)
         {
             Address = address;
-            BufferSize = bufferSize;
-            DestinationIgnorePatterns = destinationIgnorePatterns;
-            SourceIgnorePatterns = sourceIgnorePatterns;
         }
 
         private int? _port;
@@ -63,7 +60,8 @@ namespace BackupTests
             }
         }
 
-        public static BackupHelper Standard => new BackupHelper("127.0.0.1", null, null, null);
+        public static BackupHelper Default => new BackupHelper("127.0.0.1");
+        public static BackupHelper WithLocalhostAddress => new BackupHelper("localhost");
 
         public async Task CreateBackup(string destination, params string[] source)
         {
@@ -95,7 +93,7 @@ namespace BackupTests
             DataInput.Called.ShouldBeTrue();
         }
 
-        public void AssertErrorsCount(int count = 0)
+        public void AssertErrorsCount(int count)
         {
             Logger.ErrorsCount.ShouldBe(count);
         }

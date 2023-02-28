@@ -27,9 +27,10 @@ namespace BackupTests
             FileHelpers.CreateFile(srcFileB, "TestB");
             FileHelpers.CreateFile(srcFileC, "TestC");
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, srcDirA, srcDirB, srcFileA, srcFileB);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(srcDirA);
             FileHelpers.Assert($"{desc}/{srcDirA}");
@@ -53,6 +54,7 @@ namespace BackupTests
             FileHelpers.CreateFile(srcFileA, "TestA - modification");
             await backup.CreateBackup(desc, srcDirA, srcDirC, srcFileA, srcFileC);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(srcDirA);
             FileHelpers.Assert($"{desc}/{srcDirA}");
@@ -88,9 +90,10 @@ namespace BackupTests
             FileHelpers.CreateFile(srcA, "");
             FileHelpers.CreateDirectory(srcB);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, srcA, srcB);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(srcA, "");
             FileHelpers.AssertDirectoryExists(srcB);
@@ -102,6 +105,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, srcA, srcB);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(srcA, "");
             FileHelpers.AssertDirectoryExists(srcB);
@@ -136,10 +140,11 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(srcA, content: content);
             FileHelpers.CreateFile(srcB, content["fileD"]);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             backup.BufferSize = bufferSize;
             await backup.CreateBackup(desc, srcA, srcB);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(srcA, content);
             FileHelpers.Assert($"{desc}/{srcA}", content);
@@ -162,6 +167,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, srcA, srcB);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(srcA, content);
             FileHelpers.Assert($"{desc}/{srcA}", content);
@@ -183,9 +189,10 @@ namespace BackupTests
             FileHelpers.ClearDirectories(desc);
             FileHelpers.CreateTestDirectory(src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup($"{desc}/", $"{src}/");
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src);
             FileHelpers.Assert($"{desc}/{src}/");
@@ -203,6 +210,7 @@ namespace BackupTests
 
             await backup.CreateBackup($"{desc}/", $"{src}/");
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src, content);
             FileHelpers.Assert($"{desc}/{src}", content);
@@ -221,10 +229,11 @@ namespace BackupTests
             FileHelpers.ClearDirectories(desc);
             FileHelpers.CreateTestDirectory(src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             backup.Address = "localhost";
             await backup.CreateBackup(desc, $"{src}");
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src);
             FileHelpers.Assert($"{desc}/{src}");
@@ -242,6 +251,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, $"{src}");
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(src, content);
             FileHelpers.Assert($"{desc}/{src}", content);
@@ -266,9 +276,10 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(srcA);
             FileHelpers.CreateFile(srcB, "First test");
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.WithLocalhostAddress;
             await backup.CreateBackup(desc, $"{srcA}*{srcAliasA}", $"{srcB}*{srcAliasB}");
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(srcA);
             FileHelpers.Assert($"{desc}/{srcAliasA}");
@@ -290,6 +301,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, $"{srcA}*{srcAliasA}", $"{srcB}*{srcAliasB}");
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.Assert(srcA, content);
             FileHelpers.Assert($"{desc}/{srcAliasA}", content);
@@ -313,9 +325,10 @@ namespace BackupTests
             FileHelpers.CreateFile(src, "InitialContent");
             FileHelpers.HideFile(src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(src, "InitialContent");
             FileHelpers.AssertFileIsHidden(src);
@@ -328,6 +341,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(src, "ModifiedContent");
             FileHelpers.AssertFileIsHidden(src);
@@ -348,9 +362,10 @@ namespace BackupTests
             FileHelpers.ClearDirectories(desc);
             FileHelpers.CreateFile(src, "InitialContent");
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(src, "InitialContent");
             FileHelpers.AssertFileIsVisible(src);
@@ -363,6 +378,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(src, "ModifiedContent");
             FileHelpers.AssertFileIsHidden(src);
@@ -384,9 +400,10 @@ namespace BackupTests
             FileHelpers.CreateFile(src, "InitialContent");
             FileHelpers.HideFile(src);
 
-            var backup = BackupHelper.Standard;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(src, "InitialContent");
             FileHelpers.AssertFileIsHidden(src);
@@ -398,6 +415,7 @@ namespace BackupTests
 
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
 
             FileHelpers.AssertFileExists(src, "ModifiedContent");
             FileHelpers.AssertFileIsVisible(src);
