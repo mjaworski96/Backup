@@ -50,7 +50,10 @@ namespace Communication
                     byte[] buffer = stream.Length > _bufferSize ?
                         new byte[_bufferSize] : new byte[stream.Length];
                     Send(stream.Length);
-                    _logger.MaxProgress = stream.Length * 2; //read file and upload
+                    if (stream.Length == 0)
+                        _logger.ShowCompleted();
+                    else
+                        _logger.MaxProgress = stream.Length * 2; //read file and upload
                     while (stream.Position != stream.Length)
                     {
                         int count = stream.Read(buffer, 0, buffer.Length);
