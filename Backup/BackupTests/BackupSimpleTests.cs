@@ -11,11 +11,6 @@ namespace BackupTests
 {
     public class BackupSimpleTests
     {
-        /*
-         * TODO
-         * test z localhost
-         * test buffer size
-         */
         [Fact]
         public async Task BackupShouldCreateBackup()
         {

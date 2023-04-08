@@ -229,7 +229,7 @@ namespace BackupTests
             FileHelpers.ClearDirectories(desc);
             FileHelpers.CreateTestDirectory(src);
 
-            var backup = BackupHelper.Default;
+            var backup = BackupHelper.WithLocalhostAddress;
             backup.Address = "localhost";
             await backup.CreateBackup(desc, $"{src}");
             backup.AssertDirectoryNotChanged();
@@ -276,7 +276,7 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(srcA);
             FileHelpers.CreateFile(srcB, "First test");
 
-            var backup = BackupHelper.WithLocalhostAddress;
+            var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, $"{srcA}*{srcAliasA}", $"{srcB}*{srcAliasB}");
             backup.AssertDirectoryNotChanged();
             backup.AssertErrorsCount(0);
