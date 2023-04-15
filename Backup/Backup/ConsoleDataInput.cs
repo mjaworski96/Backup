@@ -7,7 +7,7 @@ namespace Backup
     {
         public string Get(string message)
         {
-            Console.Write(message);
+            Console.Write($"{message}: ");
             return Console.ReadLine();
         }
     }
