@@ -426,5 +426,67 @@ namespace BackupTests
             FileHelpers.ClearDirectories(src, desc);
             FileHelpers.ClearFiles(src);
         }
+
+        [Fact]
+        public async Task BackupShouldHandleLargeAmountOfFiles()
+        {
+            var src = $"{nameof(BackupShouldHandleLargeAmountOfFiles)}Src";
+            var desc = $"{nameof(BackupShouldHandleLargeAmountOfFiles)}Desc";
+
+            const int COUNT = 10000;
+
+            FileHelpers.ClearDirectories(desc);
+            FileHelpers.CreateDirectory(src);
+
+            for (int i = 0; i < COUNT; i++)
+            {
+                FileHelpers.CreateFile($"{src}/file_{i}", $"Content {i}");
+            }
+
+            var backup = BackupHelper.Default;
+            await backup.CreateBackup(desc, src, src);
+            backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
+
+            for (int i = 0; i < COUNT; i++)
+            {
+                FileHelpers.AssertFileExists($"{desc}/{src}/file_{i}", $"Content {i}");
+                FileHelpers.AssertFileExists($"{src}/file_{i}", $"Content {i}");
+            }
+
+            FileHelpers.AssertGuardFile(desc, true);
+
+            for (int i = 0; i < COUNT; i++)
+            {
+                if (i % 3 == 0)
+                    FileHelpers.CreateFile($"{src}/file_{i}_{i}", $"Added Content {i}");
+                else if (i % 3 == 1)
+                    FileHelpers.CreateFile($"{src}/file_{i}", $"Modified Content {i}");
+                else
+                    FileHelpers.ClearFiles($"{src}/file_{i}");
+            }
+            
+            await backup.CreateBackup(desc, src);
+            backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
+
+            for (int i = 0; i < COUNT; i++)
+            {
+                if (i % 3 == 0)
+                {
+                    FileHelpers.AssertFileExists($"{src}/file_{i}", $"Content {i}");
+                    FileHelpers.AssertFileExists($"{src}/file_{i}_{i}", $"Added Content {i}");
+                }
+                else if (i % 3 == 1)
+                    FileHelpers.AssertFileExists($"{src}/file_{i}", $"Modified Content {i}");
+                else
+                    FileHelpers.AssertFileNotExists($"{src}/file_{i}");
+            }
+
+            FileHelpers.AssertGuardFile(desc, true);
+
+            FileHelpers.ClearDirectories(src, desc);
+            FileHelpers.ClearFiles(src);
+        }
     }
 }

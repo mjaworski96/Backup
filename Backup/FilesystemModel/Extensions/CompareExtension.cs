@@ -1,9 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FilesystemModel.Extensions
 {
     public static class CompareExtension
     {
+        private class SearchableFile
+        {
+            public bool Found { get; set; }
+            public FileBase FileBase { get; set; }
+
+            public SearchableFile(bool found, FileBase fileBase)
+            {
+                Found = found;
+                FileBase = fileBase;
+            }
+        }
+        private class SearchableFileComparer : IComparer<SearchableFile>
+        {
+            public int Compare(SearchableFile x, SearchableFile y)
+            {
+                return x.FileBase.Name.CompareTo(y.FileBase.Name);
+            }
+        }
         public static void Compare(this Directory directory,
             Directory toCompare,
             out List<FileBase> newFiles,
@@ -14,52 +33,35 @@ namespace FilesystemModel.Extensions
             newFiles = new List<FileBase>();
             existingFiles = new List<(FileBase current, FileBase inOtherDirectory)>();
             deletedFiles = new List<FileBase>();
-            directory.CompareHelper(toCompare, ref newFiles, ref existingFiles, ref deletedFiles, rootDirectory);
+            Split(directory, toCompare, rootDirectory, ref newFiles, ref existingFiles, ref deletedFiles);
         }
-        private static void CompareHelper(this Directory directory,
-            Directory toCompare,
+        private static void Split(Directory firstDirectory, Directory secondDirectory,
+            bool ignoreGuardFile,
             ref List<FileBase> newFiles,
             ref List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
-            ref List<FileBase> deletedFiles,
-            bool rootDirectory)
+            ref List<FileBase> deletedFiles)
         {
-            FindNew(toCompare, directory, ref newFiles, false);
-            FindNew(directory, toCompare, ref deletedFiles, rootDirectory);
-            FindOld(directory, toCompare, ref existingFiles);
-        }
-        private static void FindNew(Directory oldDirectory,
-            Directory newDirectory,
-            ref List<FileBase> newFiles,
-            bool ignoreGuardFile)
-        {
-            var files = ignoreGuardFile ? newDirectory.GetFilesWithoutGuard() : newDirectory.Content;
-            foreach (var newItem in files)
+            var firstDirectoryContent = firstDirectory.Content.PrepareFilesToSearch();
+            var secondDirectoryContent = (ignoreGuardFile ? secondDirectory.GetFilesWithoutGuard() : secondDirectory.Content).PrepareFilesToSearch();
+            var comparer = new SearchableFileComparer();
+            for (int i = 0; i < firstDirectoryContent.Count; i++)
             {
-                if (Search(oldDirectory, newItem) == null)
-                    newFiles.Add(newItem);
+                var firstFile = firstDirectoryContent[i];
+                var secondFileIndex = secondDirectoryContent.BinarySearch(firstFile, comparer);
+                if (secondFileIndex >= 0)
+                {
+                    var secondFile = secondDirectoryContent[secondFileIndex];
+                    existingFiles.Add((firstFile.FileBase, secondFile.FileBase));
+                    firstFile.Found = true;
+                    secondFile.Found = true;
+                }
             }
+            newFiles = firstDirectoryContent.Where(x => !x.Found).Select(x => x.FileBase).ToList();
+            deletedFiles = secondDirectoryContent.Where(x => !x.Found).Select(x => x.FileBase).ToList();
         }
-        private static void FindOld(Directory firstDirectory,
-            Directory secondDirectory,
-            ref List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> oldFiles)
+        private static List<SearchableFile> PrepareFilesToSearch(this IEnumerable<FileBase> source)
         {
-            foreach (var first in firstDirectory.Content)
-            {
-                FileBase second = Search(secondDirectory, first);
-                if (second != null)
-                    oldFiles.Add((first, second));
-            }
-        }
-        private static FileBase Search(Directory directory, 
-            FileBase item)
-        {
-            foreach (var oldItem in directory.Content)
-            {
-                if (item.Name == oldItem.Name)
-                    return oldItem;
-            }
-
-            return null;
+            return source.OrderBy(x => x.Name).Select(x => new SearchableFile(false, x)).ToList();
         }
     }
 }
