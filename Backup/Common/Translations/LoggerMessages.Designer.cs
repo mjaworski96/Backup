@@ -196,7 +196,7 @@ namespace Common.Translations {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You can use this directory anyway, but some (maybe all of them) files and directories can be changed or removed. Do you want use this directory? (type y/Y to use this directory): .
+        ///   Looks up a localized string similar to You can use this directory anyway, but some (maybe all of them) files and directories can be changed or removed. Do you want use this directory? (type y/Y to use this directory).
         /// </summary>
         public static string UseNewDirectory {
             get {

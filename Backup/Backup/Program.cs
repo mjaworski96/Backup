@@ -8,8 +8,7 @@ using System.Linq;
 using Common;
 using System.Text.RegularExpressions;
 using Backup.Translations;
-using System.Globalization;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace Backup
 {
@@ -17,7 +16,7 @@ namespace Backup
     {
         public static ILogger Logger { get; set; } = new ConsoleLogger();
         public static IDataInput DataInput { get; set; } = new ConsoleDataInput();
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
@@ -26,7 +25,7 @@ namespace Backup
                 {
                     FileFactory fileFactory = new FileFactory(GetIgnoreRegex(parameters).ToList());
                     var directory = GetDirectory(fileFactory, parameters);
-                    backup.MakeBackup(directory);
+                    await backup.MakeBackup(directory);
                 }
             }
             catch (Exception e)

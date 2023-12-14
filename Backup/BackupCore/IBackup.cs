@@ -1,10 +1,11 @@
 ﻿using FilesystemModel;
 using System;
+using System.Threading.Tasks;
 
 namespace BackupCore
 {
     public interface IBackup: IDisposable
     {
-        void MakeBackup(Directory directory);
+        Task MakeBackup(Directory directory);
     }
 }

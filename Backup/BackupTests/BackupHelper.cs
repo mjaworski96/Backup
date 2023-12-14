@@ -68,15 +68,15 @@ namespace BackupTests
             Program.Logger = Logger = new NullLogger();
             Program.DataInput = DataInput = new NullDataInput();
             var port = GetPort();
-            var destinationTask = Task.Run(() =>
+            var destinationTask = Task.Run(async () =>
             {
-                Program.Main(GetArgs($"{CreateBaseParametersForDestination()} -f {FileHelpers.TestFilesDirectory}/{destination}"));
+                await Program.Main(GetArgs($"{CreateBaseParametersForDestination()} -f {FileHelpers.TestFilesDirectory}/{destination}"));
             });
 
-            var sourceTask = Task.Run(() =>
+            var sourceTask = Task.Run(async () =>
             {
                 var src = string.Join(" ", source.Select(x => $"{FileHelpers.TestFilesDirectory}/{x}"));
-                Program.Main(GetArgs($"{CreateBaseParametersForSource()} -f {src}"));
+                await Program.Main(GetArgs($"{CreateBaseParametersForSource()} -f {src}"));
             });
 
             await destinationTask;

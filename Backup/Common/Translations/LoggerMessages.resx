@@ -163,6 +163,6 @@
     <value>You can use this directory anyway, but any changes will be removed. Do you want use this directory? (type y/Y to use this directory)</value>
   </data>
   <data name="UseNewDirectory" xml:space="preserve">
-    <value>You can use this directory anyway, but some (maybe all of them) files and directories can be changed or removed. Do you want use this directory? (type y/Y to use this directory): </value>
+    <value>You can use this directory anyway, but some (maybe all of them) files and directories can be changed or removed. Do you want use this directory? (type y/Y to use this directory)</value>
   </data>
 </root>

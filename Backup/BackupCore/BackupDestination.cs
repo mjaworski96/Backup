@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using Common;
 using Common.Translations;
 using FilesystemModel;
@@ -23,10 +23,10 @@ namespace BackupCore
             _bufferSize = bufferSize;
         }
 
-        public void MakeBackup(Directory destination)
+        public async Task MakeBackup(Directory destination)
         {
             Directory source = GetSource();
-            MakeBackup(source, destination, destination.Path, true);
+            await MakeBackup(source, destination, destination.Path, true);
             _communicator.Finish();
             CreateBackupDirectoryGuardFile(destination);
         }
@@ -36,7 +36,7 @@ namespace BackupCore
             _logger.Write(source);
             return source;
         }
-        private void MakeBackup(Directory source, Directory destination, string rootDirectory, bool isBackupRoot)
+        private async Task MakeBackup(Directory source, Directory destination, string rootDirectory, bool isBackupRoot)
         {
             if (source.Attributes != destination.Attributes)
             {
@@ -48,7 +48,7 @@ namespace BackupCore
                 out List<FileBase> deletedFiles,
                 isBackupRoot);
             HandleNewFiles(newFiles, rootDirectory);
-            HandleExistingFiles(existingFiles, rootDirectory);
+            await HandleExistingFiles(existingFiles, rootDirectory);
             HandleDeletedFiles(deletedFiles, rootDirectory);
         }
         private void HandleNewFiles(List<FileBase> newFiles, string rootDirectory)
@@ -96,7 +96,7 @@ namespace BackupCore
             System.IO.FileAttributes.Normal.Set(path, _logger);
         }
 
-        private void HandleExistingFiles(List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
+        private async Task HandleExistingFiles(List<(FileBase InFirstDirectory, FileBase InSecondDirectory)> existingFiles,
             string rootDirectory)
         {
             foreach (var item in existingFiles)
@@ -104,25 +104,25 @@ namespace BackupCore
                 if (item.InFirstDirectory.Type != item.InSecondDirectory.Type)
                     HandleDifrentTypes(item.InFirstDirectory, item.InSecondDirectory, rootDirectory);
                 else
-                    HandleSameTypes(item.InFirstDirectory, item.InSecondDirectory, rootDirectory);
+                    await HandleSameTypes(item.InFirstDirectory, item.InSecondDirectory, rootDirectory);
 
             }
         }
 
-        private void HandleSameTypes(FileBase inSource, FileBase inDestination, string rootDirectory)
+        private async Task HandleSameTypes(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
             if (inSource.Type == FileType.DIRECTORY)
-                HandleDirectory(inSource, inDestination, rootDirectory);
+                await HandleDirectory(inSource, inDestination, rootDirectory);
             else
-                HandleFile(inSource, inDestination);
+                await HandleFile(inSource, inDestination);
         }
 
-        private void HandleFile(FileBase inSource, FileBase inDestination)
+        private async Task HandleFile(FileBase inSource, FileBase inDestination)
         {
             File sourceFile = inSource as File;
             File destinationFile = inDestination as File;
             _logger.Write(string.Format(LoggerMessages.CheckingFileSize, sourceFile.Path));
-            if (IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger, true)))
+            if (await IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger, true)))
             {
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }
@@ -132,11 +132,11 @@ namespace BackupCore
             }
         }
 
-        private void HandleDirectory(FileBase inSource, FileBase inDestination, string rootDirectory)
+        private async Task HandleDirectory(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
             Directory sourceDir = inSource as Directory;
             Directory destinationDir = inDestination as Directory;
-            MakeBackup(sourceDir, destinationDir,
+            await MakeBackup(sourceDir, destinationDir,
                 FileBase.BuildPath(rootDirectory, inSource.Name),
                 false);
         }
@@ -147,7 +147,7 @@ namespace BackupCore
             HandleNewFiles(new List<FileBase> { inSource }, rootDirectory);
         }
 
-        private bool IsDiffrent(string fileRequestPath, long fileSize, Func<uint> crc32)
+        private async Task<bool> IsDiffrent(string fileRequestPath, long fileSize, Func<uint> crc32)
         {
             long sourceFileSize = _communicator.GetFileSize(fileRequestPath);
             if (sourceFileSize != fileSize)
@@ -155,7 +155,9 @@ namespace BackupCore
                 return true;
             }
             _logger.Write(string.Format(LoggerMessages.CheckingChecksum, fileRequestPath));
-            return _communicator.GetCrc32(fileRequestPath) != crc32();
+            var crcCurrent = Task.Run(crc32);
+            var crcRemote = _communicator.GetCrc32(fileRequestPath);
+            return crcRemote != await crcCurrent;
         }
 
         public static void CreateBackupDirectoryGuardFile(Directory directory)

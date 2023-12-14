@@ -2,6 +2,7 @@
 using Common.Translations;
 using FilesystemModel;
 using FilesystemModel.Extensions;
+using System.Threading.Tasks;
 
 namespace BackupCore
 {
@@ -19,11 +20,12 @@ namespace BackupCore
             _bufferSize = bufferSize;
         }
 
-        public void MakeBackup(Directory directory)
+        public Task MakeBackup(Directory directory)
         {
             _logger.Write(directory);
             _communicator.SendDirectory(directory);
             HandleRequests(directory);
+            return Task.CompletedTask;
         }
         private void HandleRequests(Directory directory)
         {
