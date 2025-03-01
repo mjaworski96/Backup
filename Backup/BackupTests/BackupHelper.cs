@@ -34,6 +34,7 @@ namespace BackupTests
         public string BufferSize { get; set; }
         public IEnumerable<string> DestinationIgnorePatterns { get; set; }
         public IEnumerable<string> SourceIgnorePatterns { get; set; }
+        public string CompareLargerFilesBySize { get; set; }
 
         public NullDataInput DataInput { get; private set; }
         public NullLogger Logger { get; private set; }
@@ -138,6 +139,11 @@ namespace BackupTests
             {
                 var ignore = string.Join(" ", DestinationIgnorePatterns);
                 sb.Append($"-i {ignore} ");
+            }
+
+            if (!string.IsNullOrEmpty(CompareLargerFilesBySize))
+            {
+                sb.Append($"-c {CompareLargerFilesBySize}");
             }
 
             return sb.ToString();

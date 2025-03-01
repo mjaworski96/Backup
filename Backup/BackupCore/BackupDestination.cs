@@ -14,13 +14,14 @@ namespace BackupCore
         private readonly IDestinationCommunicator _communicator;
         private readonly ILogger _logger;
         private readonly int _bufferSize;
-
+        private readonly int _compareLargerFilesBySize;
         public BackupDestination(IDestinationCommunicator communicator,
-            ILogger logger, int bufferSize)
+            ILogger logger, int bufferSize, int compareLargerFilesBySize)
         {
             _communicator = communicator;
             _logger = logger;
             _bufferSize = bufferSize;
+            _compareLargerFilesBySize = compareLargerFilesBySize;
         }
 
         public async Task MakeBackup(Directory destination)
@@ -154,6 +155,13 @@ namespace BackupCore
             {
                 return true;
             }
+
+            //If file (on source and destination) have the same size and is larger than _compareLargerFilesBySize assume it didn't change
+            if (_compareLargerFilesBySize > 0 && fileSize > _compareLargerFilesBySize)
+            {
+                return false;
+            }
+
             _logger.Write(string.Format(LoggerMessages.CheckingChecksum, fileRequestPath));
             var crcCurrent = Task.Run(crc32);
             var crcRemote = _communicator.GetCrc32(fileRequestPath);

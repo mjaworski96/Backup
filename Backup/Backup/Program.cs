@@ -54,6 +54,13 @@ namespace Backup
             string bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Messages.BufferSize);
             return Parser.Parse(bufferSize);
         }
+
+        private static int GetCompareLargerFilesBySize(ParametersHandler parameters)
+        {
+            string bufferSize = parameters.GetParameter(Defaults.COMPARE_LARGER_FILES_BY_SIZE_KEY, Messages.CompareLargerFilesBySize, false);
+            return Parser.Parse(bufferSize);
+        }
+
         private static string GetDestinationDirectoryPath(ParametersHandler parameters)
         {
             return parameters.GetParameter(Defaults.FILES_KEY, Messages.DestinationDirectory);
@@ -118,7 +125,8 @@ namespace Backup
                         new Json(),
                         Logger),
                     Logger,
-                    GetBufferSize(parameters));
+                    GetBufferSize(parameters),
+                    GetCompareLargerFilesBySize(parameters));
             }
             else if (mode == Defaults.MODE_SOURCE)
             {

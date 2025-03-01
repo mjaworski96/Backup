@@ -10,6 +10,9 @@ namespace Backup
         private const int GIGA = 1024 * 1024 * 1024;
         public static int Parse(string size)
         {
+            if (string.IsNullOrEmpty(size))
+                return 0;
+
             if (CanBeParsed(size, "k"))
                 return Parse(size, KILO);
             if (CanBeParsed(size, "m"))

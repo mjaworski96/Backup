@@ -123,6 +123,9 @@
   <data name="BufferSize" xml:space="preserve">
     <value>Rozmiar bufora</value>
   </data>
+  <data name="CompareLargerFilesBySize" xml:space="preserve">
+    <value>Jeśli plik (w źródle i celu) ma taki sam rozmiar i jest większy niż podana wartość wtedy załóż, że się nie zmienił (0 wyłącza tę opcję)</value>
+  </data>
   <data name="DestinationDirectory" xml:space="preserve">
     <value>Katalog docelowy</value>
   </data>

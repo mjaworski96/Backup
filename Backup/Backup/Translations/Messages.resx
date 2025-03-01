@@ -123,6 +123,9 @@
   <data name="BufferSize" xml:space="preserve">
     <value>Buffer size</value>
   </data>
+  <data name="CompareLargerFilesBySize" xml:space="preserve">
+    <value>If file (on source and destination) have the same size and is larger than given value then assume that it didn't change (0 will disable this option)</value>
+  </data>
   <data name="DestinationDirectory" xml:space="preserve">
     <value>Destination directory</value>
   </data>

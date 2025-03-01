@@ -5,6 +5,9 @@ Program can be run in two modes:
 # Usage
 ```
 dotnet Backup.dll <arguments>
+ ```
+Or
+ ```
 ./Backup.exe <arguments>
  ```
 # Arguments
@@ -12,15 +15,16 @@ dotnet Backup.dll <arguments>
 |----------|--------|--------|---------------|-----------|
 |-m|Type "source" to run source mode|Type "destination" to run destination mode|(None)|Yes|
 |-a|IP addres of destination|IP address to listen (0.0.0.0 for any)|127.0.0.1|Yes|
-|-p|TCP Port of destination|TCP port to listen|7000|Yes|
+|-p|TCP port of destination|TCP port to listen|7000|Yes|
 |-f|Files and directories to copy (list)|Destination of copy (directory)|(None)|Yes|
 |-bs|Maximum buffer size (to read files)|Maximum buffer size (to read files)|10M|Yes|
 |-i|Regex of files that will be ignored|Regex of files that will be ignored|(None)|No|
+|-c|(Not used)|Compare larger files by size|0 (ignored)|No|
 
-If argument is mandatory but not specified (by user or from default values) program will ask about this value. Same if only parameter name is specified.
+If argument is mandatory but not specified (by user or from default values) program will ask for this value. Same if only parameter name is specified.
 
-# Buffer size
-Buffer size can be specifed with postfix.
+# Buffer size and compare larger files by size
+Buffer size and compare larger files by size can be specifed with postfix.
 
 |Postfix|Multiplier|Example|Real value|
 |------|----------|-------|----------|
@@ -39,5 +43,8 @@ It allow copying files with the same name from other directories. For example:
 <path1/name*first_file>
 <path2/name*second_file>
 ```
+# Compare larger files by size
+If file (on source and destination) have the same size and is larger than given value then assume that it didn't change (0 will disable this option)
+
 # Guard file (reserved filename)
 File "backup_directory_guard" will be created in target directory (on root level). For this reason "backup_directory_guard" filename can not be used on root level. This filename can be used in nested directories.

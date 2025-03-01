@@ -40,6 +40,13 @@ namespace BackupTests
             FileHelpers.CreateTestDirectory(src);
             FileHelpers.CreateTestDirectory(desc, src);
 
+            var srcFileAModificationTime = FileHelpers.GetModificationDate($"{src}/fileA");
+            var srcFileBModificationTime = FileHelpers.GetModificationDate($"{src}/directoryA/fileB");
+            var srcFileCModificationTime = FileHelpers.GetModificationDate($"{src}/directoryA/directoryB/fileC");
+            var descFileAModificationTime = FileHelpers.GetModificationDate($"{desc}/{src}/fileA");
+            var descFileBModificationTime = FileHelpers.GetModificationDate($"{desc}/{src}/directoryA/fileB");
+            var descFileCModificationTime = FileHelpers.GetModificationDate($"{desc}/{src}/directoryA/directoryB/fileC");
+
             var backup = BackupHelper.Default;
             await backup.CreateBackup(desc, src);
             backup.AssertDirectoryNotChanged();
@@ -49,6 +56,14 @@ namespace BackupTests
             FileHelpers.Assert($"{desc}/{src}");
             FileHelpers.AssertGuardFile(desc, true);
             FileHelpers.AssertGuardFile(src, false);
+
+            srcFileAModificationTime.ShouldBe(FileHelpers.GetModificationDate($"{src}/fileA"));
+            srcFileBModificationTime.ShouldBe(FileHelpers.GetModificationDate($"{src}/directoryA/fileB"));
+            srcFileCModificationTime.ShouldBe(FileHelpers.GetModificationDate($"{src}/directoryA/directoryB/fileC"));
+            descFileAModificationTime.ShouldBe(FileHelpers.GetModificationDate($"{desc}/{src}/fileA"));
+            descFileBModificationTime.ShouldBe(FileHelpers.GetModificationDate($"{desc}/{src}/directoryA/fileB"));
+            descFileCModificationTime.ShouldBe(FileHelpers.GetModificationDate($"{desc}/{src}/directoryA/directoryB/fileC"));
+
             FileHelpers.ClearDirectories(desc, src);
         }
 
@@ -366,5 +381,62 @@ namespace BackupTests
             FileHelpers.ClearFiles(srcC, srcD);
         }
 
+        [Fact]
+        public async Task BackupShouldHandleCompareLargerFileBySizeParameter()
+        {
+            var src = $"{nameof(BackupShouldHandleCompareLargerFileBySizeParameter)}Src";
+            var desc = $"{nameof(BackupShouldHandleCompareLargerFileBySizeParameter)}Desc";
+
+            var srcFilesContent = new Dictionary<string, string>
+            {
+                { "fileA", new string('a', 20 * 1024 * 1024) },
+                { "fileB", new string('b', 30 * 1024 * 1024) },
+                { "fileC", new string('c', 25 * 1024 * 1024) },
+                { "fileD", new string('d', 30 * 1024 * 1024) },
+                { "fileE", new string('e', 35 * 1024 * 1024) },
+            };
+
+            var descFilesContent = new Dictionary<string, string>
+            {
+                { "fileA", new string('f', 20 * 1024 * 1024) },
+                { "fileB", new string('g', 30 * 1024 * 1024) },
+                { "fileC", new string('h', 25 * 1024 * 1024) },
+                { "fileD", new string('i', 35 * 1024 * 1024) },
+                { "fileE", new string('j', 30 * 1024 * 1024) },
+            };
+
+            var expectedFilesContent = new Dictionary<string, string>
+            {
+                { "fileA", new string('a', 20 * 1024 * 1024) },
+                { "fileB", new string('g', 30 * 1024 * 1024) },
+                { "fileC", new string('c', 25 * 1024 * 1024) },
+                { "fileD", new string('d', 30 * 1024 * 1024) },
+                { "fileE", new string('e', 35 * 1024 * 1024) },
+            };
+
+            FileHelpers.CreateTestDirectory(src, content: srcFilesContent);
+            FileHelpers.CreateFile($"{src}/fileD", srcFilesContent["fileD"]);
+            FileHelpers.CreateFile($"{src}/fileE", srcFilesContent["fileE"]);
+            FileHelpers.CreateTestDirectory(desc, src, content: descFilesContent);
+            FileHelpers.CreateFile($"{desc}/{src}/fileD", descFilesContent["fileD"]);
+            FileHelpers.CreateFile($"{desc}/{src}/fileE", descFilesContent["fileE"]);
+            FileHelpers.RefreshGuardFile(desc);
+
+            var backup = BackupHelper.Default;
+            backup.CompareLargerFilesBySize = "25M";
+            await backup.CreateBackup(desc, src);
+            backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
+
+            FileHelpers.Assert(src, srcFilesContent);
+            FileHelpers.AssertFileExists($"{src}/fileD", srcFilesContent["fileD"]);
+            FileHelpers.AssertFileExists($"{src}/fileE", srcFilesContent["fileE"]);
+            FileHelpers.Assert($"{desc}/{src}", expectedFilesContent);
+            FileHelpers.AssertFileExists($"{desc}/{src}/fileD", expectedFilesContent["fileD"]);
+            FileHelpers.AssertFileExists($"{desc}/{src}/fileE", expectedFilesContent["fileE"]);
+            FileHelpers.AssertGuardFile(desc, true);
+            FileHelpers.AssertGuardFile(src, false);
+            FileHelpers.ClearDirectories(desc, src);
+        }
     }
 }

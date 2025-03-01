@@ -1,6 +1,7 @@
 ﻿using BackupCore;
 using Common;
 using Shouldly;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace BackupTests
 {
-    internal class FileHelpers
+    internal static class FileHelpers
     {
         public static string TestFilesDirectory = "TestFiles";
         public static void ClearDirectories(params string[] paths)
@@ -152,10 +153,13 @@ namespace BackupTests
             AssertFileExists(path, text);
         }
 
-        public static void AssertGuardFile(string path, bool guardFile)
+        public static void AssertGuardFile(string path, bool exists)
         {
-            File.Exists($"{TestFilesDirectory}/{path}/{Consts.BackupDirectoryGuardFilePath}").ShouldBe(guardFile);
+            File.Exists($"{TestFilesDirectory}/{path}/{Consts.BackupDirectoryGuardFilePath}").ShouldBe(exists);
         }
+
         private static string GetFileContent(string name) => $"Test 123 test ABC test abc - {name}";
+
+        public static DateTime GetModificationDate(string path) => File.GetCreationTimeUtc($"{TestFilesDirectory}/{path}");
     }
 }

@@ -19,7 +19,7 @@ namespace Backup.Translations {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Messages {
@@ -75,6 +75,15 @@ namespace Backup.Translations {
         internal static string BufferSize {
             get {
                 return ResourceManager.GetString("BufferSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If file (on source and destination) have the same size and is larger than given value then assume that it didn&apos;t change (0 will disable this option).
+        /// </summary>
+        internal static string CompareLargerFilesBySize {
+            get {
+                return ResourceManager.GetString("CompareLargerFilesBySize", resourceCulture);
             }
         }
         
