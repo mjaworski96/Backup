@@ -88,7 +88,6 @@ namespace BackupTests
             backup.AssertDirectoryNotChanged();
             backup.AssertErrorsCount(0);
 
-
             FileHelpers.Assert(src, filesContent);
             FileHelpers.Assert($"{desc}/{src}", filesContent);
             FileHelpers.AssertGuardFile(desc, true);
@@ -269,7 +268,7 @@ namespace BackupTests
 
             FileHelpers.CreateDirecotriesForIgnoreTests(srcRoot, srcA, srcB, srcC, srcD, firstContentSrc, secondContentSrc);
             FileHelpers.CreateDirecotriesForIgnoreTests($"{desc}/{srcRoot}", srcA, srcB, srcC, srcD, firstContentDesc, secondContentDesc);
-            
+
 
             var backup = BackupHelper.Default;
             backup.SourceIgnorePatterns = new[] { $"/{srcB}", $"/{srcD}" };
@@ -436,6 +435,46 @@ namespace BackupTests
             FileHelpers.AssertFileExists($"{desc}/{src}/fileE", expectedFilesContent["fileE"]);
             FileHelpers.AssertGuardFile(desc, true);
             FileHelpers.AssertGuardFile(src, false);
+            FileHelpers.ClearDirectories(desc, src);
+        }
+
+        [Fact]
+        public async Task BackupShouldResumeAfterStartWithInvalidConfiguration()
+        {
+            var src = $"{nameof(BackupShouldResumeAfterStartWithInvalidConfiguration)}Src";
+            var desc = $"{nameof(BackupShouldResumeAfterStartWithInvalidConfiguration)}Desc";
+            var filesContent = new Dictionary<string, string>
+            {
+                {"fileA", "Test" },
+                {"fileB", "Test Test Test" },
+                {"fileC", "Test Test" }
+            };
+
+            FileHelpers.CreateTestDirectory(src, content: filesContent);
+            FileHelpers.CreateTestDirectory(desc, src);
+
+            var backup = BackupHelper.Default;
+            backup.Init();
+            backup.BufferSize = "1M";
+            var destination = backup.CreateDestination(desc);
+            backup.BufferSize = "2M";
+            await backup.CreateSource(src);
+
+            backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(1);
+            backup.ResetErrors();
+
+            backup.BufferSize = "1M";
+            await backup.CreateSource(src);
+            await destination;
+            backup.AssertDirectoryNotChanged();
+            backup.AssertErrorsCount(0);
+
+            FileHelpers.Assert(src, filesContent);
+            FileHelpers.Assert($"{desc}/{src}", filesContent);
+            FileHelpers.AssertGuardFile(desc, true);
+            FileHelpers.AssertGuardFile(src, false);
+
             FileHelpers.ClearDirectories(desc, src);
         }
     }

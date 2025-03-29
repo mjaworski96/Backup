@@ -142,11 +142,29 @@ namespace Common.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Destination client has different buffer size ({0}).
+        /// </summary>
+        public static string InvalidBufferSize {
+            get {
+                return ResourceManager.GetString("InvalidBufferSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Listen on {0}.
         /// </summary>
         public static string ListenOn {
             get {
                 return ResourceManager.GetString("ListenOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reseting connection.
+        /// </summary>
+        public static string ResetingConnection {
+            get {
+                return ResourceManager.GetString("ResetingConnection", resourceCulture);
             }
         }
         
@@ -174,6 +192,15 @@ namespace Common.Translations {
         public static string SendingFileSize {
             get {
                 return ResourceManager.GetString("SendingFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error.
+        /// </summary>
+        public static string UnknownError {
+            get {
+                return ResourceManager.GetString("UnknownError", resourceCulture);
             }
         }
         

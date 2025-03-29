@@ -22,11 +22,44 @@ namespace BackupCore
 
         public Task MakeBackup(Directory directory)
         {
-            _logger.Write(directory);
-            _communicator.SendDirectory(directory);
-            HandleRequests(directory);
+            if (Connect())
+            {
+                _logger.Write(directory);
+                _communicator.SendDirectory(directory);
+                HandleRequests(directory);
+            }
             return Task.CompletedTask;
         }
+
+        private bool Connect()
+        {
+            _communicator.SendSourceConfiguration(new ClientConfiguration
+            {
+                BufferSize = _bufferSize
+            });
+            var status = _communicator.GetConnectionStatus();
+
+            if (!status.IsConfigurationValid)
+            {
+                status.Errors.ForEach(error => { WriteConnectionError(error); });
+            }
+
+            return status.IsConfigurationValid;
+        }
+
+        private void WriteConnectionError(ConnectionError error)
+        {
+            switch (error.ErrorCode)
+            {
+                case ErrorCodes.INVALID_BUFFER_SIZE:
+                    _logger.WriteError(string.Format(LoggerMessages.InvalidBufferSize, error.ExpectedParameterValue));
+                    break;
+                default:
+                    _logger.WriteError(LoggerMessages.UnknownError);
+                    break;
+            }
+        }
+
         private void HandleRequests(Directory directory)
         {
             Request request;

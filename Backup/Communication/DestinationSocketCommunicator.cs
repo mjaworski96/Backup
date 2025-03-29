@@ -24,12 +24,6 @@ namespace Communication
 
         public Directory GetDirectory()
         {
-            Socket connection = _socket.Accept();
-            _socket.Dispose();
-            _socket = connection;
-
-            _logger.Write(string.Format(LoggerMessages.ConnectedWith, connection.RemoteEndPoint));
-
             return Receive<Directory>();
         }
         public void ReceiveFile(string fileRequestPath,
@@ -113,6 +107,32 @@ namespace Communication
             SendRequest(Request.GET_FILE_SIZE);
             Send(fileRequestPath);
             return ReceiveSize();
+        }
+
+        public void Connect()
+        {
+            var connection = _socket.Accept();
+            _socket.Dispose();
+            _socket = connection;
+            _logger.Write(string.Format(LoggerMessages.ConnectedWith, connection.RemoteEndPoint));
+        }
+
+        public void Reset()
+        {
+            CreateSocket();
+            _socket.Bind(_endPoint);
+            _socket.Listen(1);
+            _logger.Write(string.Format(LoggerMessages.ResetingConnection));
+        }
+
+        public ClientConfiguration GetSourceConfiguration()
+        {
+            return Receive<ClientConfiguration>();
+        }
+
+        public void SendConnectionStatus(ConnectionStatus connectionStatus)
+        {
+            Send(connectionStatus);
         }
     }
 }

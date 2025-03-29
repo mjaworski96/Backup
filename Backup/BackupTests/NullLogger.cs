@@ -7,6 +7,8 @@ namespace BackupTests
 {
     internal class NullLogger : ILogger
     {
+        private object _lock = new object();
+
         public int ErrorsCount { get; set; }
         public long MaxProgress { get; set; }
 
@@ -27,7 +29,18 @@ namespace BackupTests
 
         public void WriteError(object message)
         {
-            ErrorsCount++;
+            lock (_lock)
+            {
+                ErrorsCount++;
+            }
+        }
+
+        internal void ResetErrors()
+        {
+            lock(_lock)
+            {
+                ErrorsCount = 0;
+            }
         }
     }
 }

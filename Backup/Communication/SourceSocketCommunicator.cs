@@ -74,5 +74,15 @@ namespace Communication
         {
             SendSize(size);
         }
+
+        public void SendSourceConfiguration(ClientConfiguration sourceClientConfiguration)
+        {
+            Send(sourceClientConfiguration);
+        }
+
+        public ConnectionStatus GetConnectionStatus()
+        {
+            return Receive<ConnectionStatus>();
+        }
     }
 }

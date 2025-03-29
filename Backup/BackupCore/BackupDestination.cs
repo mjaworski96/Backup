@@ -26,14 +26,47 @@ namespace BackupCore
 
         public async Task MakeBackup(Directory destination)
         {
-            Directory source = GetSource();
+            Connect();
+            var source = GetSource();
             await MakeBackup(source, destination, destination.Path, true);
             _communicator.Finish();
             CreateBackupDirectoryGuardFile(destination);
         }
+
+        private void Connect()
+        {
+            var valid = false;
+            do
+            {
+                _communicator.Connect();
+                var sourceConfiguration = _communicator.GetSourceConfiguration();
+                if (sourceConfiguration.BufferSize == _bufferSize)
+                {
+                    _communicator.SendConnectionStatus(new ConnectionStatus());
+                    valid = true;
+                }
+                else
+                {
+                    _communicator.SendConnectionStatus(new ConnectionStatus
+                    {
+                        Errors = new List<ConnectionError>
+                        {
+                            new ConnectionError
+                            {
+                                ErrorCode = ErrorCodes.INVALID_BUFFER_SIZE,
+                                ExpectedParameterValue = _bufferSize
+                            }
+                        }
+                    });
+                    _communicator.Reset();
+                }
+            } while (!valid);
+            
+        }
+
         private Directory GetSource()
         {
-            Directory source = _communicator.GetDirectory();
+            var source = _communicator.GetDirectory();
             _logger.Write(source);
             return source;
         }

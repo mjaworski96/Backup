@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Common;
 using FilesystemModel;
 
 namespace BackupCore
@@ -14,5 +13,9 @@ namespace BackupCore
         uint GetCrc32(string fileRequestPath);
         void Finish();
         long GetFileSize(string fileRequestPath);
+        void Connect();
+        void Reset();
+        ClientConfiguration GetSourceConfiguration();
+        void SendConnectionStatus(ConnectionStatus connectionStatus);
     }
 }

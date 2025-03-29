@@ -17,6 +17,7 @@ namespace Communication
         protected readonly ISerialization _serialization;
         protected readonly int _bufferSize;
         protected readonly ILogger _logger;
+        protected AddressFamily _addressFamily;
         protected SocketCommunicator(string address, 
             int port,
             int bufferSize,
@@ -25,17 +26,24 @@ namespace Communication
         {
             if (bufferSize <= 0)
                 throw new InvalidBufferSizeException();
+
             if (!IPAddress.TryParse(address, out var ip))
             {
                 ip = Dns.GetHostEntry(address).AddressList.FirstOrDefault() ?? IPAddress.Parse(address);
             }
 
+            _addressFamily = ip.AddressFamily;
             _endPoint = new IPEndPoint(ip, port);
-            _socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
             _serialization = serialization;
             _bufferSize = bufferSize;
             _logger = logger;
+
+            CreateSocket();
+        }
+
+        protected void CreateSocket()
+        {
+            _socket = new Socket(_addressFamily, SocketType.Stream, ProtocolType.Tcp);
         }
 
         protected T Receive<T>()

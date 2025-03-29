@@ -144,8 +144,14 @@
   <data name="FileIsUsed" xml:space="preserve">
     <value>File {0} is used by another process. Waitng {1} seconds for access. </value>
   </data>
+  <data name="InvalidBufferSize" xml:space="preserve">
+    <value>Destination client has different buffer size ({0})</value>
+  </data>
   <data name="ListenOn" xml:space="preserve">
     <value>Listen on {0}</value>
+  </data>
+  <data name="ResetingConnection" xml:space="preserve">
+    <value>Reseting connection</value>
   </data>
   <data name="SelectedDirectoryIsNotBackupDirectory" xml:space="preserve">
     <value>Selected directory ({0}) was not used as backup directory.</value>
@@ -155,6 +161,9 @@
   </data>
   <data name="SendingFileSize" xml:space="preserve">
     <value>Sending file size for {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unknown error</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>Uploading {0}</value>

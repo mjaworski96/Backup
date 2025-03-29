@@ -1,4 +1,5 @@
-﻿using FilesystemModel;
+﻿using Common;
+using FilesystemModel;
 using System;
 
 namespace BackupCore
@@ -11,5 +12,7 @@ namespace BackupCore
         void SendFile(string filename);
         void SendCrc32(uint crc32);
         void SendFileSize(long size);
+        void SendSourceConfiguration(ClientConfiguration sourceClientConfiguration);
+        ConnectionStatus GetConnectionStatus();
     }
 }

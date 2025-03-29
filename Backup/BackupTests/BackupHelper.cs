@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BackupTests
@@ -14,15 +15,6 @@ namespace BackupTests
     {
         static int _nextFreePort = 2000;
         static object _nextFreePortLock = new object();
-        static int GetPort()
-        {
-            lock (_nextFreePortLock)
-            {
-                var port = _nextFreePort;
-                _nextFreePort++;
-                return port;
-            }
-        }
         private static string[] GetArgs(string src)
         {
             return src.Split(' ')
@@ -66,22 +58,36 @@ namespace BackupTests
 
         public async Task CreateBackup(string destination, params string[] source)
         {
+            Init();
+
+            await Task.WhenAll(
+                CreateDestination(destination),
+                CreateSource(source));
+        }
+
+        public void Init()
+        {
             Program.Logger = Logger = new NullLogger();
             Program.DataInput = DataInput = new NullDataInput();
-            var port = GetPort();
-            var destinationTask = Task.Run(async () =>
-            {
-                await Program.Main(GetArgs($"{CreateBaseParametersForDestination()} -f {FileHelpers.TestFilesDirectory}/{destination}"));
-            });
+        }
 
-            var sourceTask = Task.Run(async () =>
-            {
-                var src = string.Join(" ", source.Select(x => $"{FileHelpers.TestFilesDirectory}/{x}"));
-                await Program.Main(GetArgs($"{CreateBaseParametersForSource()} -f {src}"));
-            });
+        public Task CreateSource(params string[] source)
+        {
+            var src = string.Join(" ", source.Select(x => $"{FileHelpers.TestFilesDirectory}/{x}"));
+            var args = GetArgs($"{CreateBaseParametersForSource()} -f {src}");
 
-            await destinationTask;
-            await sourceTask;
+            return Task.Run(async () => await Program.Main(args));
+        }
+
+        public Task CreateDestination(string destination)
+        {
+            var args = GetArgs($"{CreateBaseParametersForDestination()} -f {FileHelpers.TestFilesDirectory}/{destination}");
+            return Task.Run(async () => await Program.Main(args));
+        }
+
+        public void ResetErrors()
+        {
+            Logger.ResetErrors();
         }
 
         public void AssertDirectoryNotChanged()
@@ -94,9 +100,9 @@ namespace BackupTests
             DataInput.Called.ShouldBeTrue();
         }
 
-        public void AssertErrorsCount(int count)
+        public void AssertErrorsCount(int errorsCount)
         {
-            Logger.ErrorsCount.ShouldBe(count);
+            Logger.ErrorsCount.ShouldBe(errorsCount);
         }
 
         private string CreateBaseParameters()

@@ -144,8 +144,14 @@
   <data name="FileIsUsed" xml:space="preserve">
     <value>Plik {0} jest użwany przez inny proces. Oczekiwanie {1} sekund po dostęp.</value>
   </data>
+  <data name="InvalidBufferSize" xml:space="preserve">
+    <value>Docelowy klient ma inny rozmiar buffora ({0})</value>
+  </data>
   <data name="ListenOn" xml:space="preserve">
     <value>Nasłuchiwanie na {0}</value>
+  </data>
+  <data name="ResetingConnection" xml:space="preserve">
+    <value>Resetowanie połączenia</value>
   </data>
   <data name="SelectedDirectoryIsNotBackupDirectory" xml:space="preserve">
     <value>Wybrany folder ({0}) nie był używany jako folder kopii zapasowej.</value>
@@ -155,6 +161,9 @@
   </data>
   <data name="SendingFileSize" xml:space="preserve">
     <value>Wysyłanie rozmiaru pliku: {0}</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Nieznany błąd</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>Wysyłanie {0}</value>
