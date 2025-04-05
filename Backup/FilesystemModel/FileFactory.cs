@@ -7,7 +7,7 @@ namespace FilesystemModel
 {
     public class FileFactory
     {
-        public List<Regex> IgnoreRegex;
+        public List<Regex> IgnoreRegex { get; set; }
 
         public FileFactory(List<Regex> ignoreRegex)
         {

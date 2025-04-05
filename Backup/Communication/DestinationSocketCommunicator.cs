@@ -47,7 +47,7 @@ namespace Communication
         private void ReceiveFile(string filename,
             System.IO.FileAttributes attributes)
         {
-            long size = Receive<long>();
+            var size = Receive<long>();
             if (size == 0)
                 HandleEmptyFile(filename);
             else
@@ -58,7 +58,7 @@ namespace Communication
             long size,
             System.IO.FileAttributes attributes)
         {
-            long total = 0;
+            var total = 0L;
 
             using (System.IO.Stream stream = SafeFileUsage.GetFile(filename, System.IO.FileMode.Create, System.IO.FileAccess.Write, _logger, true))
             {
@@ -66,13 +66,13 @@ namespace Communication
                 _logger.Write(string.Format(LoggerMessages.Downloanding, filename));
                 _logger.MaxProgress = size * 2; //download and save
 
-                byte[] buffer = size > _bufferSize ?
+                var buffer = size > _bufferSize ?
                      new byte[_bufferSize] : new byte[size];
                 while (total < size)
                 {
-                    long currentBufferReceived = 0;
-                    long bytesLeft = size - total;
-                    long currentBufferSize = bytesLeft > buffer.Length ? buffer.Length : bytesLeft;
+                    var currentBufferReceived = 0L;
+                    var bytesLeft = size - total;
+                    var currentBufferSize = bytesLeft > buffer.Length ? buffer.Length : bytesLeft;
                     while (currentBufferReceived < currentBufferSize)
                     {
                         int received = _socket.Receive(buffer);
@@ -98,7 +98,7 @@ namespace Communication
 
         private void SendRequest(Request request)
         {
-            byte[] content = BitConverter.GetBytes((int)request);
+           var content = BitConverter.GetBytes((int)request);
             _socket.Send(content);
         }
 

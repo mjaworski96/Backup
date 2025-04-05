@@ -6,15 +6,15 @@ namespace FilesystemModel
     {
         public VirtualDirectory(FileFactory fileFactory) : base(fileFactory, "", false)
         {
-            content = new List<FileBase>();
+            Content = new List<FileBase>();
         }
         public void Add(FileBase fileBase)
         {
-            content.Add(fileBase);
+            Content.Add(fileBase);
         }
         public void Remove(FileBase fileBase)
         {
-            content.Remove(fileBase);
+            Content.Remove(fileBase);
         }
         public void Save()
         {
@@ -22,7 +22,7 @@ namespace FilesystemModel
         }
         public override void Copy(string destination)
         {
-            foreach (var file in content)
+            foreach (var file in Content)
             {
                 file.Copy(BuildPath(destination, file.Name));
             }

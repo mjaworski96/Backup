@@ -11,16 +11,16 @@ namespace FilesystemModel
     public static class SafeFileUsage
     {
         const int WAIT_TIME_IN_SECCONDS = 5;
-        static readonly List<long> FILE_IN_USE_ERROR_CODES;
+        static readonly List<int> FILE_IN_USE_ERROR_CODES;
         static SafeFileUsage()
         {
-            FILE_IN_USE_ERROR_CODES = new List<long> { 0x20, 0x21 }; //32, 33
+            FILE_IN_USE_ERROR_CODES = new List<int> { 0x20, 0x21 }; //32, 33
             try
             {
                 var os = Environment.OSVersion;
                 if (os.Platform == PlatformID.Unix)
                 {
-                    FILE_IN_USE_ERROR_CODES = new List<long> { 0x1A }; //26
+                    FILE_IN_USE_ERROR_CODES = new List<int> { 0x1A }; //26
                 }
             }
             catch(Exception) {}
@@ -45,7 +45,7 @@ namespace FilesystemModel
                 }
                 catch (IOException e)
                 {
-                    long errorCode = e.HResult & 0xFFFF;
+                    var errorCode = e.HResult & 0xFFFF;
                     if(FILE_IN_USE_ERROR_CODES.Contains(errorCode))
                     {
                         logger.Write(string.Format(LoggerMessages.FileIsUsed, filename, WAIT_TIME_IN_SECCONDS));

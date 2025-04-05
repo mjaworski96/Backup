@@ -2,7 +2,6 @@
 using Common.Translations;
 using FilesystemModel;
 using FilesystemModel.Extensions;
-using System.Linq;
 
 namespace BackupCore
 {

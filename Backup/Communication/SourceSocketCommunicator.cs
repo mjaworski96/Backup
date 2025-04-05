@@ -23,7 +23,7 @@ namespace Communication
 
         public Request GetRequest()
         {
-            byte[] buffer = new byte[sizeof(Request)];
+           var buffer = new byte[sizeof(Request)];
             _socket.Receive(buffer, SocketFlags.None);
             return (Request)BitConverter.ToInt32(buffer, 0);
         }
@@ -47,7 +47,7 @@ namespace Communication
                 using (System.IO.Stream stream =
                     SafeFileUsage.GetFile(filename, System.IO.FileMode.Open, System.IO.FileAccess.Read, _logger, false))
                 {
-                    byte[] buffer = stream.Length > _bufferSize ?
+                    var buffer = stream.Length > _bufferSize ?
                         new byte[_bufferSize] : new byte[stream.Length];
                     Send(stream.Length);
                     if (stream.Length == 0)
@@ -56,7 +56,7 @@ namespace Communication
                         _logger.MaxProgress = stream.Length * 2; //read file and upload
                     while (stream.Position != stream.Length)
                     {
-                        int count = stream.Read(buffer, 0, buffer.Length);
+                        var count = stream.Read(buffer, 0, buffer.Length);
                         _logger.UpdateProgressBar(count);
                         _socket.Send(buffer, count, SocketFlags.None);
                         _logger.UpdateProgressBar(count);

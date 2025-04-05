@@ -1,6 +1,5 @@
 ﻿using Common.Translations;
 using System;
-using System.Runtime.Serialization;
 
 namespace Communication
 {

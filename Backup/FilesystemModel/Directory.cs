@@ -7,22 +7,23 @@ namespace FilesystemModel
 {
     public class Directory : FileBase
     {
-        private FileFactory fileFactory;
         public static string PREFIX_GROSS = "";
-        protected List<FileBase> content;
+
+        private readonly FileFactory _fileFactory;
+        public List<FileBase> Content { get; set; }
 
         public Directory() { }
 
         public Directory(FileFactory fileFactory, string path, bool createDirectoryIfNotExists) : base(path)
         {
-            this.fileFactory = fileFactory;
-            content = GetDirectoryContent(createDirectoryIfNotExists).ToList();
+            _fileFactory = fileFactory;
+            Content = GetDirectoryContent(createDirectoryIfNotExists).ToList();
         }
         public override string ToString(string prefix)
         {
-            StringBuilder stringBuilder = new StringBuilder(base.ToString(prefix));
+            var stringBuilder = new StringBuilder(base.ToString(prefix));
 
-            foreach (var file in content)
+            foreach (var file in Content)
             {
                 stringBuilder.Append('\n');
                 stringBuilder.Append(file.ToString(prefix + PREFIX_GROSS));
@@ -37,11 +38,11 @@ namespace FilesystemModel
 			
             if(System.IO.Directory.Exists(Path))
             {
-                string[] files = System.IO.Directory.GetFileSystemEntries(Path, "*", SearchOption.TopDirectoryOnly);
+                var files = System.IO.Directory.GetFileSystemEntries(Path, "*", SearchOption.TopDirectoryOnly);
                 foreach (var file in files)
                 {
-                    if(!fileFactory.MustBeIgnored(file))
-                        yield return fileFactory.Create(file, false);
+                    if(!_fileFactory.MustBeIgnored(file))
+                        yield return _fileFactory.Create(file, false);
                 }
             }
         }
@@ -49,7 +50,7 @@ namespace FilesystemModel
         public override void Copy(string destination)
         {
             System.IO.Directory.CreateDirectory(destination);
-            foreach (var file in content)
+            foreach (var file in Content)
             {
                 file.Copy(
                     BuildPath(destination, file.Name));
@@ -58,13 +59,12 @@ namespace FilesystemModel
 
         public override FileType Type => FileType.DIRECTORY;
 
-        public List<FileBase> Content { get => content; set => content = value; }
 
         public bool Empty => !Content.Any();
 
         public virtual void Refresh()
         {
-            content = GetDirectoryContent(false).ToList();
+            Content = GetDirectoryContent(false).ToList();
         }
     }
 }

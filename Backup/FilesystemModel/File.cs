@@ -28,7 +28,7 @@ namespace FilesystemModel
                 stream.Seek(from, SeekOrigin.Begin);
                 while (stream.Position < to)
                 {
-                    int count = stream.Read(buffer, 0, buffer.Length);
+                    var count = stream.Read(buffer, 0, buffer.Length);
                     logger.UpdateProgressBar(count);
                     crc32 = Crc32CAlgorithm.Append(crc32, buffer, 0, count);
                 }

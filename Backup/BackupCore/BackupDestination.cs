@@ -92,10 +92,10 @@ namespace BackupCore
         {
             foreach (var item in newFiles)
             {
-                string path = FileBase.BuildPath(rootDirectory, item.Name);
+                var path = FileBase.BuildPath(rootDirectory, item.Name);
                 if (item.Type == FileType.DIRECTORY)
                 {
-                    Directory directory = item as Directory;
+                    var directory = item as Directory;
                     System.IO.Directory.CreateDirectory(path);
                     item.Attributes.Set(path, _logger);
                     HandleNewFiles(directory.Content, path);
@@ -110,10 +110,10 @@ namespace BackupCore
         {
             foreach (var item in deletedFiles)
             {
-                string path = FileBase.BuildPath(rootDirectory, item.Name);
+                var path = FileBase.BuildPath(rootDirectory, item.Name);
                 if (item.Type == FileType.DIRECTORY)
                 {
-                    Directory directory = item as Directory;
+                    var directory = item as Directory;
                     HandleDeletedFiles(directory.Content, path);
                     _logger.Write(string.Format(LoggerMessages.Deleting, path));
                     SetNormalAttribute(path);
@@ -156,8 +156,8 @@ namespace BackupCore
 
         private async Task HandleFile(FileBase inSource, FileBase inDestination)
         {
-            File sourceFile = inSource as File;
-            File destinationFile = inDestination as File;
+            var sourceFile = inSource as File;
+            var destinationFile = inDestination as File;
             _logger.Write(string.Format(LoggerMessages.CheckingFileSize, sourceFile.Path));
             if (await IsDiffrent(sourceFile.Path, destinationFile.Size, (long from, long to) => destinationFile.CalculateCrc32(_bufferSize, _logger, true, from, to)))
             {
@@ -171,8 +171,8 @@ namespace BackupCore
 
         private async Task HandleDirectory(FileBase inSource, FileBase inDestination, string rootDirectory)
         {
-            Directory sourceDir = inSource as Directory;
-            Directory destinationDir = inDestination as Directory;
+            var sourceDir = inSource as Directory;
+            var destinationDir = inDestination as Directory;
             await MakeBackup(sourceDir, destinationDir,
                 FileBase.BuildPath(rootDirectory, inSource.Name),
                 false);

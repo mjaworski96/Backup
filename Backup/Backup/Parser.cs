@@ -35,7 +35,7 @@ namespace Backup
         }
         private static int Parse(string str, int multiplier)
         {
-            string rawSize = str.Substring(0, str.Length - 1);
+            var rawSize = str.Substring(0, str.Length - 1);
             return int.Parse(rawSize) * multiplier;
         }
     }

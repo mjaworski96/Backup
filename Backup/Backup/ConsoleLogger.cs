@@ -51,11 +51,11 @@ namespace Backup
 
         private void DrawProgress()
         {
-            int width = Console.WindowWidth;
+            var width = Console.WindowWidth;
             Console.SetCursorPosition(0, Console.CursorTop);
-            int progressBarWidth = width - 6; //[]xxx%
-            double percentProgress = (double)_currentProgress / MaxProgress;
-            int progressFilled = (int)(percentProgress * progressBarWidth);
+            var progressBarWidth = width - 6; //[]xxx%
+            var percentProgress = (double)_currentProgress / MaxProgress;
+            var progressFilled = (int)(percentProgress * progressBarWidth);
 
             Console.Write('[');
             WriteCharacter(PROGRESS_BAR_FULL, progressFilled);

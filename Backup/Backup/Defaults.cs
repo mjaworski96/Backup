@@ -17,7 +17,6 @@ namespace Backup
         public const string MODE_DESTINATION = "destination";
         public const string MODE_SOURCE = "source";
         
-
         public static Dictionary<string, List<string>> DEFAULTS_PARAMS =>
             new Dictionary<string, List<string>>
             {

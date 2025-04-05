@@ -1,7 +1,6 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 
 namespace Backup
@@ -15,7 +14,7 @@ namespace Backup
         {
             DataInput = dataInput;
             var multi = new Dictionary<string, List<string>>();
-            List<string> currentParameter = multi.SafeGet("");
+            var currentParameter = multi.SafeGet("");
             foreach (var item in args)
             {
                 if (item.StartsWith("-"))
@@ -67,7 +66,7 @@ namespace Backup
             do
             {
                 Console.Write($"{message}: ");
-                string value = Console.ReadLine();
+                var value = Console.ReadLine();
                 hasValue = value != "";
                 if (hasValue)
                     yield return value;

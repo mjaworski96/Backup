@@ -8,7 +8,7 @@ namespace FilesystemModel.Extensions
         public static FileBase Find(this Directory directory,
             string path)
         {
-            FileBase file = TryGetFile(directory, path);
+            var file = TryGetFile(directory, path);
             if (file != null)
                 return file;
 
@@ -16,14 +16,14 @@ namespace FilesystemModel.Extensions
             if (!path.StartsWith(directory.Path))
                 return null;
             path = GetPath(directory, path);
-            string[] subPaths = FileBase.GetSubPaths(path);
+            var subPaths = FileBase.GetSubPaths(path);
             file = directory;
 
             for (int i = 0; i < subPaths.Length; i++)
             {
                 if (file.Type != FileType.DIRECTORY)
                     return null;
-                Directory dir = file as Directory;
+                var dir = file as Directory;
                 file = dir.Content.Where(x => x.Name == subPaths[i]).FirstOrDefault();
                 if (file == null)
                     break;
@@ -37,7 +37,7 @@ namespace FilesystemModel.Extensions
         }
         private static string GetPath(Directory directory, string path)
         {
-            int legth = directory is VirtualDirectory ?
+            var legth = directory is VirtualDirectory ?
                 directory.Path.Length : directory.Path.Length + 1;
             return path.Substring(legth);
         }
@@ -45,7 +45,7 @@ namespace FilesystemModel.Extensions
         {
             if (directory is VirtualDirectory)
             {
-                Directory valid = directory.Content
+                var valid = directory.Content
                     .Where(x => x.Type == FileType.DIRECTORY &&
                      path.StartsWith(x.Path))
                     .OrderByDescending(x => PathEqualSubpathsCount(x.Path, path))
@@ -57,7 +57,7 @@ namespace FilesystemModel.Extensions
         }
         private static int PathEqualSubpathsCount(string path1, string path2)
         {
-            int equal = 0;
+            var equal = 0;
 
             var path1Split = path1.Split('/');
             var path2Split = path2.Split('/');

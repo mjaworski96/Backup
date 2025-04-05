@@ -23,7 +23,7 @@ namespace Backup
                 ParametersHandler parameters = new ParametersHandler(DataInput, args, Defaults.DEFAULTS_PARAMS);
                 using (IBackup backup = GetBackup(parameters))
                 {
-                    FileFactory fileFactory = new FileFactory(GetIgnoreRegex(parameters).ToList());
+                    var fileFactory = new FileFactory(GetIgnoreRegex(parameters).ToList());
                     var directory = GetDirectory(fileFactory, parameters);
                     await backup.MakeBackup(directory);
                 }
@@ -46,24 +46,24 @@ namespace Backup
         }
         private static int GetPort(ParametersHandler parameters)
         {
-            string port = parameters.GetParameter(Defaults.PORT_KEY, Messages.Port);
+            var port = parameters.GetParameter(Defaults.PORT_KEY, Messages.Port);
             return int.Parse(port);
         }
         private static int GetBufferSize(ParametersHandler parameters)
         {
-            string bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Messages.BufferSize);
+            var bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Messages.BufferSize);
             return Parser.Parse(bufferSize);
         }
 
         private static int GetChecksumPartSize(ParametersHandler parameters)
         {
-            string bufferSize = parameters.GetParameter(Defaults.CHECKSUM_PART_SIZE, Messages.ChecksumPartSize);
+            var bufferSize = parameters.GetParameter(Defaults.CHECKSUM_PART_SIZE, Messages.ChecksumPartSize);
             return Parser.Parse(bufferSize);
         }
 
         private static int GetCompareLargerFilesBySize(ParametersHandler parameters)
         {
-            string bufferSize = parameters.GetParameter(Defaults.COMPARE_LARGER_FILES_BY_SIZE_KEY, Messages.CompareLargerFilesBySize, false);
+            var bufferSize = parameters.GetParameter(Defaults.COMPARE_LARGER_FILES_BY_SIZE_KEY, Messages.CompareLargerFilesBySize, false);
             return Parser.Parse(bufferSize);
         }
 
@@ -97,7 +97,7 @@ namespace Backup
         }
         private static Directory GetSourceDirectory(FileFactory fileFactory, ParametersHandler parameters)
         {
-            VirtualDirectory directory = new VirtualDirectory(fileFactory);
+            var directory = new VirtualDirectory(fileFactory);
 
             foreach (var item in GetSourceDirectoryContentPath(parameters))
             {
