@@ -79,6 +79,15 @@ namespace Backup.Translations {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checksum part size.
+        /// </summary>
+        internal static string ChecksumPartSize {
+            get {
+                return ResourceManager.GetString("ChecksumPartSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to If file (on source and destination) have the same size and is larger than given value then assume that it didn&apos;t change (0 will disable this option).
         /// </summary>
         internal static string CompareLargerFilesBySize {

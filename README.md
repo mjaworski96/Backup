@@ -20,11 +20,12 @@ Or
 |-bs|Maximum buffer size (to read files)|Maximum buffer size (to read files)|10M|Yes|
 |-i|Regex of files that will be ignored|Regex of files that will be ignored|(None)|No|
 |-c|(Not used)|Compare larger files by size|0 (ignored)|No|
+|-ch|(Not used)|Checksum part size|20 M|No|
 
 If argument is mandatory but not specified (by user or from default values) program will ask for this value. Same if only parameter name is specified.
 
-# Buffer size and compare larger files by size
-Buffer size and compare larger files by size can be specifed with postfix.
+# Buffer size, compare larger files by size nad checksum part size
+Buffer size, compare larger files by size and checksum part size can be specifed with postfix.
 
 |Postfix|Multiplier|Example|Real value|
 |------|----------|-------|----------|
@@ -44,7 +45,10 @@ It allow copying files with the same name from other directories. For example:
 <path2/name*second_file>
 ```
 # Compare larger files by size
-If file (on source and destination) have the same size and is larger than given value then assume that it didn't change (0 will disable this option)
+If file (on source and destination) have the same size and is larger than given value then assume that it didn't change (0 will disable this option).
+
+# Checksum part size
+File checksum will be check part by part. This parameter is responsible for the size of this part. 
 
 # Guard file (reserved filename)
 File "backup_directory_guard" will be created in target directory (on root level). For this reason "backup_directory_guard" filename can not be used on root level. This filename can be used in nested directories.

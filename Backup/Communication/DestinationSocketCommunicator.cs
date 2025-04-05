@@ -34,10 +34,10 @@ namespace Communication
             Send(fileRequestPath);
             ReceiveFile(saveFileAs, attributes);
         }
-        public uint GetCrc32(string fileRequestPath)
+        public uint GetCrc32(ChecksumRequest checksumRequest)
         {
             SendRequest(Request.GET_CRC32);
-            Send(fileRequestPath);
+            Send(checksumRequest);
             return Receive<uint>();
         }
         public void Finish()

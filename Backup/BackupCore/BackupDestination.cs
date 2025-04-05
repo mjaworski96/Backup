@@ -15,13 +15,16 @@ namespace BackupCore
         private readonly ILogger _logger;
         private readonly int _bufferSize;
         private readonly int _compareLargerFilesBySize;
+        private readonly int _checksumPartSize;
+        
         public BackupDestination(IDestinationCommunicator communicator,
-            ILogger logger, int bufferSize, int compareLargerFilesBySize)
+            ILogger logger, int bufferSize, int compareLargerFilesBySize, int checksumPartSize)
         {
             _communicator = communicator;
             _logger = logger;
             _bufferSize = bufferSize;
             _compareLargerFilesBySize = compareLargerFilesBySize;
+            _checksumPartSize = checksumPartSize;
         }
 
         public async Task MakeBackup(Directory destination)
@@ -156,7 +159,7 @@ namespace BackupCore
             File sourceFile = inSource as File;
             File destinationFile = inDestination as File;
             _logger.Write(string.Format(LoggerMessages.CheckingFileSize, sourceFile.Path));
-            if (await IsDiffrent(sourceFile.Path, destinationFile.Size, () => destinationFile.CalculateCrc32(_bufferSize, _logger, true)))
+            if (await IsDiffrent(sourceFile.Path, destinationFile.Size, (long from, long to) => destinationFile.CalculateCrc32(_bufferSize, _logger, true, from, to)))
             {
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);
             }
@@ -181,7 +184,7 @@ namespace BackupCore
             HandleNewFiles(new List<FileBase> { inSource }, rootDirectory);
         }
 
-        private async Task<bool> IsDiffrent(string fileRequestPath, long fileSize, Func<uint> crc32)
+        private async Task<bool> IsDiffrent(string fileRequestPath, long fileSize, Func<long, long, uint> crc32)
         {
             long sourceFileSize = _communicator.GetFileSize(fileRequestPath);
             if (sourceFileSize != fileSize)
@@ -194,11 +197,30 @@ namespace BackupCore
             {
                 return false;
             }
-
+            long from = 0;
+            long to = _checksumPartSize - 1;
             _logger.Write(string.Format(LoggerMessages.CheckingChecksum, fileRequestPath));
-            var crcCurrent = Task.Run(crc32);
-            var crcRemote = _communicator.GetCrc32(fileRequestPath);
-            return crcRemote != await crcCurrent;
+            while (from < fileSize)
+            {
+                if (to > fileSize)
+                {
+                    to = fileSize - 1;
+                }
+                var crcCurrent = Task.Run(() => crc32(from, to));
+                var crcRemote = _communicator.GetCrc32(new ChecksumRequest
+                {
+                    From = from,
+                    To = to,
+                    FileName = fileRequestPath,
+                });
+                if (crcRemote != await crcCurrent)
+                {
+                    return true;
+                };
+                from += _checksumPartSize;
+                to += _checksumPartSize;
+            }
+            return false;
         }
 
         public static void CreateBackupDirectoryGuardFile(Directory directory)

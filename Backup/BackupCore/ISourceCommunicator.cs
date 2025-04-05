@@ -9,6 +9,7 @@ namespace BackupCore
         void SendDirectory(Directory directory);
         Request GetRequest();
         string GetFilename();
+        ChecksumRequest GetChecksumRequest();
         void SendFile(string filename);
         void SendCrc32(uint crc32);
         void SendFileSize(long size);

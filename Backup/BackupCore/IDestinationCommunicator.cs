@@ -10,7 +10,7 @@ namespace BackupCore
         void ReceiveFile(string fileRequestPath,
             string saveFileAs,
             System.IO.FileAttributes attributes);
-        uint GetCrc32(string fileRequestPath);
+        uint GetCrc32(ChecksumRequest request);
         void Finish();
         long GetFileSize(string fileRequestPath);
         void Connect();

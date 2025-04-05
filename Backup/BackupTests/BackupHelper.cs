@@ -27,6 +27,7 @@ namespace BackupTests
         public IEnumerable<string> DestinationIgnorePatterns { get; set; }
         public IEnumerable<string> SourceIgnorePatterns { get; set; }
         public string CompareLargerFilesBySize { get; set; }
+        public string ChecksumPartSize { get; set; }
 
         public NullDataInput DataInput { get; private set; }
         public NullLogger Logger { get; private set; }
@@ -150,6 +151,11 @@ namespace BackupTests
             if (!string.IsNullOrEmpty(CompareLargerFilesBySize))
             {
                 sb.Append($"-c {CompareLargerFilesBySize}");
+            }
+
+            if (!string.IsNullOrEmpty(ChecksumPartSize))
+            {
+                sb.Append($"-ch {ChecksumPartSize}");
             }
 
             return sb.ToString();

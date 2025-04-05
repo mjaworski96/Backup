@@ -55,6 +55,12 @@ namespace Backup
             return Parser.Parse(bufferSize);
         }
 
+        private static int GetChecksumPartSize(ParametersHandler parameters)
+        {
+            string bufferSize = parameters.GetParameter(Defaults.CHECKSUM_PART_SIZE, Messages.ChecksumPartSize);
+            return Parser.Parse(bufferSize);
+        }
+
         private static int GetCompareLargerFilesBySize(ParametersHandler parameters)
         {
             string bufferSize = parameters.GetParameter(Defaults.COMPARE_LARGER_FILES_BY_SIZE_KEY, Messages.CompareLargerFilesBySize, false);
@@ -126,7 +132,8 @@ namespace Backup
                         Logger),
                     Logger,
                     GetBufferSize(parameters),
-                    GetCompareLargerFilesBySize(parameters));
+                    GetCompareLargerFilesBySize(parameters),
+                    GetChecksumPartSize(parameters));
             }
             else if (mode == Defaults.MODE_SOURCE)
             {

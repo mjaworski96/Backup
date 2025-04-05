@@ -84,5 +84,10 @@ namespace Communication
         {
             return Receive<ConnectionStatus>();
         }
+
+        public ChecksumRequest GetChecksumRequest()
+        {
+            return Receive<ChecksumRequest>();
+        }
     }
 }

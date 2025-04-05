@@ -11,6 +11,7 @@ namespace Backup
         public const string BUFFER_KEY = "-bs";
         public const string FILES_KEY = "-f";
         public const string IGNORE_KEY = "-i";
+        public const string CHECKSUM_PART_SIZE = "-ch";
         public const string COMPARE_LARGER_FILES_BY_SIZE_KEY = "-c";
 
         public const string MODE_DESTINATION = "destination";
@@ -23,6 +24,7 @@ namespace Backup
                 { ADDRESS_KEY, new List<string>() { "127.0.0.1" } },
                 { PORT_KEY, new List<string>() { "7000" } },
                 { BUFFER_KEY, new List<string>() { "10M" } },
+                { CHECKSUM_PART_SIZE, new List<string>() { "50M" } },
             };                
     }
 }

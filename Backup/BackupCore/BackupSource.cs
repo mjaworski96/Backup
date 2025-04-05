@@ -87,10 +87,10 @@ namespace BackupCore
 
         private void SendCrc32(Directory directory)
         {
-            var filename = _communicator.GetFilename();
-            _logger.Write(string.Format(LoggerMessages.CalculatingChecksum, filename));
-            var file = directory.Find(filename) as File;
-            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger, false));
+            var crcRequest = _communicator.GetChecksumRequest();
+            _logger.Write(string.Format(LoggerMessages.CalculatingChecksum, crcRequest.FileName));
+            var file = directory.Find(crcRequest.FileName) as File;
+            _communicator.SendCrc32(file.CalculateCrc32(_bufferSize, _logger, false, crcRequest.From, crcRequest.To));
         }
 
         private void SendFileSize(Directory directory)
