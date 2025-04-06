@@ -8,7 +8,7 @@ namespace Backup
         private const int KILO = 1024;
         private const int MEGA = 1024 * 1024;
         private const int GIGA = 1024 * 1024 * 1024;
-        public static int Parse(string size)
+        public static long Parse(string size)
         {
             if (string.IsNullOrEmpty(size))
                 return 0;
@@ -20,7 +20,7 @@ namespace Backup
             if (CanBeParsed(size, "g"))
                 return Parse(size, GIGA);
 
-            return int.Parse(size);
+            return long.Parse(size);
         }
         public static IEnumerable<Regex> Parse(IEnumerable<string> patterns)
         {
@@ -33,10 +33,10 @@ namespace Backup
         {
             return size.ToLower().Contains(prefix);
         }
-        private static int Parse(string str, int multiplier)
+        private static long Parse(string str, int multiplier)
         {
             var rawSize = str.Substring(0, str.Length - 1);
-            return int.Parse(rawSize) * multiplier;
+            return long.Parse(rawSize) * multiplier;
         }
     }
 }

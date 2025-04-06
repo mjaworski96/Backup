@@ -12,7 +12,7 @@ namespace Communication
     {
         public SourceSocketCommunicator(string address,
             int port,
-            int bufferSize,
+            long bufferSize,
             ISerialization serialization,
             ILogger logger) : base(address, port, bufferSize, serialization, logger)
         {

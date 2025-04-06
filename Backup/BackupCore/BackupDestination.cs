@@ -13,12 +13,12 @@ namespace BackupCore
     {
         private readonly IDestinationCommunicator _communicator;
         private readonly ILogger _logger;
-        private readonly int _bufferSize;
-        private readonly int _compareLargerFilesBySize;
-        private readonly int _checksumPartSize;
+        private readonly long _bufferSize;
+        private readonly long _compareLargerFilesBySize;
+        private readonly long _checksumPartSize;
         
         public BackupDestination(IDestinationCommunicator communicator,
-            ILogger logger, int bufferSize, int compareLargerFilesBySize, int checksumPartSize)
+            ILogger logger, long bufferSize, long compareLargerFilesBySize, long checksumPartSize)
         {
             _communicator = communicator;
             _logger = logger;
@@ -158,7 +158,6 @@ namespace BackupCore
         {
             var sourceFile = inSource as File;
             var destinationFile = inDestination as File;
-            _logger.Write(string.Format(LoggerMessages.CheckingFileSize, sourceFile.Path));
             if (await IsDiffrent(sourceFile.Path, destinationFile.Size, (long from, long to) => destinationFile.CalculateCrc32(_bufferSize, _logger, true, from, to)))
             {
                 _communicator.ReceiveFile(sourceFile.Path, inDestination.Path, sourceFile.Attributes);

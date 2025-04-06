@@ -16,7 +16,7 @@ namespace FilesystemModel
 
         public override FileType Type => FileType.FILE;
 
-        public uint CalculateCrc32(int bufferSize, ILogger logger, bool setFileNormalAttribute, long from, long to)
+        public uint CalculateCrc32(long bufferSize, ILogger logger, bool setFileNormalAttribute, long from, long to)
         {
             var crc32 = 0U;
             using (Stream stream =

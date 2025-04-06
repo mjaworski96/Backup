@@ -122,6 +122,8 @@ namespace BackupTests
         [InlineData("10m")]
         [InlineData("512M")]
         [InlineData("1g")]
+        [InlineData("2g")]
+        [InlineData("4g")]
         public async Task BackupShouldWorkWithLargeFiles(string bufferSize)
         {
             var srcA = $"{nameof(BackupShouldWorkWithLargeFiles)}SrcA_{bufferSize}";

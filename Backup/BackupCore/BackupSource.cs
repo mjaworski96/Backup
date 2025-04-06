@@ -10,10 +10,10 @@ namespace BackupCore
     {
         private readonly ISourceCommunicator _communicator;
         private readonly ILogger _logger;
-        private readonly int _bufferSize;
+        private readonly long _bufferSize;
 
         public BackupSource(ISourceCommunicator communicator,
-            ILogger logger, int bufferSize)
+            ILogger logger, long bufferSize)
         {
             _communicator = communicator;
             _logger = logger;

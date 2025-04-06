@@ -20,7 +20,7 @@ namespace Backup
         {
             try
             {
-                ParametersHandler parameters = new ParametersHandler(DataInput, args, Defaults.DEFAULTS_PARAMS);
+                var parameters = new ParametersHandler(DataInput, args, Defaults.DEFAULTS_PARAMS);
                 using (IBackup backup = GetBackup(parameters))
                 {
                     var fileFactory = new FileFactory(GetIgnoreRegex(parameters).ToList());
@@ -49,19 +49,19 @@ namespace Backup
             var port = parameters.GetParameter(Defaults.PORT_KEY, Messages.Port);
             return int.Parse(port);
         }
-        private static int GetBufferSize(ParametersHandler parameters)
+        private static long GetBufferSize(ParametersHandler parameters)
         {
             var bufferSize = parameters.GetParameter(Defaults.BUFFER_KEY, Messages.BufferSize);
             return Parser.Parse(bufferSize);
         }
 
-        private static int GetChecksumPartSize(ParametersHandler parameters)
+        private static long GetChecksumPartSize(ParametersHandler parameters)
         {
             var bufferSize = parameters.GetParameter(Defaults.CHECKSUM_PART_SIZE, Messages.ChecksumPartSize);
             return Parser.Parse(bufferSize);
         }
 
-        private static int GetCompareLargerFilesBySize(ParametersHandler parameters)
+        private static long GetCompareLargerFilesBySize(ParametersHandler parameters)
         {
             var bufferSize = parameters.GetParameter(Defaults.COMPARE_LARGER_FILES_BY_SIZE_KEY, Messages.CompareLargerFilesBySize, false);
             return Parser.Parse(bufferSize);

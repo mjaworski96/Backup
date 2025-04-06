@@ -2,6 +2,6 @@
 {
     public class ClientConfiguration
     {
-        public int BufferSize { get; set; }
+        public long BufferSize { get; set; }
     }
 }

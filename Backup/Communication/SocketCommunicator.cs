@@ -15,12 +15,12 @@ namespace Communication
         protected Socket _socket;
         protected readonly IPEndPoint _endPoint;
         protected readonly ISerialization _serialization;
-        protected readonly int _bufferSize;
+        protected readonly long _bufferSize;
         protected readonly ILogger _logger;
         protected AddressFamily _addressFamily;
         protected SocketCommunicator(string address, 
             int port,
-            int bufferSize,
+            long bufferSize,
             ISerialization serialization,
             ILogger logger)
         {
