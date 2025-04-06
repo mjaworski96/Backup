@@ -206,6 +206,7 @@ namespace BackupCore
                 {
                     to = fileSize - 1;
                 }
+                _logger.Write(string.Format(LoggerMessages.CheckingFileSize, fileRequestPath));
                 var crcCurrent = Task.Run(() => crc32(from, to));
                 var crcRemote = _communicator.GetCrc32(new ChecksumRequest
                 {

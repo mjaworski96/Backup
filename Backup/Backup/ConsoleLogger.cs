@@ -53,14 +53,15 @@ namespace Backup
         {
             var width = Console.WindowWidth;
             Console.SetCursorPosition(0, Console.CursorTop);
-            var progressBarWidth = width - 6; //[]xxx%
             var percentProgress = (double)_currentProgress / MaxProgress;
+            var percentText = ((int)(100 * percentProgress)).ToString();
+            var progressBarWidth = width - 3 - percentText.Length; //[]xxx%
             var progressFilled = (int)(percentProgress * progressBarWidth);
 
             Console.Write('[');
             WriteCharacter(PROGRESS_BAR_FULL, progressFilled);
             WriteCharacter(PROGRESS_BAR_EMPTY, progressBarWidth - progressFilled);
-            Console.Write((int)(100 * percentProgress));
+            Console.Write(percentText);
             Console.Write("%]");
         }
 
