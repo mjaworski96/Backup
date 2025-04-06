@@ -20,7 +20,7 @@ Or
 |-bs|Maximum buffer size (to read files)|Maximum buffer size (to read files)|10M|Yes|
 |-i|Regex of files that will be ignored|Regex of files that will be ignored|(None)|No|
 |-c|(Not used)|Compare larger files by size|0 (ignored)|No|
-|-ch|(Not used)|Checksum part size|20 M|No|
+|-ch|(Not used)|Checksum part size|50 M|No|
 
 If argument is mandatory but not specified (by user or from default values) program will ask for this value. Same if only parameter name is specified.
 
