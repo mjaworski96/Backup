@@ -113,11 +113,9 @@ namespace BackupCore
                 var path = FileBase.BuildPath(rootDirectory, item.Name);
                 if (item.Type == FileType.DIRECTORY)
                 {
-                    var directory = item as Directory;
-                    HandleDeletedFiles(directory.Content, path);
                     _logger.Write(string.Format(LoggerMessages.Deleting, path));
                     SetNormalAttribute(path);
-                    System.IO.Directory.Delete(path);
+                    System.IO.Directory.Delete(path, true);
                 }
                 else if (item.Type == FileType.FILE)
                 {
